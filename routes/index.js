@@ -3,9 +3,15 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  var cars = [ "asdf", "toyota", "honda", "ford" ];
+  var ingredients = [ "tomato", "onion", "carrot" ];
 
-  res.render('index', { title: 'Express', carsList: cars });
+  res.render('index', { title: 'Express', ingredients: ingredients });
+});
+
+router.post('/submit', function(req, res, next) {
+	console.log(req.body);
+
+	res.redirect('/');
 });
 
 module.exports = router;
