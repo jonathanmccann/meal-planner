@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Add Recipe
+  form(action='/add-recipe', method='post')
+    | Recipe Name:
+    input(type="text", name="recipeName")
+    br
+    | Recipe Ingredients:
+    textarea(name="recipeIngredients")
+    br
+    input(type='submit', value='Add Recipe')
