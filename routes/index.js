@@ -45,6 +45,32 @@ router.post('/add-recipe', function(req, res, next) {
   })
 });
 
+router.get('/edit-recipe/:recipeId', function(req, res, next) {
+  connection.query('SELECT * FROM Recipe WHERE recipeId = ?', req.params.recipeId, function(err, rows) {
+    if (err) {
+      throw err;
+    }
+    else {
+      res.render('edit_recipe', { recipeId: req.params.recipeId, name: rows[0].name, ingredients: rows[0].ingredients.replace(/,/g, "\r\n") });
+    }
+  });
+});
+
+router.post('/edit-recipe', function(req, res, next) {
+  var recipeName = req.body.name;
+
+  var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
+
+  connection.query('UPDATE Recipe SET ? WHERE ?', [ {name: recipeName, ingredients: ingredients}, { recipeId: req.body.recipeId}], function(err, rows) {
+    if (err) {
+      throw err;
+    }
+    else {
+      res.redirect('/view-recipes');
+    }
+  });
+});
+
 router.get('/view-recipes', function(req, res, next) {
   connection.query('SELECT * FROM Recipe', function(err, rows) {
     if (err) {
