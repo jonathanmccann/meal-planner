@@ -45,6 +45,17 @@ router.post('/add-recipe', function(req, res, next) {
   })
 });
 
+router.get('/view-recipes', function(req, res, next) {
+  connection.query('SELECT * FROM Recipe', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+    else {
+      res.render('view_recipes', { recipes: rows });
+    }
+  });
+});
+
 router.post('/submit', function(req, res, next) {
   for (var name in req.body) {
     console.log("Name = " + name);

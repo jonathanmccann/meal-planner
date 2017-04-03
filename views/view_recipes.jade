@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1 View Recipes
+  each recipe, i in recipes
+    a(href="/edit-recipe/#{recipe.recipeId}") #{recipe.name}
+    br
