@@ -1,14 +1,6 @@
-var config = require('../config');
+var connection = require('../connection');
 var express = require('express');
-var mysql = require('mysql');
 var router = express.Router();
-
-var connection = mysql.createConnection({
-  host     : config.configuration.host,
-  user     : config.configuration.user,
-  password : config.configuration.password,
-  database : config.configuration.database
-});
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: "Meal Planner" });
