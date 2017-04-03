@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1 Edit Recipe
+  form(action='/edit-category', method='post')
+    input(type="hidden", name="categoryId", value="#{categoryId}")
+    | Category Name:
+    input(type="text", name="name", value="#{name}")
+    br
+    input(type='submit', value='Edit Category')
