@@ -65,6 +65,10 @@ router.get('/view-recipes', function(req, res, next) {
 
   getCategories(function(categoryRows){
     getRecipes(function(recipeRows) {
+      if (recipeRows.length == 0) {
+        res.render('view_recipes', { title: "View Recipes" });
+      }
+
       for (var i = 0; i < recipeRows.length; i++) {
         var categoryName = recipeRows[i].categoryName;
 
