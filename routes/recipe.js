@@ -7,7 +7,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/add-recipe', function(req, res, next) {
-  res.render('add_recipe', { title: "Add Recipe" });
+  connection.query('SELECT * FROM Category', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+    else {
+      res.render('add_recipe', { title: "Add Recipe", categories: rows });
+    }
+  })
 });
 
 router.post('/add-recipe', function(req, res, next) {
@@ -15,7 +22,9 @@ router.post('/add-recipe', function(req, res, next) {
 
   var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
 
-  connection.query('INSERT INTO Recipe(name, ingredients) VALUES(?, ?)', [name, ingredients], function(err, result) {
+  var categoryId = req.body.categoryId
+
+  connection.query('INSERT INTO Recipe(name, ingredients, categoryId) VALUES(?, ?, ?)', [name, ingredients, categoryId], function(err, result) {
   	if (err) {
       throw err;
   	}

@@ -6,6 +6,11 @@ block content
     | Recipe Name:
     input(type="text", name="name")
     br
+    | Recipe Category:
+    select(name = "categoryId")
+      for category in categories
+        option(value = category.categoryId) #{category.name}
+    br
     | Recipe Ingredients:
     textarea(name="ingredients", rows="10")
     br
