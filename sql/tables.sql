@@ -1,5 +1,11 @@
 CREATE TABLE Recipe(
 	recipeId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(300),
-	ingredients TEXT
+	ingredients TEXT,
+	categoryId INT
+);
+
+CREATE TABLE Category(
+	categoryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	name VARCHAR(300)
 );
