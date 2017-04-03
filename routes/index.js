@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/add-recipe', function(req, res, next) {
-  res.render('add_recipe');
+  res.render('add_recipe', { title: "Add Recipe" });
 });
 
 router.post('/add-recipe', function(req, res, next) {
@@ -39,7 +39,7 @@ router.get('/edit-recipe/:recipeId', function(req, res, next) {
       throw err;
     }
     else {
-      res.render('edit_recipe', { recipeId: req.params.recipeId, name: rows[0].name, ingredients: rows[0].ingredients.replace(/,/g, "\r\n") });
+      res.render('edit_recipe', { recipeId: req.params.recipeId, name: rows[0].name, ingredients: rows[0].ingredients.replace(/,/g, "\r\n"), title: "Edit Recipe" });
     }
   });
 });
@@ -65,7 +65,7 @@ router.get('/view-recipes', function(req, res, next) {
       throw err;
     }
     else {
-      res.render('view_recipes', { recipes: rows });
+      res.render('view_recipes', { recipes: rows, title: "View Recipes" });
     }
   });
 });
