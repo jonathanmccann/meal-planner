@@ -14,12 +14,12 @@ var connection = mysql.createConnection({
 router.get('/', function(req, res, next) {
   var ingredients = [ "tomato", "onion", "carrot", "Can of Soup" ];
 
-  connection.query('SELECT recipeName FROM Recipe WHERE recipeId = 1', function(err, rows) {
+  connection.query('SELECT name FROM Recipe WHERE recipeId = 1', function(err, rows) {
     if (err) {
       throw err;
     }
     else {
-      res.render('index', { title: rows[0].recipeName, ingredients: ingredients });
+      res.render('index', { title: rows[0].name, ingredients: ingredients });
     }
   });
 });
@@ -31,15 +31,18 @@ router.get('/add-recipe', function(req, res, next) {
 });
 
 router.post('/add-recipe', function(req, res, next) {
-  var recipeName = req.body.recipeName;
+  var name = req.body.name;
 
-  var recipeIngredients = req.body.recipeIngredients.split(/\n/);
+  var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
 
-  for (var i = 0; i < recipeIngredients.length; i++) {
-    console.log(recipeIngredients[i]);
-  }
-
-  res.redirect('/');
+  connection.query('INSERT INTO Recipe(name, ingredients) VALUES(?, ?)', [name, ingredients], function(err, result) {
+  	if (err) {
+      throw err;
+  	}
+  	else {
+      res.redirect('/add-recipe');
+  	}
+  })
 });
 
 router.post('/submit', function(req, res, next) {

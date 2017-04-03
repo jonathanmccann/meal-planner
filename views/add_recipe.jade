@@ -4,9 +4,9 @@ block content
   h1 Add Recipe
   form(action='/add-recipe', method='post')
     | Recipe Name:
-    input(type="text", name="recipeName")
+    input(type="text", name="name")
     br
     | Recipe Ingredients:
-    textarea(name="recipeIngredients")
+    textarea(name="ingredients")
     br
     input(type='submit', value='Add Recipe')
