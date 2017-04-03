@@ -3,15 +3,6 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  form(action='/submit', method='post')
-    each ingredient, i in ingredients
-      input(type="checkbox", name="#{ingredient}")
-      | #{ingredient}
-      br
-    input(type='submit', value='Submit')
-    br
-    br
-    br
-    a(href="/add-recipe") Add Recipe
-    br
-    a(href="/view-recipes") View Recipes
+  a(href="/add-recipe") Add Recipe
+  br
+  a(href="/view-recipes") View Recipes
