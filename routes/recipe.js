@@ -35,13 +35,15 @@ router.post('/add-recipe', function(req, res, next) {
 });
 
 router.get('/edit-recipe/:recipeId', function(req, res, next) {
-  connection.query('SELECT * FROM Recipe WHERE recipeId = ?', req.params.recipeId, function(err, rows) {
-    if (err) {
-      throw err;
-    }
-    else {
-      res.render('edit_recipe', { recipeId: req.params.recipeId, name: rows[0].name, ingredients: rows[0].ingredients.replace(/,/g, "\r\n"), title: "Edit Recipe" });
-    }
+  getCategories(function(categoryRows) {
+    connection.query('SELECT * FROM Recipe WHERE recipeId = ?', req.params.recipeId, function(err, rows) {
+      if (err) {
+        throw err;
+      }
+      else {
+        res.render('edit_recipe', { recipeId: req.params.recipeId, name: rows[0].name, ingredients: rows[0].ingredients.replace(/,/g, "\r\n"), categoryName: rows[0].categoryName, categories: categoryRows, title: "Edit Recipe" });
+      }
+    });
   });
 });
 
@@ -50,7 +52,9 @@ router.post('/edit-recipe', function(req, res, next) {
 
   var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
 
-  connection.query('UPDATE Recipe SET ? WHERE ?', [ {name: recipeName, ingredients: ingredients}, { recipeId: req.body.recipeId}], function(err, rows) {
+  var categoryName = req.body.categoryName;
+
+  connection.query('UPDATE Recipe SET ? WHERE ?', [ {name: recipeName, ingredients: ingredients, categoryName: categoryName}, { recipeId: req.body.recipeId}], function(err, rows) {
     if (err) {
       throw err;
     }

@@ -7,6 +7,14 @@ block content
     | Recipe Name:
     input(type="text", name="name", value="#{name}")
     br
+    | Recipe Category:
+    select(name = "categoryName")
+      for category in categories
+        if categoryName == category.name
+          option(selected, value = category.name) #{category.name}
+        else
+          option(value = category.name) #{category.name}
+    br
     | Recipe Ingredients:
     textarea(name="ingredients", rows="10")
       | #{ingredients}
