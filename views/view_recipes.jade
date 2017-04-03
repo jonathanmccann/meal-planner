@@ -10,6 +10,6 @@ block content
     -for (var categoryRecipe in categoryRecipes)
       h2 #{categoryRecipe}
       -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
-        | #{categoryRecipes[categoryRecipe][i].name}
+        a(href="/edit-recipe/#{categoryRecipes[categoryRecipe][i].recipeId}") #{categoryRecipes[categoryRecipe][i].name}
         br
       -}
