@@ -7,7 +7,7 @@ var path = require('path');
 var stylus = require('stylus');
 
 var category = require('./routes/category');
-var index = require('./routes/index');
+var recipe = require('./routes/recipe');
 
 var app = express();
 
@@ -23,7 +23,7 @@ app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', category);
-app.use('/', index);
+app.use('/', recipe);
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
