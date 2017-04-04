@@ -31,11 +31,22 @@ router.get('/add-meals', function(req, res, next) {
 });
 
 router.post('/add-meals', function(req, res, next) {
+  var recipeIds = [];
+
   for (var recipeId in req.body) {
-    console.log(recipeId);
+    recipeIds.push(recipeId);
   }
 
-  res.redirect('/add-meals');
+  console.log(recipeIds);
+  connection.query('SELECT * FROM Recipe WHERE recipeId IN (' + recipeIds.join() + ')', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+    else {
+      console.log(rows);
+      res.render('add_ingredients', { recipes: rows, title: "Add Ingredients" });
+    }
+  })
 });
 
 router.get('/add-recipe', function(req, res, next) {

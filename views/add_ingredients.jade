@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 Add Ingredients
+  if recipes.length == 0
+    | There are no selected recipes to display. Please 
+    a(href="/add-meals") choose some
+    | .
+  else
+    each recipe in recipes
+      h2 #{recipe.name}
+      input(type="checkbox")
+      | #{recipe.ingredients}
+      br
