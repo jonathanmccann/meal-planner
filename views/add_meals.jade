@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1 Add Meals
+  if categoryRecipes == null
+    | There are currently no recipes to choose from. Go ahead and 
+    a(href="/add-recipe") add some
+    | .
+  else
+    form(action='/add-meals', method='post')
+      -for (var categoryRecipe in categoryRecipes)
+        h2 #{categoryRecipe}
+        -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
+          input(type="checkbox", name="#{categoryRecipes[categoryRecipe][i].recipeId}")
+          | #{categoryRecipes[categoryRecipe][i].name}
+          br
+        -}
+      br
+      input(type='submit', value='Add Meals')

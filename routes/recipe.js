@@ -6,6 +6,38 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: "Meal Planner" });
 });
 
+router.get('/add-meals', function(req, res, next) {
+  var categoryRecipeMap = new Object();
+
+  getCategories(function(categoryRows){
+    getRecipes(function(recipeRows) {
+      if (recipeRows.length == 0) {
+        res.render('view_recipes', { title: "View Recipes" });
+      }
+
+      for (var i = 0; i < recipeRows.length; i++) {
+        var categoryName = recipeRows[i].categoryName;
+
+        if (!categoryRecipeMap[categoryName]) {
+          categoryRecipeMap[categoryName] = [];
+        }
+
+        categoryRecipeMap[categoryName].push(recipeRows[i]);
+      }
+
+      res.render('add_meals', { categoryRecipes: categoryRecipeMap, title: "Add Meals" });
+    });
+  });
+});
+
+router.post('/add-meals', function(req, res, next) {
+  for (var recipeId in req.body) {
+    console.log(recipeId);
+  }
+
+  res.redirect('/add-meals');
+});
+
 router.get('/add-recipe', function(req, res, next) {
   connection.query('SELECT * FROM Category', function(err, rows) {
     if (err) {
