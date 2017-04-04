@@ -9,6 +9,9 @@ block content
   else
     each recipe in recipes
       h2 #{recipe.name}
-      input(type="checkbox")
-      | #{recipe.ingredients}
-      br
+      -var ingredients = recipe.ingredients.split(",");
+      -for (var i = 0; i < ingredients.length; i++) {
+        input(type="checkbox", name="#{ingredients[i]}")
+        | #{ingredients[i]}
+        br
+      -}
