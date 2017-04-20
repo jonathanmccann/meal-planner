@@ -31,7 +31,7 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   res.locals.message = err.message;
   res.locals.error = err;
 
