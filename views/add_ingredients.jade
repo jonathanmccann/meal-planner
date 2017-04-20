@@ -7,11 +7,13 @@ block content
     a(href="/add-meals") choose some
     | .
   else
-    each recipe in recipes
-      h2 #{recipe.name}
-      -var ingredients = recipe.ingredients.split(",");
-      -for (var i = 0; i < ingredients.length; i++) {
-        input(type="checkbox", name="#{ingredients[i]}")
-        | #{ingredients[i]}
-        br
-      -}
+    form(action='/add-ingredients', method='post')
+      each recipe in recipes
+        h2 #{recipe.name}
+        -var ingredients = recipe.ingredients.split(",");
+        -for (var i = 0; i < ingredients.length; i++) {
+          input(type="checkbox", name="#{ingredients[i]} (#{recipe.name})")
+          | #{ingredients[i]}
+          br
+        -}
+      input(type='submit', value='Add Ingredients')

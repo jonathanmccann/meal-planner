@@ -1,9 +1,32 @@
+var config = require('../config');
 var connection = require('../connection');
 var express = require('express');
+var http = require('http');
+var request = require('request');
 var router = express.Router();
+var wunderlistSDK = require('wunderlist');
+var wunderlistAPI = new wunderlistSDK({
+  'accessToken': config.configuration.wunderlistAccessToken,
+  'clientID': config.configuration.wunderlistClientId
+});
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: "Meal Planner" });
+});
+
+router.post('/add-ingredients', function(req, res, next) {
+  var ingredients = [];
+
+  for (var recipe in req.body) {
+    wunderlistAPI.http.tasks.create({
+      'list_id': config.configuration.listId,
+      'title': recipe
+    }).fail(function (resp, code) {
+      console.error("An error occured while adding tasks: " + resp);
+    });
+  }
+
+  res.redirect('/');
 });
 
 router.get('/add-meals', function(req, res, next) {
@@ -37,13 +60,11 @@ router.post('/add-meals', function(req, res, next) {
     recipeIds.push(recipeId);
   }
 
-  console.log(recipeIds);
   connection.query('SELECT * FROM Recipe WHERE recipeId IN (' + recipeIds.join() + ')', function(err, rows) {
     if (err) {
       throw err;
     }
     else {
-      console.log(rows);
       res.render('add_ingredients', { recipes: rows, title: "Add Ingredients" });
     }
   })
@@ -151,6 +172,10 @@ function getRecipes(callback) {
       callback(rows);
     }
   });
+}
+
+function uniqueElements(value, index, self) {
+  return self.indexOf(value) === index;
 }
 
 module.exports = router;
