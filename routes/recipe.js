@@ -134,18 +134,19 @@ router.get('/view-recipes', function(req, res) {
     if (recipeRows.length == 0) {
       res.render('view_recipes', { title: "View Recipes" });
     }
+    else {
+      for (var i = 0; i < recipeRows.length; i++) {
+        var categoryName = recipeRows[i].categoryName;
 
-    for (var i = 0; i < recipeRows.length; i++) {
-      var categoryName = recipeRows[i].categoryName;
+        if (!categoryRecipeMap[categoryName]) {
+          categoryRecipeMap[categoryName] = [];
+        }
 
-      if (!categoryRecipeMap[categoryName]) {
-        categoryRecipeMap[categoryName] = [];
+        categoryRecipeMap[categoryName].push(recipeRows[i]);
       }
 
-      categoryRecipeMap[categoryName].push(recipeRows[i]);
+      res.render('view_recipes', { categoryRecipes: categoryRecipeMap, title: "View Recipes" });
     }
-
-    res.render('view_recipes', { categoryRecipes: categoryRecipeMap, title: "View Recipes" });
   });
 });
 
