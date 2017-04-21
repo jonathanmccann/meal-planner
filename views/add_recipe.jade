@@ -1,17 +1,20 @@
 extends layout
 
 block content
-  h1 Add Recipe
-  form(action='/add-recipe', method='post')
-    | Recipe Name:
-    input(type="text", name="name")
-    br
-    | Recipe Category:
-    select(name = "categoryName")
-      for category in categories
-        option(value = category.name) #{category.name}
-    br
-    | Recipe Ingredients:
-    textarea(name="ingredients", rows="10")
-    br
-    input(type='submit', value='Add Recipe')
+  div(class="container")
+    header(class="major")
+      h2 Add Recipe
+  div(class="container")
+    form(action='/add-recipe', method='post')
+      | Recipe Name:
+      input(type="text", name="name")
+      br
+      | Recipe Category:
+      select(class="dropdown" name = "categoryName")
+        for category in categories
+          option(value = category.name) #{category.name}
+      br
+      | Recipe Ingredients:
+      textarea(name="ingredients", rows="10")
+      br
+      input(type='submit', value='Add Recipe')
