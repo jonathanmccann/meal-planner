@@ -6,15 +6,13 @@ html
     script(src="/javascripts/skel-layers.min.js")
     script(src="/javascripts/init.js")
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    a(href="/add-recipe") Add Recipe
-    br
-    a(href="/view-recipes") View Recipes
-    br
-    a(href="/add-category") Add Category
-    br
-    a(href="/view-categories") View Categories
-    br
-    a(href="/add-meals") Add Meals
+    header(id = "header")
+      nav(id = "nav")
+        ul
+          li: a(href="/add-recipe") Add Recipe
+          li: a(href="/view-recipes") View Recipes
+          li: a(href="/add-category") Add Category
+          li: a(href="/view-categories") View Categories
+          li: a(class='button special' href="/add-meals") Add Meals
   body
     block content
