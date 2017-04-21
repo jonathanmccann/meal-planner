@@ -1,12 +1,16 @@
 extends layout
 
 block content
-  h1 View Categories
-  if categories.length == 0
-    | There are currently no categories to display. Go ahead and 
-    a(href="/add-category") add some
-    | .
-  else
-    each category, i in categories
-      a(href="/edit-category/#{category.categoryId}") #{category.name}
-      br
+  div(class="container")
+    header(class="major")
+      h2 View Categories
+  div(class="container")
+    if categories.length == 0
+      | There are currently no categories to display. Go ahead and
+      a(href="/add-category") add some
+      | .
+    else
+      div(class="indent")
+        ul(class="alt")
+          each category, i in categories
+            li: a(class="category-link" href="/edit-category/#{category.categoryId}") #{category.name}
