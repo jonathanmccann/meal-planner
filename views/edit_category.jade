@@ -10,4 +10,5 @@ block content
       | Category Name:
       input(type="text", name="name", value="#{name}", required)
       br
-      input(type='submit', value='Edit Category')
+      input(type='submit', name='action', value='Edit Category')
+      input(type='submit', class="delete-button", name='action', value='Delete Category')

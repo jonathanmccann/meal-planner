@@ -29,14 +29,22 @@ router.get('/edit-category/:categoryId', function(req, res) {
 });
 
 router.post('/edit-category', function(req, res) {
-  connection.query('UPDATE Category SET ? WHERE ?', [ {name: req.body.name}, {categoryId: req.body.categoryId} ], function(err) {
-    if (err) {
-      throw err;
-    }
-    else {
-      res.redirect('/view-categories');
-    }
-  });
+  if (req.body.action == "Edit Category") {
+    connection.query('UPDATE Category SET ? WHERE ?', [ {name: req.body.name}, {categoryId: req.body.categoryId} ], function(err) {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+  else {
+    connection.query('DELETE FROM Category WHERE categoryId = ?', req.body.categoryId, function(err) {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+
+  res.redirect('/view-categories');
 });
 
 router.get('/view-categories', function(req, res) {
