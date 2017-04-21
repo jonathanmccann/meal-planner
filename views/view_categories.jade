@@ -13,4 +13,4 @@ block content
       div(class="indent")
         ul(class="alt")
           each category, i in categories
-            li: a(class="category-link" href="/edit-category/#{category.categoryId}") #{category.name}
+            li: a(href="/edit-category/#{category.categoryId}") #{category.name}
