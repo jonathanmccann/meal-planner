@@ -1,22 +1,25 @@
 extends layout
 
 block content
-  h1 Edit Recipe
-  form(action='/edit-recipe', method='post')
-    input(type="hidden", name="recipeId", value="#{recipeId}")
-    | Recipe Name:
-    input(type="text", name="name", value="#{name}")
-    br
-    | Recipe Category:
-    select(name = "categoryName")
-      for category in categories
-        if categoryName == category.name
-          option(selected, value = category.name) #{category.name}
-        else
-          option(value = category.name) #{category.name}
-    br
-    | Recipe Ingredients:
-    textarea(name="ingredients", rows="10")
-      | #{ingredients}
-    br
-    input(type='submit', value='Edit Recipe')
+  div(class="container")
+    header(class="major")
+      h2 Edit Recipe
+  div(class="container")
+    form(action='/edit-recipe', method='post')
+      input(type="hidden", name="recipeId", value="#{recipeId}")
+      | Recipe Name:
+      input(type="text", name="name", value="#{name}")
+      br
+      | Recipe Category:
+      select(name = "categoryName")
+        for category in categories
+          if categoryName == category.name
+            option(selected, value = category.name) #{category.name}
+          else
+            option(value = category.name) #{category.name}
+      br
+      | Recipe Ingredients:
+      textarea(name="ingredients", rows="10")
+        | #{ingredients}
+      br
+      input(type='submit', value='Edit Recipe')
