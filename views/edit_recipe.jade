@@ -22,4 +22,5 @@ block content
       textarea(name="ingredients", rows="5", required)
         | #{ingredients}
       br
-      input(type='submit', value='Edit Recipe')
+      input(type='submit', name='action', value='Edit Recipe')
+      input(type='submit', class="delete-button", name='action', value='Delete Recipe')

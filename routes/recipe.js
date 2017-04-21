@@ -103,20 +103,32 @@ router.get('/edit-recipe/:recipeId', function(req, res) {
 });
 
 router.post('/edit-recipe', function(req, res) {
-  var recipeName = req.body.name;
+  if (req.body.action == "Edit Recipe") {
+    var recipeName = req.body.name;
 
-  var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
+    var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
 
-  var categoryName = req.body.categoryName;
+    var categoryName = req.body.categoryName;
 
-  connection.query('UPDATE Recipe SET ? WHERE ?', [ {name: recipeName, ingredients: ingredients, categoryName: categoryName}, { recipeId: req.body.recipeId}], function(err) {
-    if (err) {
-      throw err;
-    }
-    else {
-      res.redirect('/view-recipes');
-    }
-  });
+    connection.query('UPDATE Recipe SET ? WHERE ?', [ {name: recipeName, ingredients: ingredients, categoryName: categoryName}, { recipeId: req.body.recipeId}], function(err) {
+      if (err) {
+        throw err;
+      }
+      else {
+        res.redirect('/view-recipes');
+      }
+    });
+  }
+  else {
+    connection.query('DELETE FROM Recipe WHERE ?', { recipeId: req.body.recipeId }, function(err) {
+      if (err) {
+        throw err;
+      }
+      else {
+        res.redirect('/view-recipes');
+      }
+    });
+  }
 });
 
 router.get('/view-recipes', function(req, res) {
