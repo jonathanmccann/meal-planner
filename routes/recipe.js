@@ -114,9 +114,6 @@ router.post('/edit-recipe', function(req, res) {
       if (err) {
         throw err;
       }
-      else {
-        res.redirect('/view-recipes');
-      }
     });
   }
   else {
@@ -124,11 +121,10 @@ router.post('/edit-recipe', function(req, res) {
       if (err) {
         throw err;
       }
-      else {
-        res.redirect('/view-recipes');
-      }
     });
   }
+
+  res.redirect('/view-recipes');
 });
 
 router.get('/view-recipes', function(req, res) {
