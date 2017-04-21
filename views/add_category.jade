@@ -4,6 +4,6 @@ block content
   h1 Add Category
   form(action='/add-category', method='post')
     | Category Name:
-    input(type="text", name="name")
+    input(type="text", name="name", required)
     br
     input(type='submit', value='Add Category')

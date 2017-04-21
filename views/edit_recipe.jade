@@ -8,7 +8,7 @@ block content
     form(action='/edit-recipe', method='post')
       input(type="hidden", name="recipeId", value="#{recipeId}")
       | Recipe Name:
-      input(type="text", name="name", value="#{name}")
+      input(type="text", name="name", value="#{name}", required)
       br
       | Recipe Category:
       select(name = "categoryName")
@@ -19,7 +19,7 @@ block content
             option(value = category.name) #{category.name}
       br
       | Recipe Ingredients:
-      textarea(name="ingredients", rows="10")
+      textarea(name="ingredients", rows="10", required)
         | #{ingredients}
       br
       input(type='submit', value='Edit Recipe')

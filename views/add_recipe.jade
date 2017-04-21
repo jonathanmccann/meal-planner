@@ -7,7 +7,7 @@ block content
   div(class="container")
     form(action='/add-recipe', method='post')
       | Recipe Name:
-      input(type="text", name="name")
+      input(type="text", name="name", required)
       br
       | Recipe Category:
       select(class="dropdown" name = "categoryName")
@@ -15,6 +15,6 @@ block content
           option(value = category.name) #{category.name}
       br
       | Recipe Ingredients:
-      textarea(name="ingredients", rows="10")
+      textarea(name="ingredients", rows="10", required)
       br
       input(type='submit', value='Add Recipe')
