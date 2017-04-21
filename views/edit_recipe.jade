@@ -13,10 +13,10 @@ block content
       | Recipe Category:
       select(name = "categoryName")
         for category in categories
-          if categoryName == category.name
-            option(selected, value = category.name) #{category.name}
+          if categoryId == category.categoryId
+            option(selected, value = category.categoryId) #{category.name}
           else
-            option(value = category.name) #{category.name}
+            option(value = category.categoryId) #{category.name}
       br
       | Recipe Ingredients:
       textarea(name="ingredients", rows="5", required)

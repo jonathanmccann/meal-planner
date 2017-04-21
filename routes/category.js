@@ -35,9 +35,21 @@ router.post('/edit-category', function(req, res) {
         throw err;
       }
     });
+
+    connection.query('UPDATE Recipe SET ? WHERE ?', [ {categoryName: req.body.name}, {categoryId: req.body.categoryId} ], function(err) {
+      if (err) {
+        throw err;
+      }
+    });
   }
   else {
     connection.query('DELETE FROM Category WHERE categoryId = ?', req.body.categoryId, function(err) {
+      if (err) {
+        throw err;
+      }
+    });
+
+    connection.query('UPDATE Recipe SET ? WHERE ?', [ {categoryId: 0, categoryName: "No Category"}, {categoryId: req.body.categoryId} ], function(err) {
       if (err) {
         throw err;
       }

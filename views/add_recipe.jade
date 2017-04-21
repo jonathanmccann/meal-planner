@@ -10,9 +10,9 @@ block content
       input(type="text", name="name", required)
       br
       | Recipe Category:
-      select(class="dropdown" name = "categoryName")
+      select(class="dropdown" name = "category")
         for category in categories
-          option(value = category.name) #{category.name}
+          option(value = category.categoryId + "," + category.name) #{category.name}
       br
       | Recipe Ingredients:
       textarea(name="ingredients", rows="5", required)

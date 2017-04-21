@@ -72,14 +72,24 @@ router.get('/add-recipe', function(req, res) {
   })
 });
 
-router.post('/add-recipe', function(req, res, next) {
+router.post('/add-recipe', function(req, res) {
   var name = req.body.name;
 
   var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
 
-  var categoryName = req.body.categoryName;
+  var category = req.body.category;
 
-  connection.query('INSERT INTO Recipe(name, ingredients, categoryName) VALUES(?, ?, ?)', [name, ingredients, categoryName], function(err) {
+  var categoryId = 0;
+  var categoryName = "No Category";
+
+  if (category !== undefined) {
+    category = category.split(",");
+
+    categoryId = category[0];
+    categoryName = category[1];
+  }
+
+  connection.query('INSERT INTO Recipe(name, ingredients, categoryId, categoryName) VALUES(?, ?, ?, ?)', [name, ingredients, categoryId, categoryName], function(err) {
   	if (err) {
       throw err;
   	}
@@ -96,7 +106,7 @@ router.get('/edit-recipe/:recipeId', function(req, res) {
         throw err;
       }
       else {
-        res.render('edit_recipe', { recipeId: req.params.recipeId, name: rows[0].name, ingredients: rows[0].ingredients.replace(/,/g, "\r\n"), categoryName: rows[0].categoryName, categories: categoryRows, title: "Edit Recipe" });
+        res.render('edit_recipe', { recipeId: req.params.recipeId, name: rows[0].name, ingredients: rows[0].ingredients.replace(/,/g, "\r\n"), categoryId: rows[0].categoryId, categories: categoryRows, title: "Edit Recipe" });
       }
     });
   });
