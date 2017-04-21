@@ -1,5 +1,25 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  div(class="container")
+    header(class="major")
+      h2 Welcome to #{title}
+
+  section(class="wrapper style1 special")
+    div(class="container")
+      div(class="row 150%")
+        div(class="4u 12u$(medium)")
+          a(href="/add-recipe")
+            section(class="box")
+              i(class="icon big rounded color1 fa-book")
+              h3 Recipes
+        div(class="4u 12u$(medium)")
+          a(href="/add-category")
+            section(class="box")
+              i(class="icon big rounded color8 fa-cog")
+              h3 Categories
+        div(class="4u 12u$(medium)")
+          a(href="/add-meals")
+            section(class="box")
+              i(class="icon big rounded color7 fa-cutlery")
+              h3 Plan Meals
