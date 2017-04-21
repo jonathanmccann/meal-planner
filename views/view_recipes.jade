@@ -6,9 +6,11 @@ block content
       h2= title
   div(class="container")
     if categoryRecipes == null
-      | There are currently no recipes to display. Go ahead and
-      a(href="/add-recipe") add some
-      | .
+      header(class='major')
+        p
+          | There are currently no recipes to display. Go ahead and 
+          a(href="/add-recipe") add some
+          | .
     else
       -for (var categoryRecipe in categoryRecipes)
         h2 #{categoryRecipe}
