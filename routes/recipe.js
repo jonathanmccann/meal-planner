@@ -153,7 +153,7 @@ function getCategories(callback) {
 }
 
 function getRecipes(callback) {
-  connection.query('SELECT * FROM Recipe ORDER BY name', function(err, rows) {
+  connection.query('SELECT * FROM Recipe ORDER BY categoryName, name', function(err, rows) {
     if (err) {
       throw err;
     }
