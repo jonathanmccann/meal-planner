@@ -36,7 +36,7 @@
 	}
 
 	a {
-		color: #383b43;
+		color: #51b6d9;
 		text-decoration: none;
 	}
 
@@ -1218,3 +1218,9 @@
 		.grid-demo .row.flush > div:last-child span {
 			border-radius: 0 4px 4px 0;
 		}
+
+/* Custom */
+
+	.indent {
+		padding: 0 0 0 2em
+	}

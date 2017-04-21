@@ -1,15 +1,19 @@
 extends layout
 
 block content
-  h1 View Recipes
-  if categoryRecipes == null
-    | There are currently no recipes to display. Go ahead and 
-    a(href="/add-recipe") add some
-    | .
-  else
-    -for (var categoryRecipe in categoryRecipes)
-      h2 #{categoryRecipe}
-      -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
-        a(href="/edit-recipe/#{categoryRecipes[categoryRecipe][i].recipeId}") #{categoryRecipes[categoryRecipe][i].name}
-        br
-      -}
+  div(class="container")
+    header(class="major")
+      h2 View Recipes
+  div(class="container")
+    if categoryRecipes == null
+      | There are currently no recipes to display. Go ahead and
+      a(href="/add-recipe") add some
+      | .
+    else
+      -for (var categoryRecipe in categoryRecipes)
+        h2 #{categoryRecipe}
+        div(class="indent")
+          ul(class="alt")
+            -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
+              li: a(href="/edit-recipe/#{categoryRecipes[categoryRecipe][i].recipeId}") #{categoryRecipes[categoryRecipe][i].name}
+            -}
