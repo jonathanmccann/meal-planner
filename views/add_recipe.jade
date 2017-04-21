@@ -3,7 +3,7 @@ extends layout
 block content
   div(class="container")
     header(class="major")
-      h2 Add Recipe
+      h2= title
   div(class="container")
     form(action='/add-recipe', method='post')
       | Recipe Name:
