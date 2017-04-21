@@ -1,9 +1,12 @@
 extends layout
 
 block content
-  h1 Add Category
-  form(action='/add-category', method='post')
-    | Category Name:
-    input(type="text", name="name", required)
-    br
-    input(type='submit', value='Add Category')
+  div(class="container")
+    header(class="major")
+      h2 Add Category
+  div(class="container")
+    form(action='/add-category', method='post')
+      | Category Name:
+      input(type="text", name="name", required)
+      br
+      input(type='submit', value='Add Category')

@@ -12,7 +12,7 @@ router.post('/add-category', function(req, res) {
       throw err;
   	}
   	else {
-      res.redirect('/add-category');
+      res.redirect('/view-categories');
   	}
   })
 });
