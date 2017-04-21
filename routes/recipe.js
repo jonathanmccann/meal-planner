@@ -84,7 +84,7 @@ router.post('/add-recipe', function(req, res, next) {
       throw err;
   	}
   	else {
-      res.redirect('/add-recipe');
+      res.redirect('/view-recipes');
   	}
   })
 });
