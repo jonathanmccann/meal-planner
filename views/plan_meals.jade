@@ -6,9 +6,11 @@ block content
       h2= title
   div(class="container")
     if categoryRecipes == null
-      | There are currently no recipes to choose from. Go ahead and
-      a(href="/add-recipe") add some
-      | .
+      header(class='major')
+        p
+          | There are currently no recipes to display. Go ahead and 
+          a(href="/add-recipe") add some
+          | .
     else
       form(action='/plan-meals', method='post')
         -for (var categoryRecipe in categoryRecipes)

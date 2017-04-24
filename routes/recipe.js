@@ -104,7 +104,7 @@ router.get('/plan-meals', function(req, res) {
 
   getRecipes(function(recipeRows) {
     if (recipeRows.length === 0) {
-      res.render('view_recipes', { title: "View Recipes" });
+      res.render('plan_meals', { title: "Plan Meals" });
     }
     else {
       for (var i = 0; i < recipeRows.length; i++) {
