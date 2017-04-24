@@ -115,18 +115,19 @@ router.get('/plan-meals', function(req, res) {
     if (recipeRows.length == 0) {
       res.render('view_recipes', { title: "View Recipes" });
     }
-
-    for (var i = 0; i < recipeRows.length; i++) {
-      var categoryName = recipeRows[i].categoryName;
-
-      if (!categoryRecipeMap[categoryName]) {
-        categoryRecipeMap[categoryName] = [];
+    else {
+      for (var i = 0; i < recipeRows.length; i++) {
+        var categoryName = recipeRows[i].categoryName;
+  
+        if (!categoryRecipeMap[categoryName]) {
+          categoryRecipeMap[categoryName] = [];
+        }
+  
+        categoryRecipeMap[categoryName].push(recipeRows[i]);
       }
-
-      categoryRecipeMap[categoryName].push(recipeRows[i]);
+  
+      res.render('plan_meals', { categoryRecipes: categoryRecipeMap, title: "Plan Meals" });
     }
-
-    res.render('plan_meals', { categoryRecipes: categoryRecipeMap, title: "Plan Meals" });
   });
 });
 
