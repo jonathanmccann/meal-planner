@@ -27,7 +27,7 @@ router.post('/add-ingredients', function(req, res) {
   res.redirect('/');
 });
 
-router.get('/add-meals', function(req, res) {
+router.get('/plan-meals', function(req, res) {
   var categoryRecipeMap = new Object();
 
   getRecipes(function(recipeRows) {
@@ -45,11 +45,11 @@ router.get('/add-meals', function(req, res) {
       categoryRecipeMap[categoryName].push(recipeRows[i]);
     }
 
-    res.render('add_meals', { categoryRecipes: categoryRecipeMap, title: "Add Meals" });
+    res.render('plan_meals', { categoryRecipes: categoryRecipeMap, title: "Plan Meals" });
   });
 });
 
-router.post('/add-meals', function(req, res) {
+router.post('/plan-meals', function(req, res) {
   var recipeIds = [];
 
   for (var recipeId in req.body) {

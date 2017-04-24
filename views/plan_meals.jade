@@ -10,7 +10,7 @@ block content
       a(href="/add-recipe") add some
       | .
     else
-      form(action='/add-meals', method='post')
+      form(action='/plan-meals', method='post')
         -for (var categoryRecipe in categoryRecipes)
           h2 #{categoryRecipe}
           div(class="indent")
@@ -21,4 +21,4 @@ block content
                   label(for="#{categoryRecipes[categoryRecipe][i].recipeId}") #{categoryRecipes[categoryRecipe][i].name}
               -}
         br
-        input(type='submit', value='Add Meals')
+        input(type='submit', value='Plan Meals')
