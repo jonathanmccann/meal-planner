@@ -137,14 +137,20 @@ router.post('/plan-meals', function(req, res) {
     recipeIds.push(recipeId);
   }
 
-  connection.query('SELECT * FROM Recipe WHERE recipeId IN (' + recipeIds.join() + ') ORDER BY name', function(err, rows) {
-    if (err) {
-      throw err;
-    }
-    else {
-      res.render('add_ingredients', { recipes: rows, title: "Add Ingredients" });
-    }
-  })
+  console.log(recipeIds.length);
+  if (recipeIds.length == 0) {
+    res.redirect('/plan-meals');
+  }
+  else {
+    connection.query('SELECT * FROM Recipe WHERE recipeId IN (' + recipeIds.join() + ') ORDER BY name', function(err, rows) {
+      if (err) {
+        throw err;
+      }
+      else {
+        res.render('add_ingredients', { recipes: rows, title: "Add Ingredients" });
+      }
+    })
+  }
 });
 
 router.get('/view-recipes', function(req, res) {
