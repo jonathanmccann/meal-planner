@@ -83,6 +83,12 @@
 				$body.removeClass('is-loading');
 			});
 
+		// Dropdowns.
+			$('#nav > ul').dropotron({
+				offsetY: -15,
+				hoverDelay: 0
+			});
+
 	});
 
 })(jQuery);

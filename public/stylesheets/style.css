@@ -982,6 +982,7 @@
 
 				#header nav > ul > li {
 					border-radius: 4px;
+					color: #cdced0;
 					display: inline-block;
 					margin-left: 2em;
 					padding-left: 0;
@@ -998,7 +999,7 @@
 						text-decoration: none;
 					}
 
-						#header nav > ul > li a:active, #header nav > ul > li a:hover {
+						#header nav > ul > li a:active, #header nav > ul > li a:hover, #header nav > ul > li.active, #header nav > ul > li:hover {
 							color: #ffffff;
 						}
 
@@ -1029,6 +1030,54 @@
 			#header .container nav {
 				right: 0;
 			}
+
+/* Dropotron */
+
+	.dropotron {
+		margin-top: -2px;
+		background: #6b707f;
+		border-radius: 10px;
+		color: white;
+		list-style: none;
+		min-width: 8em;
+		padding: 1em 0;
+	}
+
+		.dropotron > li {
+			color: #cdced0;
+			line-height: 2em;
+			padding: 0 1em;
+		}
+
+			.dropotron > li > a {
+				color: #cdced0;
+				text-decoration: none;
+			}
+
+			.dropotron > li.active > a, .dropotron > li:hover > a {
+				color: #ffffff;
+			}
+
+		.dropotron.level-0 {
+			border-radius: 0 10px 10px 10px;
+			font-size: 1em;
+		}
+
+	#nav ul li .down-arrow {
+		display: inline-block;
+		margin: 0 0 0 0.5em;
+		position: relative;
+		width: 0;
+		height: 0;
+		top: -2px;
+		border-left: 6px solid transparent;
+		border-right: 6px solid transparent;
+		border-top: 7px solid #cdced0;
+	}
+	
+	#nav ul li.active .down-arrow {
+		border-top: 7px solid white;
+	}
 
 /* Banner */
 
