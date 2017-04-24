@@ -138,7 +138,6 @@ router.post('/plan-meals', function(req, res) {
     recipeIds.push(recipeId);
   }
 
-  console.log(recipeIds.length);
   if (recipeIds.length == 0) {
     res.redirect('/plan-meals');
   }
