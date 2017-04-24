@@ -15,7 +15,7 @@ router.post('/add-ingredients', function(req, res) {
     wunderlist.addTask(ingredient)
   }
 
-  res.redirect('/');
+  res.redirect('/plan-meals');
 });
 
 router.get('/add-recipe', function(req, res) {
