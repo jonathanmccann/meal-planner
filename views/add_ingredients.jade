@@ -5,20 +5,15 @@ block content
     header(class="major")
       h2= title
   div(class="container")
-    if recipes.length == 0
-      | There are no selected recipes to display. Please
-      a(href="/add-meals") choose some
-      | .
-    else
-      form(action='/add-ingredients', method='post')
-        each recipe in recipes
-          h2 #{recipe.name}
-          div(class="indent")
-            ul(class="alt")
-              -var ingredients = recipe.ingredients.split(",");
-              -for (var i = 0; i < ingredients.length; i++) {
-                li
-                  input(type="checkbox", id="#{ingredients[i]} (#{recipe.name})", name="#{ingredients[i]} (#{recipe.name})")
-                  label(for="#{ingredients[i]} (#{recipe.name})") #{ingredients[i]}
-              -}
-        input(type='submit', value='Add Ingredients')
+    form(action='/add-ingredients', method='post')
+      each recipe in recipes
+        h2 #{recipe.name}
+        div(class="indent")
+          ul(class="alt")
+            -var ingredients = recipe.ingredients.split(",");
+            -for (var i = 0; i < ingredients.length; i++) {
+              li
+                input(type="checkbox", id="#{ingredients[i]} (#{recipe.name})", name="#{ingredients[i]} (#{recipe.name})")
+                label(for="#{ingredients[i]} (#{recipe.name})") #{ingredients[i]}
+            -}
+      input(type='submit', value='Add Ingredients')
