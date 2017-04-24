@@ -79,9 +79,19 @@ router.post('/edit-recipe', function(req, res) {
 
     var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
 
-    var categoryName = req.body.categoryName;
+    var category = req.body.category;
 
-    connection.query('UPDATE Recipe SET ? WHERE ?', [ {name: recipeName, ingredients: ingredients, categoryName: categoryName}, { recipeId: req.body.recipeId}], function(err) {
+    var categoryId = 0;
+    var categoryName = "No Category";
+  
+    if (category !== undefined) {
+      category = category.split(",");
+  
+      categoryId = category[0];
+      categoryName = category[1];
+    }
+
+    connection.query('UPDATE Recipe SET ? WHERE ?', [ {name: recipeName, ingredients: ingredients, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}], function(err) {
       if (err) {
         throw err;
       }
