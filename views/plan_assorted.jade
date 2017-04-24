@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  div(class="container")
+    header(class="major")
+      h2= title
+  div(class="container")
+    if assortedItems.length == 0
+      header(class='major')
+        p
+          | There are currently no assorted items to display. Go ahead and 
+          a(href="/add-assorted") add some
+          | .
+    else
+      form(action='/plan-assorted', method='post')
+        div(class="indent")
+          ul(class="alt")
+            each assortedItem in assortedItems
+              li
+                input(type="checkbox", id="#{assortedItem.assortedId}", name="#{assortedItem.itemName}")
+                label(for="#{assortedItem.assortedId}") #{assortedItem.itemName}
+        input(type='submit', value='Plan Assorted')
