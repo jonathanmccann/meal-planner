@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  div(class="container")
+    header(class="major")
+      h2= title
+  div(class="container")
+    form(action='/edit-assorted', method='post')
+      input(type="hidden", name="assortedId", value="#{assortedId}")
+      | Assorted Item:
+      input(type="text", name="itemName", value="#{itemName}", required)
+      br
+      input(type='submit', name='action', value='Edit Assorted Item')
+      input(type='submit', class="delete-button", name='action', value='Delete Assorted Item')

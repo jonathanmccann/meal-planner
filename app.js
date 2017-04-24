@@ -6,6 +6,7 @@ var logger = require('morgan');
 var path = require('path');
 var stylus = require('stylus');
 
+var assorted = require('./routes/assorted');
 var category = require('./routes/category');
 var recipe = require('./routes/recipe');
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', assorted);
 app.use('/', category);
 app.use('/', recipe);
 
