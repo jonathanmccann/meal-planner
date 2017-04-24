@@ -14,5 +14,5 @@ block content
     else
       div(class="indent")
         ul(class="alt")
-          each category, i in categories
+          each category in categories
             li: a(href="/edit-category/#{category.categoryId}") #{category.name}

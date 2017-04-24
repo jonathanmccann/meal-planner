@@ -29,7 +29,7 @@ router.get('/edit-category/:categoryId', function(req, res) {
 });
 
 router.post('/edit-category', function(req, res) {
-  if (req.body.action == "Edit Category") {
+  if (req.body.action === "Edit Category") {
     connection.query('UPDATE Category SET ? WHERE ?', [ {name: req.body.name}, {categoryId: req.body.categoryId} ], function(err) {
       if (err) {
         throw err;

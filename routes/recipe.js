@@ -20,7 +20,7 @@ router.post('/add-ingredients', function(req, res) {
       'list_id': config.configuration.listId,
       'title': recipe
     }).fail(function (resp) {
-      console.error("An error occured while adding tasks: " + resp);
+      console.error("An error occurred while adding tasks: " + resp);
     });
   }
 
@@ -74,7 +74,7 @@ router.get('/edit-recipe/:recipeId', function(req, res) {
 });
 
 router.post('/edit-recipe', function(req, res) {
-  if (req.body.action == "Edit Recipe") {
+  if (req.body.action === "Edit Recipe") {
     var recipeName = req.body.name;
 
     var ingredients = req.body.ingredients.trim().replace(/\r?\n|\r/g, ",");
@@ -109,10 +109,10 @@ router.post('/edit-recipe', function(req, res) {
 });
 
 router.get('/plan-meals', function(req, res) {
-  var categoryRecipeMap = new Object();
+  var categoryRecipeMap = {};
 
   getRecipes(function(recipeRows) {
-    if (recipeRows.length == 0) {
+    if (recipeRows.length === 0) {
       res.render('view_recipes', { title: "View Recipes" });
     }
     else {
@@ -138,7 +138,7 @@ router.post('/plan-meals', function(req, res) {
     recipeIds.push(recipeId);
   }
 
-  if (recipeIds.length == 0) {
+  if (recipeIds.length === 0) {
     res.redirect('/plan-meals');
   }
   else {
@@ -154,10 +154,10 @@ router.post('/plan-meals', function(req, res) {
 });
 
 router.get('/view-recipes', function(req, res) {
-  var categoryRecipeMap = new Object();
+  var categoryRecipeMap = {};
 
   getRecipes(function(recipeRows) {
-    if (recipeRows.length == 0) {
+    if (recipeRows.length === 0) {
       res.render('view_recipes', { title: "View Recipes" });
     }
     else {
