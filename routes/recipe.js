@@ -27,45 +27,6 @@ router.post('/add-ingredients', function(req, res) {
   res.redirect('/');
 });
 
-router.get('/plan-meals', function(req, res) {
-  var categoryRecipeMap = new Object();
-
-  getRecipes(function(recipeRows) {
-    if (recipeRows.length == 0) {
-      res.render('view_recipes', { title: "View Recipes" });
-    }
-
-    for (var i = 0; i < recipeRows.length; i++) {
-      var categoryName = recipeRows[i].categoryName;
-
-      if (!categoryRecipeMap[categoryName]) {
-        categoryRecipeMap[categoryName] = [];
-      }
-
-      categoryRecipeMap[categoryName].push(recipeRows[i]);
-    }
-
-    res.render('plan_meals', { categoryRecipes: categoryRecipeMap, title: "Plan Meals" });
-  });
-});
-
-router.post('/plan-meals', function(req, res) {
-  var recipeIds = [];
-
-  for (var recipeId in req.body) {
-    recipeIds.push(recipeId);
-  }
-
-  connection.query('SELECT * FROM Recipe WHERE recipeId IN (' + recipeIds.join() + ') ORDER BY name', function(err, rows) {
-    if (err) {
-      throw err;
-    }
-    else {
-      res.render('add_ingredients', { recipes: rows, title: "Add Ingredients" });
-    }
-  })
-});
-
 router.get('/add-recipe', function(req, res) {
   getCategories(function(categoryRows) {
     res.render('add_recipe', { title: "Add Recipe", categories: categoryRows });
@@ -135,6 +96,45 @@ router.post('/edit-recipe', function(req, res) {
   }
 
   res.redirect('/view-recipes');
+});
+
+router.get('/plan-meals', function(req, res) {
+  var categoryRecipeMap = new Object();
+
+  getRecipes(function(recipeRows) {
+    if (recipeRows.length == 0) {
+      res.render('view_recipes', { title: "View Recipes" });
+    }
+
+    for (var i = 0; i < recipeRows.length; i++) {
+      var categoryName = recipeRows[i].categoryName;
+
+      if (!categoryRecipeMap[categoryName]) {
+        categoryRecipeMap[categoryName] = [];
+      }
+
+      categoryRecipeMap[categoryName].push(recipeRows[i]);
+    }
+
+    res.render('plan_meals', { categoryRecipes: categoryRecipeMap, title: "Plan Meals" });
+  });
+});
+
+router.post('/plan-meals', function(req, res) {
+  var recipeIds = [];
+
+  for (var recipeId in req.body) {
+    recipeIds.push(recipeId);
+  }
+
+  connection.query('SELECT * FROM Recipe WHERE recipeId IN (' + recipeIds.join() + ') ORDER BY name', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+    else {
+      res.render('add_ingredients', { recipes: rows, title: "Add Ingredients" });
+    }
+  })
 });
 
 router.get('/view-recipes', function(req, res) {
