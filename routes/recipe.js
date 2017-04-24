@@ -4,11 +4,7 @@ var express = require('express');
 var http = require('http');
 var request = require('request');
 var router = express.Router();
-var wunderlistSDK = require('wunderlist');
-var wunderlistAPI = new wunderlistSDK({
-  'accessToken': config.configuration.wunderlistAccessToken,
-  'clientID': config.configuration.wunderlistClientId
-});
+var wunderlist = require('./wunderlist');
 
 router.get('/', function(req, res) {
   res.render('index', { title: "Meal Planner" });
@@ -16,12 +12,7 @@ router.get('/', function(req, res) {
 
 router.post('/add-ingredients', function(req, res) {
   for (var recipe in req.body) {
-    wunderlistAPI.http.tasks.create({
-      'list_id': config.configuration.listId,
-      'title': recipe
-    }).fail(function (resp) {
-      console.error("An error occurred while adding tasks: " + resp);
-    });
+    wunderlist.addTask(recipe)
   }
 
   res.redirect('/');
