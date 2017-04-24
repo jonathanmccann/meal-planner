@@ -36,7 +36,7 @@ router.get('/add-recipe', function(req, res) {
 router.post('/add-recipe', function(req, res) {
   var name = req.body.name;
 
-  var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
+  var ingredients = req.body.ingredients.trim().replace(/\r?\n|\r/g, ",");
 
   var category = req.body.category;
 
@@ -77,7 +77,7 @@ router.post('/edit-recipe', function(req, res) {
   if (req.body.action == "Edit Recipe") {
     var recipeName = req.body.name;
 
-    var ingredients = req.body.ingredients.replace(/\r?\n|\r/g, ",");
+    var ingredients = req.body.ingredients.trim().replace(/\r?\n|\r/g, ",");
 
     var category = req.body.category;
 
