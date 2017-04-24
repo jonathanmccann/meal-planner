@@ -11,8 +11,8 @@ router.get('/', function(req, res) {
 });
 
 router.post('/add-ingredients', function(req, res) {
-  for (var recipe in req.body) {
-    wunderlist.addTask(recipe)
+  for (var ingredient in req.body) {
+    wunderlist.addTask(ingredient)
   }
 
   res.redirect('/');
