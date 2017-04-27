@@ -1,6 +1,14 @@
 extends layout
 
 block content
+  script.
+    var toggle = function(divId, isChecked) {
+      var checkboxes = document.querySelectorAll('#' + divId + ' input[type="checkbox"]');
+
+      for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = isChecked;
+      }
+    }
   div(class="container")
     header(class="major")
       h2= title
@@ -8,7 +16,9 @@ block content
     form(action='/add-ingredients', method='post')
       each recipe in recipes
         h2 #{recipe.name}
-        div(class="indent")
+        input(type="checkbox", id="#{recipe.name}_select", onClick='toggle("#{recipe.name}", this.checked)')
+        label(for="#{recipe.name}_select") Select All
+        div(class="indent", id="#{recipe.name}")
           ul(class="alt")
             -var ingredients = recipe.ingredients.split(",");
             -for (var i = 0; i < ingredients.length; i++) {
