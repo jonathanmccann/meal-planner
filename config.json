@@ -3,6 +3,7 @@
   "user": "",
   "password": "",
   "database": "",
+  "sessionSecret": "",
   "wunderlistAccessToken": "",
   "wunderlistClientId": "",
   "listId": 

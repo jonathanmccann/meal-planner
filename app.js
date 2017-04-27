@@ -1,9 +1,12 @@
 var bodyParser = require('body-parser');
+var config = require('./config');
 var cookieParser = require('cookie-parser');
 var express = require('express');
 var favicon = require('serve-favicon');
+var flash = require('connect-flash');
 var logger = require('morgan');
 var path = require('path');
+var session = require('express-session');
 var stylus = require('stylus');
 
 var assorted = require('./routes/assorted');
@@ -22,6 +25,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  cookie: {
+    maxAge: 60000
+  },
+  resave: true,
+  saveUninitialized: true,
+  secret: config.configuration.sessionSecret
+}));
+app.use(flash());
 
 app.use('/', assorted);
 app.use('/', category);

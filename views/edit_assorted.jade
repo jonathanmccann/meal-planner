@@ -5,10 +5,17 @@ block content
     header(class="major")
       h2= title
   div(class="container")
-    form(action='/edit-assorted', method='post')
-      input(type="hidden", name="assortedId", value="#{assortedId}")
-      | Assorted Item:
-      input(type="text", name="itemName", value="#{itemName}", required)
-      br
-      input(type='submit', name='action', value='Edit Assorted Item')
-      input(type='submit', class="delete-button", name='action', value='Delete Assorted Item')
+    if errorMessage && errorMessage.length
+      div(class="error")
+        | #{errorMessage}
+    if successMessage && successMessage.length
+      div(class="success")
+        | #{successMessage}
+    div(class="padding-top")
+      form(action='/edit-assorted', method='post')
+        input(type="hidden", name="assortedId", value="#{assortedId}")
+        | Assorted Item:
+        input(type="text", name="itemName", value="#{itemName}", required)
+        br
+        input(type='submit', name='action', value='Edit Assorted Item')
+        input(type='submit', class="delete-button", name='action', value='Delete Assorted Item')

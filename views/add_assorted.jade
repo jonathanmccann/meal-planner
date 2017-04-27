@@ -5,8 +5,15 @@ block content
     header(class="major")
       h2= title
   div(class="container")
-    form(action='/add-assorted', method='post')
-      | Assorted Item:
-      input(type="text", name="itemName", required)
-      br
-      input(type='submit', value='Add Assorted Item')
+    if errorMessage && errorMessage.length
+      div(class="error")
+        | #{errorMessage}
+    if successMessage && successMessage.length
+      div(class="success")
+        | #{successMessage}
+    div(class="padding-top")
+      form(action='/add-assorted', method='post')
+        | Assorted Item:
+        input(type="text", name="itemName", required)
+        br
+        input(type='submit', value='Add Assorted Item')

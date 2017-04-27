@@ -1122,6 +1122,28 @@
 		text-shadow: 0 0 0 #000;
 	}
 
+	.error {
+		border: 1px solid;
+		margin: 10px 0px;
+		padding:15px 10px 15px 25px;
+		background-color: #FFCCBA;
+		color: #DF323C;
+		border-radius:.5em;
+	}
+
 	.indent {
 		padding: 0 0 0 2em
+	}
+
+	.padding-top {
+		padding-top: 10px;
+	}
+
+	.success {
+		border: 1px solid;
+		margin: auto;
+		padding:15px 10px 15px 25px;
+		background-color: #DFF2BF;
+		color: #4F8A10;
+		border-radius:.5em;
 	}

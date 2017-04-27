@@ -5,18 +5,25 @@ block content
     header(class="major")
       h2= title
   div(class="container")
-    if assortedItems.length == 0
-      header(class='major')
-        p
-          | There are currently no assorted items to display. Go ahead and 
-          a(href="/add-assorted") add some
-          | .
-    else
-      form(action='/plan-assorted', method='post')
-        div(class="indent")
-          ul(class="alt")
-            each assortedItem in assortedItems
-              li
-                input(type="checkbox", id="#{assortedItem.assortedId}", name="#{assortedItem.itemName}")
-                label(for="#{assortedItem.assortedId}") #{assortedItem.itemName}
-        input(type='submit', value='Plan Assorted')
+    if errorMessage && errorMessage.length
+      div(class="error")
+        | #{errorMessage}
+    if successMessage && successMessage.length
+      div(class="success")
+        | #{successMessage}
+    div(class="padding-top")
+      if assortedItems.length == 0
+        header(class='major')
+          p
+            | There are currently no assorted items to display. Go ahead and 
+            a(href="/add-assorted") add some
+            | .
+      else
+        form(action='/plan-assorted', method='post')
+          div(class="indent")
+            ul(class="alt")
+              each assortedItem in assortedItems
+                li
+                  input(type="checkbox", id="#{assortedItem.assortedId}", name="#{assortedItem.itemName}")
+                  label(for="#{assortedItem.assortedId}") #{assortedItem.itemName}
+          input(type='submit', value='Plan Assorted')
