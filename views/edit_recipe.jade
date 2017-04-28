@@ -5,22 +5,29 @@ block content
     header(class="major")
       h2= title
   div(class="container")
-    form(action='/edit-recipe', method='post')
-      input(type="hidden", name="recipeId", value="#{recipeId}")
-      | Recipe Name:
-      input(type="text", name="name", value="#{name}", required)
-      br
-      | Recipe Category:
-      select(class="dropdown" name = "category")
-        for category in categories
-          if categoryId == category.categoryId
-            option(selected, value = category.categoryId + "," + category.name) #{category.name}
-          else
-            option(value = category.categoryId + "," + category.name) #{category.name}
-      br
-      | Recipe Ingredients:
-      textarea(name="ingredients", rows="5", required)
-        | #{ingredients}
-      br
-      input(type='submit', name='action', value='Edit Recipe')
-      input(type='submit', class="delete-button", name='action', value='Delete Recipe')
+    if errorMessage && errorMessage.length
+      div(class="error")
+        | #{errorMessage}
+    if successMessage && successMessage.length
+      div(class="success")
+        | #{successMessage}
+    div(class="padding-top")
+      form(action='/edit-recipe', method='post')
+        input(type="hidden", name="recipeId", value="#{recipeId}")
+        | Recipe Name:
+        input(type="text", name="name", value="#{name}", required)
+        br
+        | Recipe Category:
+        select(class="dropdown" name = "category")
+          for category in categories
+            if categoryId == category.categoryId
+              option(selected, value = category.categoryId + "," + category.name) #{category.name}
+            else
+              option(value = category.categoryId + "," + category.name) #{category.name}
+        br
+        | Recipe Ingredients:
+        textarea(name="ingredients", rows="5", required)
+          | #{ingredients}
+        br
+        input(type='submit', name='action', value='Edit Recipe')
+        input(type='submit', class="delete-button", name='action', value='Delete Recipe')

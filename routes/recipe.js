@@ -1,3 +1,4 @@
+var async = require('async');
 var config = require('../config');
 var connection = require('../connection');
 var express = require('express');
@@ -11,11 +12,38 @@ router.get('/', function(req, res) {
 });
 
 router.post('/add-ingredients', function(req, res) {
+  var calls = [];
+
   for (var ingredient in req.body) {
-    wunderlist.addTask(ingredient)
+    (function(innerIngredient) {
+      calls.push(function (callback) {
+        wunderlist.addTask(innerIngredient, function (err) {
+          if (err) {
+            console.error("An error occurred while adding ingredients");
+            console.error(err.error);
+
+            callback(err);
+          }
+          else {
+            callback(null);
+          }
+        })
+      });
+    })(ingredient);
   }
 
-  res.redirect('/plan-meals');
+  async.parallel(calls, function(err) {
+    if (err) {
+      req.flash('errorMessage', 'The ingredients were unable to be added to Wunderlist.');
+  
+      return res.redirect('/plan-meals');
+    }
+    else {
+      req.flash('successMessage', 'The ingredients were added to Wunderlist successfully.');
+  
+      return res.redirect('/plan-meals');
+    }
+  });
 });
 
 router.post('/add-recipe', function(req, res) {
@@ -37,22 +65,37 @@ router.post('/add-recipe', function(req, res) {
 
   connection.query('INSERT INTO Recipe(name, ingredients, categoryId, categoryName) VALUES(?, ?, ?, ?)', [name, ingredients, categoryId, categoryName], function(err) {
   	if (err) {
-      throw err;
+      console.error(err);
+
+      req.flash('errorMessage', 'The recipe was unable to be added.');
   	}
   	else {
-      res.redirect('/view-recipes');
+  	  req.flash('successMessage', 'The recipe was added successfully.');
   	}
+
+  	res.redirect('/view-recipes');
   })
 });
 
 router.get('/edit-recipe/:recipeId', function(req, res) {
   getCategories(function(categoryRows) {
     connection.query('SELECT * FROM Recipe WHERE recipeId = ?', req.params.recipeId, function(err, rows) {
-      if (err) {
-        throw err;
+      if (err || rows.length === 0) {
+        console.error(err);
+
+        req.flash('errorMessage', 'The recipe was unable to be found.');
+
+        res.redirect('/view-recipes');
       }
       else {
-        res.render('edit_recipe', { recipeId: req.params.recipeId, name: rows[0].name, ingredients: rows[0].ingredients.replace(/,/g, "\r\n"), categoryId: rows[0].categoryId, categories: categoryRows, title: "Edit Recipe" });
+        res.render('edit_recipe', {
+          categoryId: rows[0].categoryId,
+          categories: categoryRows,
+          ingredients: rows[0].ingredients.replace(/,/g, "\r\n"),
+          name: rows[0].name,
+          recipeId: req.params.recipeId,
+          title: "Edit Recipe"
+        });
       }
     });
   });
@@ -78,19 +121,33 @@ router.post('/edit-recipe', function(req, res) {
 
     connection.query('UPDATE Recipe SET ? WHERE ?', [ {name: recipeName, ingredients: ingredients, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}], function(err) {
       if (err) {
-        throw err;
+        console.error(err);
+
+        req.flash('errorMessage', 'The recipe was unable to be edited.');
       }
+      else {
+        console.log("Success edit");
+        req.flash('successMessage', 'The recipe was edited successfully.');
+      }
+
+      res.redirect('/view-recipes');
     });
   }
   else {
     connection.query('DELETE FROM Recipe WHERE ?', { recipeId: req.body.recipeId }, function(err) {
       if (err) {
-        throw err;
+        console.error(err);
+
+        req.flash('errorMessage', 'The recipe was unable to be deleted.');
       }
+      else {
+        console.log("Success delete");
+        req.flash('successMessage', 'The recipe was deleted successfully.');
+      }
+
+      res.redirect('/view-recipes');
     });
   }
-
-  res.redirect('/view-recipes');
 });
 
 router.get('/plan-meals', function(req, res) {
@@ -98,7 +155,11 @@ router.get('/plan-meals', function(req, res) {
 
   getRecipes(function(recipeRows) {
     if (recipeRows.length === 0) {
-      res.render('plan_meals', { title: "Plan Meals" });
+      res.render('plan_meals', {
+        errorMessage: req.flash('errorMessage'),
+        successMessage: req.flash('successMessage'),
+        title: "Plan Meals"
+      });
     }
     else {
       for (var i = 0; i < recipeRows.length; i++) {
@@ -111,7 +172,13 @@ router.get('/plan-meals', function(req, res) {
         categoryRecipeMap[categoryName].push(recipeRows[i]);
       }
   
-      res.render('plan_meals', { categoryRecipes: categoryRecipeMap, title: "Plan Meals" });
+      res.render('plan_meals', {
+        categoryRecipes: categoryRecipeMap,
+        errorMessage: req.flash('errorMessage'),
+        infoMessage: req.flash('infoMessage'),
+        successMessage: req.flash('successMessage'),
+        title: "Plan Meals"
+      });
     }
   });
 });
@@ -124,12 +191,18 @@ router.post('/plan-meals', function(req, res) {
   }
 
   if (recipeIds.length === 0) {
+    req.flash('infoMessage', 'Please select at least one recipe to plan.');
+
     res.redirect('/plan-meals');
   }
   else {
     connection.query('SELECT * FROM Recipe WHERE recipeId IN (' + recipeIds.join() + ') ORDER BY name', function(err, rows) {
       if (err) {
-        throw err;
+        console.error(err);
+
+        req.flash('errorMessage', 'The recipes were unable to be planned.');
+
+        res.redirect('/plan-meals');
       }
       else {
         res.render('add_ingredients', { recipes: rows, title: "Add Ingredients" });
@@ -157,7 +230,13 @@ router.get('/view-recipes', function(req, res) {
           categoryRecipeMap[categoryName].push(recipeRows[i]);
         }
   
-        res.render('view_recipes', { categoryRecipes: categoryRecipeMap, categories: categoryRows, title: "Recipes" });
+        res.render('view_recipes', {
+          categoryRecipes: categoryRecipeMap,
+          categories: categoryRows,
+          errorMessage: req.flash('errorMessage'),
+          successMessage: req.flash('successMessage'),
+          title: "Recipes"
+        });
       }
     });
   });
