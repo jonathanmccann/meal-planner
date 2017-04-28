@@ -10,14 +10,12 @@ router.post('/add-assorted', function(req, res) {
       console.error(err);
 
       req.flash('errorMessage', 'The assorted item was unable to be added.');
-
-      res.redirect('/add-assorted');
     }
     else {
       req.flash('successMessage', 'The assorted item was added successfully.');
-
-      res.redirect('/view-assorted');
     }
+
+    res.redirect('/view-assorted');
   })
 });
 
