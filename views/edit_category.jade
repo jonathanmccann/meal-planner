@@ -5,10 +5,17 @@ block content
     header(class="major")
       h2= title
   div(class="container")
-    form(action='/edit-category', method='post')
-      input(type="hidden", name="categoryId", value="#{categoryId}")
-      | Category Name:
-      input(type="text", name="name", value="#{name}", required)
-      br
-      input(type='submit', name='action', value='Edit Category')
-      input(type='submit', class="delete-button", name='action', value='Delete Category')
+    if errorMessage && errorMessage.length
+      div(class="error")
+        | #{errorMessage}
+    if successMessage && successMessage.length
+      div(class="success")
+        | #{successMessage}
+    div(class="padding-top")
+      form(action='/edit-category', method='post')
+        input(type="hidden", name="categoryId", value="#{categoryId}")
+        | Category Name:
+        input(type="text", name="name", value="#{name}", required)
+        br
+        input(type='submit', name='action', value='Edit Category')
+        input(type='submit', class="delete-button", name='action', value='Delete Category')
