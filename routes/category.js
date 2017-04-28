@@ -60,7 +60,7 @@ router.post('/edit-category', function(req, res) {
 });
 
 router.get('/view-categories', function(req, res) {
-  connection.query('SELECT * FROM Category', function(err, rows) {
+  connection.query('SELECT * FROM Category ORDER BY name', function(err, rows) {
     if (err) {
       throw err;
     }
