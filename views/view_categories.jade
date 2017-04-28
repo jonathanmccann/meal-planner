@@ -5,12 +5,15 @@ block content
     header(class="major")
       h2= title
   div(class="container")
+    form(action='/add-category', method='post')
+      | Category Name:
+      input(type="text", name="name", required)
+      br
+      input(type='submit', value='Add Category')
     if categories.length == 0
       header(class='major')
         p
-          | There are currently no categories to display. Go ahead and 
-          a(href="/add-category") add some
-          | .
+          | There are currently no categories to display. Go ahead and add some!
     else
       div(class="indent")
         ul(class="alt")

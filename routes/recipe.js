@@ -18,12 +18,6 @@ router.post('/add-ingredients', function(req, res) {
   res.redirect('/plan-meals');
 });
 
-router.get('/add-recipe', function(req, res) {
-  getCategories(function(categoryRows) {
-    res.render('add_recipe', { title: "Add Recipe", categories: categoryRows });
-  })
-});
-
 router.post('/add-recipe', function(req, res) {
   var name = req.body.name;
 
@@ -147,23 +141,25 @@ router.post('/plan-meals', function(req, res) {
 router.get('/view-recipes', function(req, res) {
   var categoryRecipeMap = {};
 
-  getRecipes(function(recipeRows) {
-    if (recipeRows.length === 0) {
-      res.render('view_recipes', { title: "View Recipes" });
-    }
-    else {
-      for (var i = 0; i < recipeRows.length; i++) {
-        var categoryName = recipeRows[i].categoryName;
-
-        if (!categoryRecipeMap[categoryName]) {
-          categoryRecipeMap[categoryName] = [];
-        }
-
-        categoryRecipeMap[categoryName].push(recipeRows[i]);
+  getCategories(function(categoryRows) {
+    getRecipes(function(recipeRows) {
+      if (recipeRows.length === 0) {
+        res.render('view_recipes', { categories: categoryRows, title: "Recipes" });
       }
-
-      res.render('view_recipes', { categoryRecipes: categoryRecipeMap, title: "View Recipes" });
-    }
+      else {
+        for (var i = 0; i < recipeRows.length; i++) {
+          var categoryName = recipeRows[i].categoryName;
+  
+          if (!categoryRecipeMap[categoryName]) {
+            categoryRecipeMap[categoryName] = [];
+          }
+  
+          categoryRecipeMap[categoryName].push(recipeRows[i]);
+        }
+  
+        res.render('view_recipes', { categoryRecipes: categoryRecipeMap, categories: categoryRows, title: "Recipes" });
+      }
+    });
   });
 });
 

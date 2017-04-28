@@ -5,12 +5,23 @@ block content
     header(class="major")
       h2= title
   div(class="container")
+    form(action='/add-recipe', method='post')
+      | Recipe Name:
+      input(type="text", name="name", required)
+      br
+      | Recipe Category:
+      select(class="dropdown" name = "category")
+        for category in categories
+          option(value = category.categoryId + "," + category.name) #{category.name}
+      br
+      | Recipe Ingredients:
+      textarea(name="ingredients", rows="5", required)
+      br
+      input(type='submit', value='Add Recipe')
     if categoryRecipes == null
       header(class='major')
         p
-          | There are currently no recipes to display. Go ahead and 
-          a(href="/add-recipe") add some
-          | .
+          | There are currently no recipes to display. Go ahead and add some!
     else
       -for (var categoryRecipe in categoryRecipes)
         h2 #{categoryRecipe}

@@ -4,14 +4,6 @@ var express = require('express');
 var router = express.Router();
 var wunderlist = require('./wunderlist');
 
-router.get('/add-assorted', function(req, res) {
-  res.render('add_assorted', {
-    errorMessage: req.flash('errorMessage'),
-    successMessage: req.flash('successMessage'),
-    title: "Add Assorted Item"
-  });
-});
-
 router.post('/add-assorted', function(req, res) {
   connection.query('INSERT INTO Assorted SET ?', req.body, function(err) {
     if (err) {
@@ -149,7 +141,7 @@ router.get('/view-assorted', function(req, res) {
         assortedItems: rows,
         errorMessage: req.flash('errorMessage'),
         successMessage: req.flash('successMessage'),
-        title: "View Assorted Items"
+        title: "Assorted Items"
       });
     }
   });

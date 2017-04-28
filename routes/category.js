@@ -2,10 +2,6 @@ var connection = require('../connection');
 var express = require('express');
 var router = express.Router();
 
-router.get('/add-category', function(req, res) {
-  res.render('add_category', { title: "Add Category" });
-});
-
 router.post('/add-category', function(req, res) {
   connection.query('INSERT INTO Category SET ?', req.body, function(err) {
   	if (err) {
@@ -65,7 +61,7 @@ router.get('/view-categories', function(req, res) {
       throw err;
     }
     else {
-      res.render('view_categories', { categories: rows, title: "View Categories" });
+      res.render('view_categories', { categories: rows, title: "Categories" });
     }
   });
 });

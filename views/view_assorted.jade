@@ -12,12 +12,15 @@ block content
       div(class="success")
         | #{successMessage}
     div(class="padding-top")
+      form(action='/add-assorted', method='post')
+        | Assorted Item:
+        input(type="text", name="itemName", required)
+        br
+        input(type='submit', value='Add Assorted Item')
       if assortedItems.length == 0
         header(class='major')
           p
-            | There are currently no assorted items to display. Go ahead and 
-            a(href="/add-assorted") add some
-            | .
+            | There are currently no assorted items to display. Go ahead and add some!
       else
         div(class="indent")
           ul(class="alt")

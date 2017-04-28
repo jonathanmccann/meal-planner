@@ -2,7 +2,6 @@ doctype html
 html
   head
     script(src="/javascripts/jquery.min.js")
-    script(src="/javascripts/jquery.dropotron.min.js")
     script(src="/javascripts/skel.min.js")
     script(src="/javascripts/skel-layers.min.js")
     script(src="/javascripts/init.js")
@@ -12,24 +11,9 @@ html
         a(href="/") Meal Planner
       nav(id = "nav")
         ul
-          li
-            | Recipes
-            span(class="down-arrow")
-            ul
-              li: a(href="/add-recipe") Add Recipe
-              li: a(href="/view-recipes") View Recipes
-          li
-            | Categories
-            span(class="down-arrow")
-            ul
-              li: a(href="/add-category") Add Category
-              li: a(href="/view-categories") View Categories
-          li
-            | Assorted
-            span(class="down-arrow")
-            ul
-              li: a(href="/add-assorted") Add Assorted Item
-              li: a(href="/view-assorted") View Assorted Items
+          li: a(href="/view-recipes") Recipes
+          li: a(href="/view-categories") Categories
+          li: a(href="/view-assorted") Assorted Items
           li: a(class='button special' href="/plan-meals") Plan Meals
           li: a(class='button special' href="/plan-assorted") Plan Assorted
   body
