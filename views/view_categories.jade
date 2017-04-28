@@ -7,7 +7,7 @@ block content
   div(class="container")
     form(action='/add-category', method='post')
       | Category Name:
-      input(type="text", name="name", required)
+      input(type="text", name="name", autofocus, required)
       br
       input(type='submit', value='Add Category')
     if categories.length == 0
