@@ -5,12 +5,14 @@ var wunderlistAPI = new wunderlistSDK({
   'clientID': config.configuration.wunderlistClientId
 });
 
-function addTask(taskTitle) {
+function addTask(taskTitle, callback) {
   wunderlistAPI.http.tasks.create({
     'list_id': config.configuration.listId,
     'title': taskTitle
+  }).done(function () {
+    return callback(null);
   }).fail(function (resp) {
-    console.error("An error occurred while adding tasks: " + resp);
+    return callback(resp);
   });
 }
 

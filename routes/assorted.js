@@ -1,3 +1,4 @@
+var async = require('async');
 var connection = require('../connection');
 var express = require('express');
 var router = express.Router();
@@ -104,13 +105,38 @@ router.get('/plan-assorted', function(req, res) {
 });
 
 router.post('/plan-assorted', function(req, res) {
-  for (var assorted in req.body) {
-    wunderlist.addTask(assorted)
+  var calls = [];
+
+  for (var task in req.body) {
+    (function(innerTask) {
+      calls.push(function (callback) {
+        wunderlist.addTask(innerTask, function (err) {
+          if (err) {
+            console.error("An error occurred while adding assorted items");
+            console.error(err.error);
+
+            callback(err);
+          }
+          else {
+            callback(null);
+          }
+        })
+      });
+    })(task);
   }
 
-  req.flash('successMessage', 'The assorted items were added to Wunderlist successfully.');
-
-  res.redirect('/plan-assorted');
+  async.parallel(calls, function(err) {
+    if (err) {
+      req.flash('errorMessage', 'The assorted items were unable to be added to Wunderlist.');
+  
+      return res.redirect('/plan-assorted');
+    }
+    else {
+      req.flash('successMessage', 'The assorted items were added to Wunderlist successfully.');
+  
+      return res.redirect('/plan-assorted');
+    }
+  });
 });
 
 router.get('/view-assorted', function(req, res) {
