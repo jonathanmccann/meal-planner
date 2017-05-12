@@ -10,6 +10,7 @@ var session = require('express-session');
 var stylus = require('stylus');
 
 var assorted = require('./routes/assorted');
+var calendar = require('./routes/calendar');
 var category = require('./routes/category');
 var recipe = require('./routes/recipe');
 
@@ -36,6 +37,7 @@ app.use(session({
 app.use(flash());
 
 app.use('/', assorted);
+app.use('/', calendar);
 app.use('/', category);
 app.use('/', recipe);
 
