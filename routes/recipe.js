@@ -196,7 +196,7 @@ router.post('/plan-meals', function(req, res) {
     res.redirect('/plan-meals');
   }
   else {
-    connection.query('SELECT * FROM Recipe WHERE recipeId IN (' + recipeIds.join() + ') ORDER BY name', function(err, rows) {
+    connection.query('SELECT * FROM Recipe WHERE recipeId IN (?) ORDER BY name', [recipeIds.join()], function(err, rows) {
       if (err) {
         console.error(err);
 
