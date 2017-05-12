@@ -7,10 +7,6 @@ var request = require('request');
 var router = express.Router();
 var wunderlist = require('./wunderlist');
 
-router.get('/', function(req, res) {
-  res.render('index', { title: "Meal Planner" });
-});
-
 router.post('/add-ingredients', function(req, res) {
   var calls = [];
 
@@ -63,7 +59,7 @@ router.post('/add-recipe', function(req, res) {
     categoryName = category[1];
   }
 
-  connection.query('INSERT INTO Recipe(name, ingredients, categoryId, categoryName) VALUES(?, ?, ?, ?)', [name, ingredients, categoryId, categoryName], function(err) {
+  connection.query('INSERT INTO Recipe(name, ingredients, categoryId, categoryName, userId) VALUES(?, ?, ?, ?, ?)', [name, ingredients, categoryId, categoryName, req.user.userId], function(err) {
   	if (err) {
       console.error(err);
 
@@ -78,8 +74,8 @@ router.post('/add-recipe', function(req, res) {
 });
 
 router.get('/edit-recipe/:recipeId', function(req, res) {
-  getCategories(function(categoryRows) {
-    connection.query('SELECT * FROM Recipe WHERE recipeId = ?', req.params.recipeId, function(err, rows) {
+  getCategories(req.user.userId, function(categoryRows) {
+    connection.query('SELECT * FROM Recipe WHERE ? AND ?', [ {recipeId: req.params.recipeId}, {userId: req.user.userId} ], function(err, rows) {
       if (err || rows.length === 0) {
         console.error(err);
 
@@ -94,7 +90,8 @@ router.get('/edit-recipe/:recipeId', function(req, res) {
           ingredients: rows[0].ingredients.replace(/,/g, "\r\n"),
           name: rows[0].name,
           recipeId: req.params.recipeId,
-          title: "Edit Recipe"
+          title: "Edit Recipe",
+          user: req.user
         });
       }
     });
@@ -119,14 +116,13 @@ router.post('/edit-recipe', function(req, res) {
       categoryName = category[1];
     }
 
-    connection.query('UPDATE Recipe SET ? WHERE ?', [ {name: recipeName, ingredients: ingredients, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}], function(err) {
+    connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {name: recipeName, ingredients: ingredients, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}, {userId: req.user.userId}], function(err) {
       if (err) {
         console.error(err);
 
         req.flash('errorMessage', 'The recipe was unable to be edited.');
       }
       else {
-        console.log("Success edit");
         req.flash('successMessage', 'The recipe was edited successfully.');
       }
 
@@ -134,14 +130,13 @@ router.post('/edit-recipe', function(req, res) {
     });
   }
   else {
-    connection.query('DELETE FROM Recipe WHERE ?', { recipeId: req.body.recipeId }, function(err) {
+    connection.query('DELETE FROM Recipe WHERE ? AND ?', [ {recipeId: req.body.recipeId}, {userId: req.user.userId} ], function(err) {
       if (err) {
         console.error(err);
 
         req.flash('errorMessage', 'The recipe was unable to be deleted.');
       }
       else {
-        console.log("Success delete");
         req.flash('successMessage', 'The recipe was deleted successfully.');
       }
 
@@ -153,12 +148,13 @@ router.post('/edit-recipe', function(req, res) {
 router.get('/plan-meals', function(req, res) {
   var categoryRecipeMap = {};
 
-  getRecipes(function(recipeRows) {
+  getRecipes(req.user.userId, function(recipeRows) {
     if (recipeRows.length === 0) {
       res.render('plan_meals', {
         errorMessage: req.flash('errorMessage'),
         successMessage: req.flash('successMessage'),
-        title: "Plan Meals"
+        title: "Plan Meals",
+        user: req.user
       });
     }
     else {
@@ -177,7 +173,8 @@ router.get('/plan-meals', function(req, res) {
         errorMessage: req.flash('errorMessage'),
         infoMessage: req.flash('infoMessage'),
         successMessage: req.flash('successMessage'),
-        title: "Plan Meals"
+        title: "Plan Meals",
+        user: req.user
       });
     }
   });
@@ -196,7 +193,7 @@ router.post('/plan-meals', function(req, res) {
     res.redirect('/plan-meals');
   }
   else {
-    connection.query('SELECT * FROM Recipe WHERE recipeId IN (?) ORDER BY name', [recipeIds.join()], function(err, rows) {
+    connection.query('SELECT * FROM Recipe WHERE recipeId IN (?) AND userId = ? // NOT SURE ABOUT THIS ONE // ORDER BY name', [recipeIds.join()], function(err, rows) {
       if (err) {
         console.error(err);
 
@@ -205,7 +202,11 @@ router.post('/plan-meals', function(req, res) {
         res.redirect('/plan-meals');
       }
       else {
-        res.render('add_ingredients', { recipes: rows, title: "Add Ingredients" });
+        res.render('add_ingredients', {
+          recipes: rows,
+          title: "Add Ingredients",
+          user: req.user
+        });
       }
     })
   }
@@ -214,10 +215,14 @@ router.post('/plan-meals', function(req, res) {
 router.get('/view-recipes', function(req, res) {
   var categoryRecipeMap = {};
 
-  getCategories(function(categoryRows) {
-    getRecipes(function(recipeRows) {
+  getCategories(req.user.userId, function(categoryRows) {
+    getRecipes(req.user.userId, function(recipeRows) {
       if (recipeRows.length === 0) {
-        res.render('view_recipes', { categories: categoryRows, title: "Recipes" });
+        res.render('view_recipes', {
+          categories: categoryRows,
+          title: "Recipes",
+          user: req.user
+        });
       }
       else {
         for (var i = 0; i < recipeRows.length; i++) {
@@ -235,15 +240,16 @@ router.get('/view-recipes', function(req, res) {
           categories: categoryRows,
           errorMessage: req.flash('errorMessage'),
           successMessage: req.flash('successMessage'),
-          title: "Recipes"
+          title: "Recipes",
+          user: req.user
         });
       }
     });
   });
 });
 
-function getCategories(callback) {
-  connection.query('SELECT * FROM Category ORDER BY name', function(err, rows) {
+function getCategories(userId, callback) {
+  connection.query('SELECT * FROM Category WHERE ? ORDER BY name', {userId: userId}, function(err, rows) {
     if (err) {
       throw err;
     }
@@ -253,8 +259,8 @@ function getCategories(callback) {
   });
 }
 
-function getRecipes(callback) {
-  connection.query('SELECT * FROM Recipe ORDER BY categoryName, name', function(err, rows) {
+function getRecipes(userId, callback) {
+  connection.query('SELECT * FROM Recipe WHERE ? ORDER BY categoryName, name', {userId: userId}, function(err, rows) {
     if (err) {
       throw err;
     }

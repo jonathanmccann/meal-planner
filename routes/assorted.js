@@ -5,7 +5,7 @@ var router = express.Router();
 var wunderlist = require('./wunderlist');
 
 router.post('/add-assorted', function(req, res) {
-  connection.query('INSERT INTO Assorted SET ?', req.body, function(err) {
+  connection.query('INSERT INTO Assorted SET ?, ?', [ {itemName: req.body.itemName}, {userId: req.user.userId} ], function(err) {
     if (err) {
       console.error(err);
 
@@ -20,7 +20,7 @@ router.post('/add-assorted', function(req, res) {
 });
 
 router.get('/edit-assorted/:assortedId', function(req, res) {
-  connection.query('SELECT * FROM Assorted WHERE assortedId = ?', req.params.assortedId, function(err, rows) {
+  connection.query('SELECT * FROM Assorted WHERE ? and ?', [ {assortedId: req.params.assortedId}, {userId: req.user.userId} ], function(err, rows) {
     if (err || rows.length === 0) {
       console.error(err);
 
@@ -34,7 +34,8 @@ router.get('/edit-assorted/:assortedId', function(req, res) {
         itemName: rows[0].itemName,
         errorMessage: req.flash('errorMessage'),
         successMessage: req.flash('successMessage'),
-        title: "Edit Assorted Item"
+        title: "Edit Assorted Item",
+        user: req.user
       });
     }
   });
@@ -42,7 +43,7 @@ router.get('/edit-assorted/:assortedId', function(req, res) {
 
 router.post('/edit-assorted', function(req, res) {
   if (req.body.action === "Edit Assorted Item") {
-    connection.query('UPDATE Assorted SET ? WHERE ?', [ {itemName: req.body.itemName}, {assortedId: req.body.assortedId} ], function(err) {
+    connection.query('UPDATE Assorted SET ? WHERE ? AND ?', [ {itemName: req.body.itemName}, {assortedId: req.body.assortedId}, {userId: req.user.userId} ], function(err) {
       if (err) {
         console.error(err);
 
@@ -58,7 +59,7 @@ router.post('/edit-assorted', function(req, res) {
     });
   }
   else {
-    connection.query('DELETE FROM Assorted WHERE assortedId = ?', req.body.assortedId, function(err) {
+    connection.query('DELETE FROM Assorted WHERE ? AND ?', [ {assortedId: req.body.assortedId}, {userId: req.user.userId} ], function(err) {
       if (err) {
         console.error(err);
 
@@ -76,7 +77,7 @@ router.post('/edit-assorted', function(req, res) {
 });
 
 router.get('/plan-assorted', function(req, res) {
-  connection.query('SELECT * FROM Assorted ORDER BY itemName', function(err, rows) {
+  connection.query('SELECT * FROM Assorted WHERE ? ORDER BY itemName', [ {userId: req.user.userId} ], function(err, rows) {
     if (err) {
       console.error(err);
 
@@ -86,9 +87,11 @@ router.get('/plan-assorted', function(req, res) {
     }
     else {
       res.render('plan_assorted', {
-        assortedItems: rows, title: "Plan Assorted Items",
+        assortedItems: rows,
         errorMessage: req.flash('errorMessage'),
-        successMessage: req.flash('successMessage')
+        successMessage: req.flash('successMessage'),
+        title: "Plan Assorted Items",
+        user: req.user
       });
     }
   });
@@ -130,7 +133,7 @@ router.post('/plan-assorted', function(req, res) {
 });
 
 router.get('/view-assorted', function(req, res) {
-  connection.query('SELECT * FROM Assorted ORDER BY itemName', function(err, rows) {
+  connection.query('SELECT * FROM Assorted WHERE ? ORDER BY itemName', [ {userId: req.user.userId} ], function(err, rows) {
     if (err) {
       throw err;
     }
@@ -139,7 +142,8 @@ router.get('/view-assorted', function(req, res) {
         assortedItems: rows,
         errorMessage: req.flash('errorMessage'),
         successMessage: req.flash('successMessage'),
-        title: "Assorted Items"
+        title: "Assorted Items",
+        user: req.user
       });
     }
   });

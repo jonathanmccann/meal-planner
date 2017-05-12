@@ -3,9 +3,9 @@ var express = require('express');
 var router = express.Router();
 
 router.post('/add-category', function(req, res) {
-  connection.query('INSERT INTO Category SET ?', req.body, function(err) {
+  connection.query('INSERT INTO Category SET ? AND ?', [ {name: req.body.name}, {userId: req.user.userId} ], function(err) {
   	if (err) {
-      console.log(err);
+      console.error(err);
 
       req.flash('errorMessage', 'The category was unable to be added.');
 
@@ -20,9 +20,9 @@ router.post('/add-category', function(req, res) {
 });
 
 router.get('/edit-category/:categoryId', function(req, res) {
-  connection.query('SELECT * FROM Category WHERE categoryId = ?', req.params.categoryId, function(err, rows) {
+  connection.query('SELECT * FROM Category WHERE ? AND ?', [ {categoryId: req.params.categoryId}, {userId: req.user.userId} ], function(err, rows) {
     if (err) {
-      console.log(err);
+      console.error(err);
 
       req.flash('errorMessage', 'The category was unable to be found.');
 
@@ -32,7 +32,8 @@ router.get('/edit-category/:categoryId', function(req, res) {
       res.render('edit_category', {
         categoryId: req.params.categoryId,
         name: rows[0].name,
-        title: "Edit Category"
+        title: "Edit Category",
+        user: req.user
       });
     }
   });
@@ -40,18 +41,18 @@ router.get('/edit-category/:categoryId', function(req, res) {
 
 router.post('/edit-category', function(req, res) {
   if (req.body.action === "Edit Category") {
-    connection.query('UPDATE Category SET ? WHERE ?', [ {name: req.body.name}, {categoryId: req.body.categoryId} ], function(err) {
+    connection.query('UPDATE Category SET ? WHERE ? AND ?', [ {name: req.body.name}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
       if (err) {
-        console.log(err);
+        console.error(err);
 
         req.flash('errorMessage', 'The category was unable to be edited.');
   
         res.redirect('/view-categories');
       }
       else {
-        connection.query('UPDATE Recipe SET ? WHERE ?', [ {categoryName: req.body.name}, {categoryId: req.body.categoryId} ], function(err) {
+        connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {categoryName: req.body.name}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
           if (err) {
-            console.log(err);
+            console.error(err);
     
             req.flash('errorMessage', 'The category was unable to be edited.');
       
@@ -67,18 +68,18 @@ router.post('/edit-category', function(req, res) {
     });
   }
   else {
-    connection.query('DELETE FROM Category WHERE categoryId = ?', req.body.categoryId, function(err) {
+    connection.query('DELETE FROM Category WHERE ? AND ?', [ {categoryId: req.params.categoryId}, {userId: req.user.userId} ], function(err) {
       if (err) {
-        console.log(err);
+        console.error(err);
 
         req.flash('errorMessage', 'The category was unable to be deleted.');
   
         res.redirect('/view-categories');
       }
       else {
-        connection.query('UPDATE Recipe SET ? WHERE ?', [ {categoryId: 0, categoryName: "No Category"}, {categoryId: req.body.categoryId} ], function(err) {
+        connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {categoryId: 0, categoryName: "No Category"}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
           if (err) {
-            console.log(err);
+            console.error(err);
 
             req.flash('errorMessage', 'The category was unable to be deleted.');
       
@@ -96,7 +97,7 @@ router.post('/edit-category', function(req, res) {
 });
 
 router.get('/view-categories', function(req, res) {
-  connection.query('SELECT * FROM Category ORDER BY name', function(err, rows) {
+  connection.query('SELECT * FROM Category WHERE ? ORDER BY name', [ {userId: req.user.userId} ], function(err, rows) {
     if (err) {
       throw err;
     }
@@ -105,7 +106,8 @@ router.get('/view-categories', function(req, res) {
         categories: rows,
         errorMessage: req.flash('errorMessage'),
         successMessage: req.flash('successMessage'),
-        title: "Categories"
+        title: "Categories",
+        user: req.user
       });
     }
   });

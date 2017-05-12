@@ -1,0 +1,19 @@
+extends header
+
+block content
+  div(class="container")
+    header(class="major")
+      h2= title
+  div(class="container")
+    if errorMessage && errorMessage.length
+      div(class="error")
+        | #{errorMessage}
+    if successMessage && successMessage.length
+      div(class="success")
+        | #{successMessage}
+    form(action='/log-in', method='post')
+      | Email Address:
+      input(type="text", name="emailAddress", required)
+      | Password:
+      input(type="password", name="password", required)
+      input(type='submit', name='action', value='Log In')
