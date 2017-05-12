@@ -10,6 +10,14 @@ CREATE TABLE Category(
 	name VARCHAR(300)
 );
 
+CREATE TABLE Calendar(
+	calendarId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	userId INT NOT NULL,
+	recipeId INT,
+	recipeName VARCHAR(300),
+	mealKey VARCHAR(2)
+);
+
 CREATE TABLE Recipe(
 	recipeId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	userId INT NOT NULL,

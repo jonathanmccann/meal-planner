@@ -11,6 +11,7 @@ var session = require('express-session');
 var stylus = require('stylus');
 
 var assorted = require('./routes/assorted');
+var calendar = require('./routes/calendar');
 var category = require('./routes/category');
 var recipe = require('./routes/recipe');
 var user = require('./routes/user');
@@ -57,6 +58,7 @@ app.get('/', function(req, res) {
 
 app.use('/', user);
 app.use('/', isLoggedIn, assorted);
+app.use('/', isLoggedIn, calendar);
 app.use('/', isLoggedIn, category);
 app.use('/', isLoggedIn, recipe);
 
