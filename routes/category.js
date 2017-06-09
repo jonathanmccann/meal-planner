@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 
 router.post('/add-category', function(req, res) {
-  connection.query('INSERT INTO Category SET ? AND ?', [ {name: req.body.name}, {userId: req.user.userId} ], function(err) {
+  connection.query('INSERT INTO Category SET ?, ?', [ {name: req.body.name}, {userId: req.user.userId} ], function(err) {
   	if (err) {
       console.error(err);
 
