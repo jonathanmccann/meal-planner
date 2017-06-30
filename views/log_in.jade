@@ -13,7 +13,7 @@ block content
         | #{successMessage}
     form(action='/log-in', method='post')
       | Email Address:
-      input(type="text", name="emailAddress", required)
+      input(type="email", name="emailAddress", required)
       | Password:
       input(type="password", name="password", required)
       input(type='submit', name='action', value='Log In')
