@@ -4,6 +4,7 @@ block content
   link(href='/stylesheets/dragula.css', rel='stylesheet')
   script(src="/javascripts/dragula.min.js")
   script(src="/javascripts/initDragula.js")
+  script(src="/javascripts/realtime_search.js")
 
   div(class="container")
     header(class="major")
@@ -54,6 +55,7 @@ block content
         input(style="display: block", type='submit', value='Submit Calendar')
       h2(class="padding-top") Recipes
       div(id="recipes", class="recipes")
+        input(type="text", id="searchInput", onkeyup="realtimeSearch()" placeholder="Search for recipes")
         for recipe in recipes
           label(class="padding-top", id="#{recipe.recipeId}")
             | #{recipe.name}
