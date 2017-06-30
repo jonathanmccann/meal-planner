@@ -50,7 +50,7 @@ window.onload = function() {
   }).on('drop', function(el, target, source) {
     target.classList.toggle('accept');
     source.classList.toggle('accept');
-  }).on('remove', function(el, source) {
+  }).on('remove', function(el, target, source) {
     source.classList.toggle('accept');
   });
 
