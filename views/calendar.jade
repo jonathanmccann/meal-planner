@@ -5,8 +5,9 @@ block content
   script(src="/javascripts/dragula.min.js")
   script(src="/javascripts/initDragula.js")
 
-  -var daysOfTheWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-
+  div(class="container")
+    header(class="major")
+      h2= title
   div(class="container")
     if errorMessage && errorMessage.length
       div(class="error")
@@ -14,30 +15,45 @@ block content
     if successMessage && successMessage.length
       div(class="success")
         | #{successMessage}
-  div(class="padding-top")
-    form(id="calendar-form", action='/calendar', method='post')
-      -for (var i = 0; i < daysOfTheWeek.length; i++) {
-        div(id="#{daysOfTheWeek[i]}", class="calendar")
-          h2 #{daysOfTheWeek[i]}
-          div(id="#{i}0", class=(calendarDayAndRecipeMap[i + "0"] != null ? "meal" : "meal accept"))
-            | Breakfast
-            if calendarDayAndRecipeMap[i + "0"] != null
-              label(class="padding-top", id="#{calendarDayAndRecipeMap[i + '0'][0]}")
-                | #{calendarDayAndRecipeMap[i + "0"][1]}
-          div(id="#{i}1", class=(calendarDayAndRecipeMap[i + "1"] != null ? "meal" : "meal accept"))
-            | Lunch
-            if calendarDayAndRecipeMap[i + "1"] != null
-              label(class="padding-top", id="#{calendarDayAndRecipeMap[i + '1'][0]}")
-                | #{calendarDayAndRecipeMap[i + "1"][1]}
-          div(id="#{i}2", class=(calendarDayAndRecipeMap[i + "2"] != null ? "meal" : "meal accept"))
-            | Dinner
-            if calendarDayAndRecipeMap[i + "2"] != null
-              label(class="padding-top", id="#{calendarDayAndRecipeMap[i + '2'][0]}")
-                | #{calendarDayAndRecipeMap[i + "2"][1]}
-      -}
-      input(class="padding-top", type='submit', value='Submit Calendar')
-    h2(class="padding-top") Recipes
-    div(id="recipes", class="recipes")
-      for recipe in recipes
-        label(class="padding-top", id="#{recipe.recipeId}")
-          | #{recipe.name}
+    div(class="padding-top")
+      form(id="calendar-form", action='/calendar', method='post')
+        table(class="rtable")
+          tr
+            th
+            th Sunday
+            th Monday
+            th Tuesday
+            th Wednesday
+            th Thursday
+            th Friday
+            th Saturday
+          tr
+            td Breakfast
+            -for (var j = 0; j < 7; j++) {
+              td(id="#{j}0", class=(calendarDayAndRecipeMap["" + j + 0] != null ? "" : "accept"))
+                if calendarDayAndRecipeMap["" + j + 0] != null
+                  label(class="padding-top", id="#{calendarDayAndRecipeMap['' + j + 0][0]}")
+                    | #{calendarDayAndRecipeMap["" + j + 0][1]}
+            -}
+          tr
+            td Lunch
+            -for (var j = 0; j < 7; j++) {
+              td(id="#{j}1", class=(calendarDayAndRecipeMap["" + j + 1] != null ? "" : "accept"))
+                if calendarDayAndRecipeMap["" + j + 1] != null
+                  label(class="padding-top", id="#{calendarDayAndRecipeMap['' + j + 1][0]}")
+                    | #{calendarDayAndRecipeMap["" + j + 1][1]}
+            -}
+          tr
+            td Dinner
+            -for (var j = 0; j < 7; j++) {
+              td(id="#{j}2", class=(calendarDayAndRecipeMap["" + j + 2] != null ? "" : "accept"))
+                if calendarDayAndRecipeMap["" + j + 2] != null
+                  label(class="padding-top", id="#{calendarDayAndRecipeMap['' + j + 2][0]}")
+                    | #{calendarDayAndRecipeMap["" + j + 2][1]}
+            -}
+        input(style="display: block", type='submit', value='Submit Calendar')
+      h2(class="padding-top") Recipes
+      div(id="recipes", class="recipes")
+        for recipe in recipes
+          label(class="padding-top", id="#{recipe.recipeId}")
+            | #{recipe.name}

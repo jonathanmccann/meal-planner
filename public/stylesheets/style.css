@@ -696,6 +696,7 @@
 		font-weight: 400;
 		height: 2.85em;
 		line-height: 2.95em;
+		margin: 10px;
 		padding: 0 2em;
 		text-align: center;
 		text-decoration: none;
@@ -1057,17 +1058,6 @@
 
 /* Custom */
 
-	.calendar {
-		display: table-cell;
-		/*float: left;*/
-		/*display: block;*/
-		background-color: rgba(255, 255, 255, 0.2);
-		width: 10%;
-		min-height: 400px;
-		border: 1px solid #eee;
-		padding: 30px;
-	}
-
 	.delete-button {
 		background-color: #df323c !important;
 		margin: 1em;
@@ -1107,28 +1097,6 @@
 		border-radius:.5em;
 	}
 
-	.meal {
-		/*display: table-cell;*/
-		background-color: rgba(255, 255, 255, 0.2);
-		width: 100%;
-		min-height: 100px;
-		border: 1px solid #eee;
-		padding: 15px;
-		margin: 0px auto 10px auto;
-		/*display: inline-block;*/
-	}
-
-	@media (max-width: 1350px) {
-		.calendar {
-			display: block;
-			width: 100%;
-		}
-		/*.meal {
-			display: block;
-			width: 100%;
-		}*/
-	}
-
 	.recipes {
 		height: 200px;		
 	}
@@ -1144,4 +1112,122 @@
 		background-color: #DFF2BF;
 		color: #4F8A10;
 		border-radius:.5em;
+	}
+
+	/*!
+	// CSS only Responsive Tables
+	// http://dbushell.com/2016/03/04/css-only-responsive-tables/
+	// by David Bushell
+	*/
+	.rtable {
+		display: inline-block;
+		vertical-align: top;
+		max-width: 100%;
+
+		overflow-x: auto;
+
+		white-space: nowrap;
+
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+
+	.rtable,
+	.rtable--flip tbody {
+		-webkit-overflow-scrolling: touch;
+
+		background: -webkit-radial-gradient(left ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 0 center, -webkit-radial-gradient(right ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 100% center;
+		background: radial-gradient(ellipse at left, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 0 center, radial-gradient(ellipse at right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 100% center;
+		background-size: 10px 100%, 10px 100%;
+		background-attachment: scroll, scroll;
+		background-repeat: no-repeat;
+	}
+
+	.rtable td:first-child,
+	.rtable--flip tbody tr:first-child {
+		background-image: -webkit-linear-gradient(left, white 50%, rgba(255, 255, 255, 0) 100%);
+		background-image: linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 100%);
+		background-repeat: no-repeat;
+		background-size: 20px 100%;
+	}
+
+	.rtable td:last-child,
+	.rtable--flip tbody tr:last-child {
+		background-image: -webkit-linear-gradient(right, white 50%, rgba(255, 255, 255, 0) 100%);
+		background-image: linear-gradient(to left, white 50%, rgba(255, 255, 255, 0) 100%);
+		background-repeat: no-repeat;
+		background-position: 100% 0;
+		background-size: 20px 100%;
+	}
+
+	.rtable th {
+		font-size: 11px;
+		text-align: left;
+		text-transform: uppercase;
+		background: #f2f0e6;
+	}
+
+	.rtable th,
+	.rtable td {
+		padding: 6px 12px;
+		border: 1px solid #d9d7ce;
+		width: 250px;
+	}
+
+	.rtable--flip {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		overflow: hidden;
+		background: none;
+	}
+
+	.rtable--flip thead {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-ms-flex-negative: 0;
+			flex-shrink: 0;
+		min-width: -webkit-min-content;
+		min-width: -moz-min-content;
+		min-width: min-content;
+	}
+
+	.rtable--flip tbody {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		position: relative;
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
+	.rtable--flip tr {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+			-ms-flex-direction: column;
+				flex-direction: column;
+		min-width: -webkit-min-content;
+		min-width: -moz-min-content;
+		min-width: min-content;
+		-ms-flex-negative: 0;
+			flex-shrink: 0;
+	}
+
+	.rtable--flip td,
+	.rtable--flip th {
+		display: block;
+	}
+
+	.rtable--flip td {
+		background-image: none !important;
+		border-left: 0;
+	}
+
+	.rtable--flip th:not(:last-child),
+	.rtable--flip td:not(:last-child) {
+		border-bottom: 0;
 	}
