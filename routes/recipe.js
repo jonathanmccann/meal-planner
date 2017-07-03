@@ -13,7 +13,7 @@ router.post('/add-ingredients', function(req, res) {
   for (var ingredient in req.body) {
     (function(innerIngredient) {
       calls.push(function (callback) {
-        wunderlist.addTask(innerIngredient, function (err) {
+        wunderlist.addTask(req.user.wunderlistAccessToken, req.user.wunderlistListId, innerIngredient, function (err) {
           if (err) {
             console.error("An error occurred while adding ingredients");
             console.error(err.error);

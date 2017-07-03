@@ -103,7 +103,7 @@ router.post('/plan-assorted', function(req, res) {
   for (var task in req.body) {
     (function(innerTask) {
       calls.push(function (callback) {
-        wunderlist.addTask(innerTask, function (err) {
+        wunderlist.addTask(req.user.wunderlistAccessToken, req.user.wunderlistListId, innerTask, function (err) {
           if (err) {
             console.error("An error occurred while adding assorted items");
             console.error(err.error);

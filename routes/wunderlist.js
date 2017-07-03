@@ -1,9 +1,5 @@
 var config = require('../config');
 var wunderlistSDK = require('wunderlist');
-var wunderlistAPI = new wunderlistSDK({
-  'accessToken': config.configuration.wunderlistAccessToken,
-  'clientID': config.configuration.wunderlistClientId
-});
 
 function addList(accessToken, callback) {
   var newWunderlistAPI = new wunderlistSDK({
@@ -20,9 +16,14 @@ function addList(accessToken, callback) {
   })
 }
 
-function addTask(taskTitle, callback) {
+function addTask(accessToken, listId, taskTitle, callback) {
+  var wunderlistAPI = new wunderlistSDK({
+    'accessToken': accessToken,
+    'clientID': config.configuration.wunderlistClientId
+  });
+
   wunderlistAPI.http.tasks.create({
-    'list_id': config.configuration.listId,
+    'list_id': listId,
     'title': taskTitle
   }).done(function () {
     return callback(null);

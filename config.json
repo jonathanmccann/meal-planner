@@ -4,10 +4,8 @@
   "password": "",
   "database": "",
   "sessionSecret": "",
-  "wunderlistAccessToken": "",
   "wunderlistClientId": "",
   "wunderlistClientSecret": "",
   "wunderlistState": "",
-  "listId": ,
   "domain": ""
 }
