@@ -6,5 +6,8 @@
   "sessionSecret": "",
   "wunderlistAccessToken": "",
   "wunderlistClientId": "",
-  "listId": 
+  "wunderlistClientSecret": "",
+  "wunderlistState": "",
+  "listId": ,
+  "domain": ""
 }
