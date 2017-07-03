@@ -58,8 +58,8 @@ app.get('/', function(req, res) {
 });
 
 app.use('/', user);
-app.use('/', authorize);
 app.use('/', isLoggedIn, assorted);
+app.use('/', isLoggedIn, authorize);
 app.use('/', isLoggedIn, calendar);
 app.use('/', isLoggedIn, category);
 app.use('/', isLoggedIn, recipe);

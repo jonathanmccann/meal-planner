@@ -1,4 +1,5 @@
 var config = require('../config');
+var connection = require('../connection');
 var express = require('express');
 var request = require('request');
 var router = express.Router();
@@ -54,9 +55,18 @@ router.get('/callback', function(req, res) {
         return res.redirect('/wunderlist');
       }
       else {
-        req.flash('successMessage', 'Your accounts have been linked successfully.');
+        connection.query('UPDATE User_ SET ? WHERE ?', [ {wunderlistAccessToken: accessToken, wunderlistListId: listId}, {userId: req.user.userId} ], function(err) {
+          if (err) {
+            console.error(err);
     
-        return res.redirect('/wunderlist');
+            req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
+          }
+          else {
+            req.flash('successMessage', 'Your accounts have been linked successfully.');
+          }
+    
+          res.redirect('/wunderlist');
+        });
       }
     });
   });
