@@ -23,7 +23,7 @@ function addTask(accessToken, listId, taskTitle, callback) {
   });
 
   wunderlistAPI.http.tasks.create({
-    'list_id': listId,
+    'list_id': parseInt(listId),
     'title': taskTitle
   }).done(function () {
     return callback(null);
