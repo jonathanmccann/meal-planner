@@ -13,6 +13,7 @@ var stylus = require('stylus');
 var authorize = require('./routes/authorize');
 var calendar = require('./routes/calendar');
 var category = require('./routes/category');
+var myAccount = require('./routes/my_account');
 var recipe = require('./routes/recipe');
 var user = require('./routes/user');
 
@@ -60,6 +61,7 @@ app.use('/', user);
 app.use('/', isLoggedIn, authorize);
 app.use('/', isLoggedIn, calendar);
 app.use('/', isLoggedIn, category);
+app.use('/', isLoggedIn, myAccount);
 app.use('/', isLoggedIn, recipe);
 
 app.use(function(req, res, next) {
