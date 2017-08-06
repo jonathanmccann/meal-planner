@@ -12,6 +12,7 @@ block content
       div(class="success")
         | #{successMessage}
     div(class="padding-top")
-      form(action='/log-in', method='post')
+      form(action='/my-account', method='post')
         | Email Address:
         input(type="email", name="emailAddress", value="#{user.emailAddress}", required)
+        input(type='submit', name='action', value='Update')
