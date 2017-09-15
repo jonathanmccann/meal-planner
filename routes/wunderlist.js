@@ -2,12 +2,9 @@ var config = require('../config');
 var wunderlistSDK = require('wunderlist');
 
 function addList(accessToken, callback) {
-  var newWunderlistAPI = new wunderlistSDK({
-    'accessToken': accessToken,
-    'clientID': config.configuration.wunderlistClientId
-  });
+  var wunderlistAPI = getWunderlistAPI(accessToken);
 
-  newWunderlistAPI.http.lists.create({
+  wunderlistAPI.http.lists.create({
     'title': 'Grocery List'
   }).done(function(listData) {
     return callback(listData.id);
@@ -17,10 +14,7 @@ function addList(accessToken, callback) {
 }
 
 function addTask(accessToken, listId, taskTitle, callback) {
-  var wunderlistAPI = new wunderlistSDK({
-    'accessToken': accessToken,
-    'clientID': config.configuration.wunderlistClientId
-  });
+  var wunderlistAPI = getWunderlistAPI(accessToken);
 
   wunderlistAPI.http.tasks.create({
     'list_id': parseInt(listId),
@@ -33,10 +27,7 @@ function addTask(accessToken, listId, taskTitle, callback) {
 }
 
 function getList(accessToken, listId, callback) {
-	var wunderlistAPI = new wunderlistSDK({
-    'accessToken': accessToken,
-    'clientID': config.configuration.wunderlistClientId
-  });
+	var wunderlistAPI = getWunderlistAPI(accessToken);
 
 	wunderlistAPI.http.lists.getID(
     listId
@@ -45,6 +36,13 @@ function getList(accessToken, listId, callback) {
   }).fail(function(resp) {
     return callback(resp);
   })
+}
+
+function getWunderlistAPI(accessToken) {
+	return new wunderlistSDK({
+    'accessToken': accessToken,
+    'clientID': config.configuration.wunderlistClientId
+  });
 }
 
 module.exports = {
