@@ -29,12 +29,12 @@ router.post('/add-ingredients', function(req, res) {
     if (err) {
       req.flash('errorMessage', 'The ingredients were unable to be added to Wunderlist.');
 
-      return res.redirect('/plan-meals');
+      return res.redirect('/add-ingredients');
     }
     else {
       req.flash('successMessage', 'The ingredients were added to Wunderlist successfully.');
 
-      return res.redirect('/plan-meals');
+      return res.redirect('/add-ingredients');
     }
   });
 });
