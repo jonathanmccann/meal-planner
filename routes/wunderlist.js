@@ -8,7 +8,7 @@ function addList(accessToken, callback) {
   });
 
   newWunderlistAPI.http.lists.create({
-    'title': 'New Grocery List'
+    'title': 'Grocery List'
   }).done(function(listData) {
     return callback(listData.id);
   }).fail(function(resp) {
