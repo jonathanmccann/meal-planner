@@ -2,6 +2,7 @@ var expressBrute = require('express-brute');
 var express = require('express');
 var passport = require('passport');
 var router = express.Router();
+var wunderlist = require('./wunderlist');
 
 var store = new expressBrute.MemoryStore();
 
@@ -33,10 +34,30 @@ router.get('/log-in', function(req, res) {
 });
 
 router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
-  passport.authenticate('log-in', {
-    successRedirect: '/',
-    failureRedirect: '/log-in',
-    failureFlash: true
+  passport.authenticate('log-in', function(err, user, info) {
+  	if (err) {
+  		return next(err);
+		}
+		else if (!user) {
+  		return res.redirect('/log-in');
+		}
+
+		req.logIn(user, function(err) {
+			if (err) {
+				return next(err);
+			}
+
+			wunderlist.getList(user.wunderlistAccessToken, user.wunderlistListId, function(err) {
+				if (err) {
+					req.flash('errorMessage', 'Unable to contact Wunderlist. Please try reconnecting.');
+
+					return res.redirect('/my-account');
+				}
+				else {
+					return res.redirect('/');
+				}
+			});
+		})
   })(req, res, next);
 });
 

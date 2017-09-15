@@ -32,7 +32,23 @@ function addTask(accessToken, listId, taskTitle, callback) {
   });
 }
 
+function getList(accessToken, listId, callback) {
+	var wunderlistAPI = new wunderlistSDK({
+    'accessToken': accessToken,
+    'clientID': config.configuration.wunderlistClientId
+  });
+
+	wunderlistAPI.http.lists.getID(
+    listId
+  ).done(function() {
+    return callback(null);
+  }).fail(function(resp) {
+    return callback(resp);
+  })
+}
+
 module.exports = {
   addList: addList,
-  addTask: addTask
+  addTask: addTask,
+	getList: getList
 };
