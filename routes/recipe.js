@@ -1,46 +1,6 @@
-var async = require('async');
-var config = require('../config');
 var connection = require('../connection');
 var express = require('express');
-var http = require('http');
-var request = require('request');
 var router = express.Router();
-var wunderlist = require('./wunderlist');
-
-router.post('/add-ingredients', function(req, res) {
-  var calls = [];
-
-  for (var ingredient in req.body) {
-    (function(innerIngredient) {
-      calls.push(function (callback) {
-        wunderlist.addTask(req.user.wunderlistAccessToken, req.user.wunderlistListId, innerIngredient, function (err) {
-          if (err) {
-            console.error("An error occurred while adding ingredients");
-            console.error(err.error);
-
-            callback(err);
-          }
-          else {
-            callback(null);
-          }
-        })
-      });
-    })(ingredient);
-  }
-
-  async.parallel(calls, function(err) {
-    if (err) {
-      req.flash('errorMessage', 'The ingredients were unable to be added to Wunderlist.');
-  
-      return res.redirect('/plan-meals');
-    }
-    else {
-      req.flash('successMessage', 'The ingredients were added to Wunderlist successfully.');
-  
-      return res.redirect('/plan-meals');
-    }
-  });
-});
 
 router.post('/add-recipe', function(req, res) {
   var name = req.body.name;
@@ -142,73 +102,6 @@ router.post('/edit-recipe', function(req, res) {
 
       res.redirect('/view-recipes');
     });
-  }
-});
-
-router.get('/plan-meals', function(req, res) {
-  var categoryRecipeMap = {};
-
-  getRecipes(req.user.userId, function(recipeRows) {
-    if (recipeRows.length === 0) {
-      res.render('plan_meals', {
-        errorMessage: req.flash('errorMessage'),
-        successMessage: req.flash('successMessage'),
-        title: "Plan Meals",
-        user: req.user
-      });
-    }
-    else {
-      for (var i = 0; i < recipeRows.length; i++) {
-        var categoryName = recipeRows[i].categoryName;
-  
-        if (!categoryRecipeMap[categoryName]) {
-          categoryRecipeMap[categoryName] = [];
-        }
-  
-        categoryRecipeMap[categoryName].push(recipeRows[i]);
-      }
-  
-      res.render('plan_meals', {
-        categoryRecipes: categoryRecipeMap,
-        errorMessage: req.flash('errorMessage'),
-        infoMessage: req.flash('infoMessage'),
-        successMessage: req.flash('successMessage'),
-        title: "Plan Meals",
-        user: req.user
-      });
-    }
-  });
-});
-
-router.post('/plan-meals', function(req, res) {
-  var recipeIds = [];
-
-  for (var recipeId in req.body) {
-    recipeIds.push(recipeId);
-  }
-
-  if (recipeIds.length === 0) {
-    req.flash('infoMessage', 'Please select at least one recipe to plan.');
-
-    res.redirect('/plan-meals');
-  }
-  else {
-    connection.query('SELECT * FROM Recipe WHERE recipeId IN (?) AND userId = ? ORDER BY name', [recipeIds.join(), req.user.userId], function(err, rows) {
-      if (err) {
-        console.error(err);
-
-        req.flash('errorMessage', 'The recipes were unable to be planned.');
-
-        res.redirect('/plan-meals');
-      }
-      else {
-        res.render('add_ingredients', {
-          recipes: rows,
-          title: "Add Ingredients",
-          user: req.user
-        });
-      }
-    })
   }
 });
 
