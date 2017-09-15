@@ -16,3 +16,7 @@ block content
         | Email Address:
         input(type="email", name="emailAddress", value="#{user.emailAddress}", required)
         input(type='submit', name='action', value='Update')
+      form(action='/authorize', method='post')
+        | Got a new Wunderlist account or lost the old to-do list? Reconnect!
+        br
+        input(type='submit', value='Connect With Wunderlist')

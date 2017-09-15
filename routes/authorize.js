@@ -32,7 +32,7 @@ router.get('/callback', function(req, res) {
 
     req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
 
-    return res.redirect('/authorize');
+    return res.redirect('/my-account');
   }
 
   request({
@@ -52,7 +52,7 @@ router.get('/callback', function(req, res) {
       if (err) {
         req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
     
-        return res.redirect('/authorize');
+        return res.redirect('/my-account');
       }
       else {
         connection.query('UPDATE User_ SET ? WHERE ?', [ {wunderlistAccessToken: accessToken, wunderlistListId: listId}, {userId: req.user.userId} ], function(err) {
@@ -65,7 +65,7 @@ router.get('/callback', function(req, res) {
             req.flash('successMessage', 'Your accounts have been linked successfully.');
           }
     
-          res.redirect('/authorize');
+          res.redirect('/my-account');
         });
       }
     });
