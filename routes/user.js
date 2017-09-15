@@ -60,7 +60,7 @@ router.get('/create-account', function(req, res) {
 
 router.post('/create-account', userBruteForce.prevent, function(req, res, next) {
   passport.authenticate('create-account', {
-    successRedirect: '/',
+    successRedirect: '/wunderlist',
     failureRedirect: '/create-account',
     failureFlash: true
   })(req, res, next);
