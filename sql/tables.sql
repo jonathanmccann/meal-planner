@@ -23,7 +23,7 @@ CREATE TABLE Recipe(
 
 CREATE TABLE User_(
 	userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	emailAddress VARCHAR(300),
+	emailAddress VARCHAR(300) NOT NULL UNIQUE,
 	password VARCHAR(300),
 	wunderlistAccessToken VARCHAR(300),
 	wunderlistListId VARCHAR(30)
