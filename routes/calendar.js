@@ -47,46 +47,64 @@ router.get('/calendar', function(req, res) {
 });
 
 router.post('/calendar', function(req, res) {
-  connection.query('DELETE FROM Calendar WHERE ?', {userId: req.user.userId}, function(err) {
-    if (err) {
-      console.error(err);
+	if (req.body.action === "Clear Calendar") {
+		connection.query('DELETE FROM Calendar WHERE ?', {userId: req.user.userId}, function(err) {
+			if (err) {
+				console.error(err);
 
-      req.flash('errorMessage', 'The calendar was unable to be saved.');
+				req.flash('errorMessage', 'The calendar was unable to be saved.');
 
-      res.redirect('/calendar');
-    }
-    else {
-      var meals = [];
+				res.redirect('/calendar');
+			}
+			else {
+				req.flash('successMessage', 'The calendar was cleared successfully.');
 
-      for (var key in req.body) {
-        var [recipeId, mealKey] = key.split('_');
+				res.redirect('/calendar');
+			}
+		});
+	}
+	else {
+		connection.query('DELETE FROM Calendar WHERE ?', {userId: req.user.userId}, function(err) {
+			if (err) {
+				console.error(err);
 
-        var meal = [req.user.userId, recipeId, req.body[key], mealKey];
+				req.flash('errorMessage', 'The calendar was unable to be saved.');
 
-        meals.push(meal);
-      }
+				res.redirect('/calendar');
+			}
+			else {
+				var meals = [];
 
-      if (meals.length) {
-        connection.query('INSERT INTO Calendar (userId, recipeId, recipeName, mealKey) VALUES ?', [meals], function (err) {
-          if (err) {
-            console.error(err);
+				for (var key in req.body) {
+					var [recipeId, mealKey] = key.split('_');
 
-            req.flash('errorMessage', 'The calendar was unable to be saved.');
-          }
-          else {
-            req.flash('successMessage', 'The calendar was saved successfully.');
-          }
+					var meal = [req.user.userId, recipeId, req.body[key], mealKey];
 
-          res.redirect('/calendar');
-        });
-      }
-      else {
-        req.flash('successMessage', 'The calendar was saved successfully.');
+					meals.push(meal);
+				}
 
-        res.redirect('/calendar');
-      }
-    }
-  });
+				if (meals.length) {
+					connection.query('INSERT INTO Calendar (userId, recipeId, recipeName, mealKey) VALUES ?', [meals], function (err) {
+						if (err) {
+							console.error(err);
+
+							req.flash('errorMessage', 'The calendar was unable to be saved.');
+						}
+						else {
+							req.flash('successMessage', 'The calendar was saved successfully.');
+						}
+
+						res.redirect('/calendar');
+					});
+				}
+				else {
+					req.flash('successMessage', 'The calendar was saved successfully.');
+
+					res.redirect('/calendar');
+				}
+			}
+		});
+	}
 });
 
 module.exports = router;

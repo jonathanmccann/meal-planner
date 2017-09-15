@@ -55,13 +55,15 @@ window.onload = function() {
   });
 
   $("#calendar-form").submit(function(e) {
-    e.preventDefault();
+  	var buttonClicked = $(this).find("input[type=submit]:focus").val();
 
-    appendToForm(this);
+  	if (buttonClicked === "Submit Calendar") {
+			e.preventDefault();
 
-    console.log("Intercepted!");
+			appendToForm(this);
 
-    this.submit();
+			this.submit();
+		}
   });
 };
 
