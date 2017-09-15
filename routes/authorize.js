@@ -32,7 +32,7 @@ router.get('/callback', function(req, res) {
 
     req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
 
-    return res.redirect('/wunderlist');
+    return res.redirect('/authorize');
   }
 
   request({
@@ -52,7 +52,7 @@ router.get('/callback', function(req, res) {
       if (err) {
         req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
     
-        return res.redirect('/wunderlist');
+        return res.redirect('/authorize');
       }
       else {
         connection.query('UPDATE User_ SET ? WHERE ?', [ {wunderlistAccessToken: accessToken, wunderlistListId: listId}, {userId: req.user.userId} ], function(err) {
@@ -65,23 +65,23 @@ router.get('/callback', function(req, res) {
             req.flash('successMessage', 'Your accounts have been linked successfully.');
           }
     
-          res.redirect('/wunderlist');
+          res.redirect('/authorize');
         });
       }
     });
   });
 });
 
-router.get('/wunderlist', function(req, res) {
-  res.render('wunderlist', {
+router.get('/authorize', function(req, res) {
+  res.render('authorize', {
     errorMessage: req.flash('errorMessage'),
     successMessage: req.flash('successMessage'),
-    title: "Recipes",
+    title: "Authorize",
     user: req.user
   });
 });
 
-router.post('/wunderlist', function(req, res) {
+router.post('/authorize', function(req, res) {
   res.redirect(authorizationUri);
 });
 
