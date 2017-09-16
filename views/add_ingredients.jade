@@ -30,14 +30,14 @@ block content
         form(action='/add-ingredients', method='post')
           each recipe in recipes
             h2 #{recipe.name}
-            input(type="checkbox", id="#{recipe.name}_select", onClick='toggle("#{recipe.name}", this.checked)')
-            label(for="#{recipe.name}_select") Select All
-            div(class="indent", id="#{recipe.name}")
+            input(type="checkbox", id="#{recipe.recipeId}_select", onClick='toggle("div" + "#{recipe.recipeId}", this.checked)')
+            label(for="#{recipe.recipeId}_select") Select All
+            div(class="indent", id="div" + "#{recipe.recipeId}")
               ul(class="alt")
                 -var ingredients = recipe.ingredients.split(",");
                 -for (var i = 0; i < ingredients.length; i++) {
                   li
-                    input(type="checkbox", id="#{ingredients[i]} (#{recipe.name})", name="#{ingredients[i]} (#{recipe.name})")
-                    label(for="#{ingredients[i]} (#{recipe.name})") #{ingredients[i]}
+                    input(type="checkbox", id="#{i}_#{recipe.recipeId}", name="#{ingredients[i]} (#{recipe.name})")
+                    label(for="#{i}_#{recipe.recipeId}") #{ingredients[i]}
                 -}
           input(type='submit', value='Add Ingredients')
