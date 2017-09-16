@@ -13,24 +13,31 @@ block content
     header(class="major")
       h2= title
   div(class="container")
-    if categoryRecipes == null
-      header(class='major')
-        p
-          | There are currently planned meals. Go ahead and 
-          a(href="/calendar") plan some
-          | .
-    else
-      form(action='/add-ingredients', method='post')
-        each recipe in recipes
-          h2 #{recipe.name}
-          input(type="checkbox", id="#{recipe.name}_select", onClick='toggle("#{recipe.name}", this.checked)')
-          label(for="#{recipe.name}_select") Select All
-          div(class="indent", id="#{recipe.name}")
-            ul(class="alt")
-              -var ingredients = recipe.ingredients.split(",");
-              -for (var i = 0; i < ingredients.length; i++) {
-                li
-                  input(type="checkbox", id="#{ingredients[i]} (#{recipe.name})", name="#{ingredients[i]} (#{recipe.name})")
-                  label(for="#{ingredients[i]} (#{recipe.name})") #{ingredients[i]}
-              -}
-        input(type='submit', value='Add Ingredients')
+    if errorMessage && errorMessage.length
+      div(class="error")
+        | #{errorMessage}
+    if successMessage && successMessage.length
+      div(class="success")
+        | #{successMessage}
+    div(class="padding-top")
+      if categoryRecipes == null
+        header(class='major')
+          p
+            | There are currently planned meals. Go ahead and
+            a(href="/calendar") plan some
+            | .
+      else
+        form(action='/add-ingredients', method='post')
+          each recipe in recipes
+            h2 #{recipe.name}
+            input(type="checkbox", id="#{recipe.name}_select", onClick='toggle("#{recipe.name}", this.checked)')
+            label(for="#{recipe.name}_select") Select All
+            div(class="indent", id="#{recipe.name}")
+              ul(class="alt")
+                -var ingredients = recipe.ingredients.split(",");
+                -for (var i = 0; i < ingredients.length; i++) {
+                  li
+                    input(type="checkbox", id="#{ingredients[i]} (#{recipe.name})", name="#{ingredients[i]} (#{recipe.name})")
+                    label(for="#{ingredients[i]} (#{recipe.name})") #{ingredients[i]}
+                -}
+          input(type='submit', value='Add Ingredients')
