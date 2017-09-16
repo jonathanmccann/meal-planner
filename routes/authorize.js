@@ -48,7 +48,7 @@ router.get('/callback', function(req, res) {
 
     var accessToken = json.access_token;
 
-    wunderlist.addList(accessToken, function(listId, err) {
+    wunderlist.addList(accessToken, function(err, listId) {
       if (err) {
         req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
     
