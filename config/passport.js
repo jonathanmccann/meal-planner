@@ -48,7 +48,7 @@ module.exports = function(passport) {
             else {
               user.userId = rows.insertId;
 
-              return done(null, user);
+              return done(null, user, req.flash('successMessage', 'You account has been successfully created. Please connect with Wunderlist to start planning meals.'));
             }
           })
         }

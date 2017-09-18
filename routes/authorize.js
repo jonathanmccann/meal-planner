@@ -72,15 +72,6 @@ router.get('/callback', function(req, res) {
   });
 });
 
-router.get('/authorize', function(req, res) {
-  res.render('authorize', {
-    errorMessage: req.flash('errorMessage'),
-    successMessage: req.flash('successMessage'),
-    title: "Authorize",
-    user: req.user
-  });
-});
-
 router.post('/authorize', function(req, res) {
   res.redirect(authorizationUri);
 });

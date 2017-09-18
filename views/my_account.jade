@@ -4,14 +4,14 @@ block content
   div(class="container")
     header(class="major")
       h2= title
-  div(class="container")
+  div(class="container my-account")
     if errorMessage && errorMessage.length
       div(class="error")
         | #{errorMessage}
     if successMessage && successMessage.length
       div(class="success")
         | #{successMessage}
-    div(class="my-account padding-top")
+    div(class="padding-top")
       form(action='/my-account', method='post')
         | Email Address:
         input(type="email", name="emailAddress", value="#{user.emailAddress}", required)

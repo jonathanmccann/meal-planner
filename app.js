@@ -10,7 +10,6 @@ var path = require('path');
 var session = require('express-session');
 var stylus = require('stylus');
 
-var authorize = require('./routes/authorize');
 var calendar = require('./routes/calendar');
 var category = require('./routes/category');
 var myAccount = require('./routes/my_account');
@@ -59,7 +58,6 @@ app.get('/', function(req, res) {
 });
 
 app.use('/', user);
-app.use('/', isLoggedIn, authorize);
 app.use('/', isLoggedIn, calendar);
 app.use('/', isLoggedIn, category);
 app.use('/', isLoggedIn, myAccount);
