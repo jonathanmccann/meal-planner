@@ -31,25 +31,25 @@ block content
           tr
             td Breakfast
             -for (var j = 0; j < 7; j++) {
-              td(id="#{j}0", class=(calendarDayAndRecipeMap["" + j + 0] != null ? "" : "accept"))
+              td(id="#{j}0", class=(calendarDayAndRecipeMap["" + j + 0] != null ? "accept-container" : "accept accept-container"))
                 if calendarDayAndRecipeMap["" + j + 0] != null
-                  label(class="padding-top", id="#{calendarDayAndRecipeMap['' + j + 0][0]}")
+                  label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + j + 0][0]}")
                     | #{calendarDayAndRecipeMap["" + j + 0][1]}
             -}
           tr
             td Lunch
             -for (var j = 0; j < 7; j++) {
-              td(id="#{j}1", class=(calendarDayAndRecipeMap["" + j + 1] != null ? "" : "accept"))
+              td(id="#{j}1", class=(calendarDayAndRecipeMap["" + j + 1] != null ? "accept-container" : "accept accept-container"))
                 if calendarDayAndRecipeMap["" + j + 1] != null
-                  label(class="padding-top", id="#{calendarDayAndRecipeMap['' + j + 1][0]}")
+                  label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + j + 1][0]}")
                     | #{calendarDayAndRecipeMap["" + j + 1][1]}
             -}
           tr
             td Dinner
             -for (var j = 0; j < 7; j++) {
-              td(id="#{j}2", class=(calendarDayAndRecipeMap["" + j + 2] != null ? "" : "accept"))
+              td(id="#{j}2", class=(calendarDayAndRecipeMap["" + j + 2] != null ? "accept-container" : "accept accept-container"))
                 if calendarDayAndRecipeMap["" + j + 2] != null
-                  label(class="padding-top", id="#{calendarDayAndRecipeMap['' + j + 2][0]}")
+                  label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + j + 2][0]}")
                     | #{calendarDayAndRecipeMap["" + j + 2][1]}
             -}
         input(type='submit', name='action', value='Submit Calendar')
@@ -57,8 +57,9 @@ block content
       div(id="recipes", class="recipes")
         input(type="text", id="searchInput", onkeyup="realtimeSearch()" placeholder="Search for recipes")
         -for (var categoryRecipe in categoryRecipes)
-          h3 #{categoryRecipe}
-          -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
-            label(class="draggable indent padding-top", id="#{categoryRecipes[categoryRecipe][i].recipeId}")
-              | #{categoryRecipes[categoryRecipe][i].name}
-          -}
+          div(id="#{categoryRecipe}", class="source-container")
+            h3 #{categoryRecipe}
+            -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
+              label(class="draggable indent padding-top", id="#{categoryRecipes[categoryRecipe][i].recipeId}")
+                | #{categoryRecipes[categoryRecipe][i].name}
+            -}

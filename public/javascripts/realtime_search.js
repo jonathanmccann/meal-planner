@@ -1,4 +1,5 @@
 function realtimeSearch() {
+	var categories;
   var filter;
   var recipes;
 	var searchInput;
@@ -17,6 +18,29 @@ function realtimeSearch() {
 		}
 		else {
 			recipes[i].style.display = "none";
+		}
+	}
+
+	categories = document.getElementsByClassName("source-container");
+
+	for (var i = 0; i < categories.length; i++) {
+		var categoryRecipes = categories[i].getElementsByTagName("label");
+
+		var hideHeader = true;
+
+		for (var j = 0; j < categoryRecipes.length; j++) {
+			if (categoryRecipes[j].style.display !== "none") {
+				hideHeader = false;
+
+				break;
+			}
+		}
+
+		if (hideHeader) {
+			categories[i].style.display = "none";
+		}
+		else {
+			categories[i].style.display = "";
 		}
 	}
 }

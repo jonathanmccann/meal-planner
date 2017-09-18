@@ -16,42 +16,23 @@ function appendToForm(form) {
 }
 
 window.onload = function() {
-  dragula([
-    document.getElementById('recipes'),
-    document.getElementById('00'),
-    document.getElementById('01'),
-    document.getElementById('02'),
-    document.getElementById('10'),
-    document.getElementById('11'),
-    document.getElementById('12'),
-    document.getElementById('20'),
-    document.getElementById('21'),
-    document.getElementById('22'),
-    document.getElementById('30'),
-    document.getElementById('31'),
-    document.getElementById('32'),
-    document.getElementById('40'),
-    document.getElementById('41'),
-    document.getElementById('42'),
-    document.getElementById('50'),
-    document.getElementById('51'),
-    document.getElementById('52'),
-    document.getElementById('60'),
-    document.getElementById('61'),
-    document.getElementById('62')
-  ], {
-  	accepts: function (el, target) {
-      return (target !== document.getElementById('recipes')) && target.classList.contains('accept')
-    },
-    copy: function (el, source) {
-      return source === document.getElementById('recipes')
-    },
-		moves: function (el) {
-    	return el.classList.contains('draggable')
+	var containers = $('.accept-container').toArray();
+
+	containers = containers.concat($('.source-container').toArray());
+
+  dragula(containers, {
+		accepts: function (el, target) {
+			return (!target.classList.contains('source-container')) && target.classList.contains('accept')
 		},
-    removeOnSpill: true
+		copy: function (el, source) {
+			return source.classList.contains('source-container');
+		},
+		moves: function (el) {
+			return el.classList.contains('draggable')
+		},
+		removeOnSpill: true
   }).on('drop', function(el, target, source) {
-  	el.classList.toggle('indent');
+  	el.classList.remove('indent');
     target.classList.toggle('accept');
     source.classList.toggle('accept');
   }).on('remove', function(el, target, source) {
