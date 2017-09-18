@@ -1,4 +1,4 @@
-var containerIds = ['00', '01', '02', '10', '11', '12', '20', '21', '22', '30', '31', '32', '40', '41', '42', '50', '51', '52', '60', '61', '62', ]
+var containerIds = ['00', '01', '02', '10', '11', '12', '20', '21', '22', '30', '31', '32', '40', '41', '42', '50', '51', '52', '60', '61', '62' ];
 
 function appendToForm(form) {
   for (var i = 0; i < containerIds.length; i++) {
@@ -40,14 +40,18 @@ window.onload = function() {
     document.getElementById('61'),
     document.getElementById('62')
   ], {
+  	accepts: function (el, target) {
+      return (target !== document.getElementById('recipes')) && target.classList.contains('accept')
+    },
     copy: function (el, source) {
       return source === document.getElementById('recipes')
     },
-    accepts: function (el, target) {
-      return (target !== document.getElementById('recipes')) && target.classList.contains('accept')
-    },
+		moves: function (el) {
+    	return el.classList.contains('draggable')
+		},
     removeOnSpill: true
   }).on('drop', function(el, target, source) {
+  	el.classList.toggle('indent');
     target.classList.toggle('accept');
     source.classList.toggle('accept');
   }).on('remove', function(el, target, source) {

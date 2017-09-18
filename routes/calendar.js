@@ -14,34 +14,45 @@ router.get('/calendar', function(req, res) {
       });
     }
     else {
-      connection.query('SELECT * FROM Recipe WHERE ?', {userId: req.user.userId}, function(err, recipeRows) {
-        if (err) {
-          console.error(err);
+			connection.query('SELECT * FROM Recipe WHERE ?', {userId: req.user.userId}, function (err, recipeRows) {
+				if (err) {
+					console.error(err);
 
-          res.render('calendar', {
-            errorMessage: "The calendar was unable to be successfully loaded.",
-            title: "Calendar",
-            user: req.user
-          });
-        }
-        else {
-          var calendarDayAndRecipeMap = {};
+					res.render('calendar', {
+						errorMessage: "The calendar was unable to be successfully loaded.",
+						title: "Calendar",
+						user: req.user
+					});
+				}
+				else {
+					var calendarDayAndRecipeMap = {};
+					var categoryRecipeMap = {};
 
-          for (var i = 0; i < calendarRows.length; i++) {
-            calendarDayAndRecipeMap[calendarRows[i].mealKey] = [calendarRows[i].recipeId, calendarRows[i].recipeName];
-          }
+					for (var i = 0; i < calendarRows.length; i++) {
+						calendarDayAndRecipeMap[calendarRows[i].mealKey] = [calendarRows[i].recipeId, calendarRows[i].recipeName];
+					}
 
-          res.render('calendar', {
-            calendarDayAndRecipeMap: calendarDayAndRecipeMap,
-            errorMessage: req.flash('errorMessage'),
-            successMessage: req.flash('successMessage'),
-            recipes: recipeRows,
-            test: "test",
-            title: "Calendar",
-            user: req.user
-          });
-        }
-      });
+					for (var i = 0; i < recipeRows.length; i++) {
+						var categoryName = recipeRows[i].categoryName;
+
+						if (!categoryRecipeMap[categoryName]) {
+							categoryRecipeMap[categoryName] = [];
+						}
+
+						categoryRecipeMap[categoryName].push(recipeRows[i]);
+					}
+
+					res.render('calendar', {
+						calendarDayAndRecipeMap: calendarDayAndRecipeMap,
+						categoryRecipes: categoryRecipeMap,
+						errorMessage: req.flash('errorMessage'),
+						successMessage: req.flash('successMessage'),
+						test: "test",
+						title: "Calendar",
+						user: req.user
+					});
+				}
+			});
     }
   });
 });
