@@ -6,7 +6,7 @@ function realtimeSearch() {
 
 	searchInput = document.getElementById('searchInput');
 
-	filter = searchInput.value.toLowerCase();
+	filter = searchInput.value.toLowerCase().trim();
 
 	recipes = document.getElementById("recipes").getElementsByTagName("label");
 
