@@ -11,7 +11,7 @@ block content
     if successMessage && successMessage.length
       div(class="success")
         | #{successMessage}
-    div(class="padding-top")
+    div(class="my-account padding-top")
       form(action='/my-account', method='post')
         | Email Address:
         input(type="email", name="emailAddress", value="#{user.emailAddress}", required)

@@ -1097,6 +1097,12 @@
 		border-radius:.5em;
 	}
 
+	.my-account {
+		margin: 0 auto;
+		padding: 20px;
+		width: 45%;
+	}
+
 	.recipes {
 		height: 200px;		
 	}
