@@ -40,6 +40,8 @@ router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
   		return next(err);
 		}
 		else if (!user) {
+		  req.flash('originalUrl', req.body.originalUrl)
+
   		return res.redirect('/log-in');
 		}
 
