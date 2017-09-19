@@ -22,7 +22,19 @@ window.onload = function() {
 
   dragula(containers, {
 		accepts: function (el, target) {
-			return (!target.classList.contains('source-container')) && target.classList.contains('accept')
+			if (target.classList.contains('source-container')) {
+				return false;
+			}
+
+			var children = target.children;
+
+			for (var i = 0; i < children.length; i++) {
+				if (!children[i].classList.contains('gu-transit') && children[i].id === el.id) {
+					return false;
+				}
+			}
+
+			return true;
 		},
 		copy: function (el, source) {
 			return source.classList.contains('source-container');
@@ -33,10 +45,6 @@ window.onload = function() {
 		removeOnSpill: true
   }).on('drop', function(el, target, source) {
   	el.classList.remove('indent');
-    target.classList.toggle('accept');
-    source.classList.toggle('accept');
-  }).on('remove', function(el, target, source) {
-    source.classList.toggle('accept');
   });
 
   $("#calendar-form").submit(function(e) {

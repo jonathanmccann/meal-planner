@@ -29,7 +29,13 @@ router.get('/calendar', function(req, res) {
 					var categoryRecipeMap = {};
 
 					for (var i = 0; i < calendarRows.length; i++) {
-						calendarDayAndRecipeMap[calendarRows[i].mealKey] = [calendarRows[i].recipeId, calendarRows[i].recipeName];
+						var mealKey = calendarRows[i].mealKey;
+
+						if (!calendarDayAndRecipeMap[mealKey]) {
+							calendarDayAndRecipeMap[mealKey] = [];
+						}
+
+						calendarDayAndRecipeMap[mealKey].push([calendarRows[i].recipeId, calendarRows[i].recipeName]);
 					}
 
 					for (var i = 0; i < recipeRows.length; i++) {

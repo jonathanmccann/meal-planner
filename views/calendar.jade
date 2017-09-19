@@ -30,27 +30,33 @@ block content
             th Saturday
           tr
             td Breakfast
-            -for (var j = 0; j < 7; j++) {
-              td(id="#{j}0", class=(calendarDayAndRecipeMap["" + j + 0] != null ? "accept-container" : "accept accept-container"))
-                if calendarDayAndRecipeMap["" + j + 0] != null
-                  label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + j + 0][0]}")
-                    | #{calendarDayAndRecipeMap["" + j + 0][1]}
+            -for (var i = 0; i < 7; i++) {
+              td(id="#{i}0", class="accept-container")
+                if calendarDayAndRecipeMap["" + i + 0] != null
+                  -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 0].length; j++) {
+                    label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + i + 0][j][0]}")
+                      | #{calendarDayAndRecipeMap["" + i + 0][j][1]}
+                  -}
             -}
           tr
             td Lunch
-            -for (var j = 0; j < 7; j++) {
-              td(id="#{j}1", class=(calendarDayAndRecipeMap["" + j + 1] != null ? "accept-container" : "accept accept-container"))
-                if calendarDayAndRecipeMap["" + j + 1] != null
-                  label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + j + 1][0]}")
-                    | #{calendarDayAndRecipeMap["" + j + 1][1]}
+            -for (var i = 0; i < 7; i++) {
+              td(id="#{i}1", class="accept-container")
+                if calendarDayAndRecipeMap["" + i + 1] != null
+                  -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 1].length; j++) {
+                    label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + i + 1][j][0]}")
+                      | #{calendarDayAndRecipeMap["" + i + 1][j][1]}
+                  -}
             -}
           tr
             td Dinner
-            -for (var j = 0; j < 7; j++) {
-              td(id="#{j}2", class=(calendarDayAndRecipeMap["" + j + 2] != null ? "accept-container" : "accept accept-container"))
-                if calendarDayAndRecipeMap["" + j + 2] != null
-                  label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + j + 2][0]}")
-                    | #{calendarDayAndRecipeMap["" + j + 2][1]}
+            -for (var i = 0; i < 7; i++) {
+              td(id="#{i}2", class="accept-container")
+                if calendarDayAndRecipeMap["" + i + 2] != null
+                  -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 2].length; j++) {
+                    label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + i + 2][j][0]}")
+                      | #{calendarDayAndRecipeMap["" + i + 2][j][1]}
+                  -}
             -}
         input(type='submit', name='action', value='Submit Calendar')
         input(class="delete-button", name='action', type='submit', value='Clear Calendar')
