@@ -1,6 +1,8 @@
 extends header
 
 block content
+  script(src="/javascripts/realtime_search.js")
+
   div(class="container")
     header(class="major")
       h2= title
@@ -24,7 +26,9 @@ block content
             p
               | There are currently no categories to display. Go ahead and add some!
         else
-          div(class="indent")
+          | Search for Categories:
+          input(type="text", id="searchInput", onkeyup="realtimeCategorySearch()")
+          div(class="indent padding-top", id="search")
             ul(class="alt")
               each category in categories
                 li: a(href="/edit-category/#{category.categoryId}") #{category.name}

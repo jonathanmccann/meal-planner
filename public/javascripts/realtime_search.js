@@ -1,30 +1,33 @@
-function realtimeSearch() {
-	var categories;
-  var filter;
-  var recipes;
+function hideElements(container, tag) {
+	var filter;
+  var elements;
 	var searchInput;
 
 	searchInput = document.getElementById('searchInput');
 
 	filter = searchInput.value.toLowerCase().trim();
 
-	recipes = document.getElementById("recipes").getElementsByTagName("label");
+	elements = document.getElementById(container).getElementsByTagName(tag);
 
-	for (var i = 0; i < recipes.length; i++) {
-		recipe = recipes[i];
+	for (var i = 0; i < elements.length; i++) {
+		var element = elements[i];
 
-		if (recipe.textContent.toLowerCase().indexOf(filter) > -1) {
-			recipes[i].style.display = "";
+		if (element.textContent.toLowerCase().indexOf(filter) > -1) {
+			element.style.display = "";
 		}
 		else {
-			recipes[i].style.display = "none";
+			element.style.display = "none";
 		}
 	}
+}
 
-	categories = document.getElementsByClassName("source-container");
+function hideHeaders(container, tag) {
+	var categories;
+
+	categories = document.getElementsByClassName(container);
 
 	for (var i = 0; i < categories.length; i++) {
-		var categoryRecipes = categories[i].getElementsByTagName("label");
+		var categoryRecipes = categories[i].getElementsByTagName(tag);
 
 		var hideHeader = true;
 
@@ -43,4 +46,20 @@ function realtimeSearch() {
 			categories[i].style.display = "";
 		}
 	}
+}
+
+function realtimeSearch() {
+	hideElements("recipes", "label");
+
+	hideHeaders("source-container", "label");
+}
+
+function realtimeCategorySearch() {
+  hideElements("search", "li");
+}
+
+function realtimeRecipeSearch() {
+  hideElements("search", "li");
+
+  hideHeaders("categories-container", "li");
 }

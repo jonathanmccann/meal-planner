@@ -1,6 +1,8 @@
 extends header
 
 block content
+  script(src="/javascripts/realtime_search.js")
+
   div(class="container")
     header(class="major")
       h2= title
@@ -32,10 +34,14 @@ block content
             p
               | There are currently no recipes to display. Go ahead and add some!
         else
-          -for (var categoryRecipe in categoryRecipes)
-            h2 #{categoryRecipe}
-            div(class="indent")
-              ul(class="alt")
-                -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
-                  li: a(href="/edit-recipe/#{categoryRecipes[categoryRecipe][i].recipeId}") #{categoryRecipes[categoryRecipe][i].name}
-                -}
+          | Search for Recipes:
+          input(type="text", id="searchInput", onkeyup="realtimeRecipeSearch()")
+          div(class="padding-top", id="search")
+            -for (var categoryRecipe in categoryRecipes)
+              div(class="categories-container")
+                h2 #{categoryRecipe}
+                div(class="indent")
+                  ul(class="alt")
+                    -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
+                      li: a(href="/edit-recipe/#{categoryRecipes[categoryRecipe][i].recipeId}") #{categoryRecipes[categoryRecipe][i].name}
+                    -}
