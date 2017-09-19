@@ -46,6 +46,8 @@ function isLoggedIn(req, res, next) {
       next();
     }
     else {
+      req.flash('originalUrl', req.originalUrl);
+
       res.redirect('/log-in');
     }
 }

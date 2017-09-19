@@ -27,6 +27,7 @@ router.get('/log-in', function(req, res) {
   res.render('log_in', {
     errorMessage: req.flash('errorMessage'),
     infoMessage: req.flash('infoMessage'),
+    originalUrl: req.flash('originalUrl'),
     successMessage: req.flash('successMessage'),
     title: "Log In",
     user: req.user
@@ -54,7 +55,12 @@ router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
 					return res.redirect('/my-account');
 				}
 				else {
-					return res.redirect('/');
+				  if (req.body.originalUrl === "") {
+            return res.redirect('/');
+          }
+          else {
+            return res.redirect(req.body.originalUrl);
+          }
 				}
 			});
 		})

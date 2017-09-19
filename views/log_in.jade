@@ -12,6 +12,7 @@ block content
       div(class="success")
         | #{successMessage}
     form(action='/log-in', method='post')
+      input(type="hidden", name="originalUrl", value="#{originalUrl}")
       | Email Address:
       input(type="email", name="emailAddress", required)
       | Password:
