@@ -42,7 +42,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 function isLoggedIn(req, res, next) {
-    if (req.user) {
+    if (req.isAuthenticated()) {
       next();
     }
     else {
