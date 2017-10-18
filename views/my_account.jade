@@ -12,11 +12,23 @@ block content
       div(class="success")
         | #{successMessage}
     div(class="padding-top")
-      form(action='/my-account', method='post')
+      form(action='/update-email', method='post')
+        h3
+          | Update Email
         | Email Address:
         input(type="email", name="emailAddress", value="#{user.emailAddress}", required)
-        input(type='submit', name='action', value='Update')
+        input(type='submit', name='action', value='Update Email')
+      form(action='/update-password', method='post')
+        h3
+          | Update Password
+        | Current Password:
+        input(type="password", name="currentPassword", required)
+        | New Password:
+        input(type="password", name="newPassword", required)
+        input(type='submit', name='action', value='Update Password')
       form(action='/authorize', method='post')
+        h3
+          | Wunderlist
         | Got a new Wunderlist account or lost the old to-do list? Reconnect!
         br
         input(type='submit', value='Connect With Wunderlist')
