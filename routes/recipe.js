@@ -154,6 +154,11 @@ router.post('/edit-recipe', function(req, res) {
         console.log(err);
   
         req.flash('errorMessage', 'The recipe was unable to be updated.');
+        req.flash('categoryId', categoryId);
+        req.flash('ingredients', ingredients);
+        req.flash('name', recipeName);
+
+        return res.redirect('/edit-recipe/' + req.body.recipeId);
       }
       else {
         req.flash('successMessage', 'The recipe was updated successfully.');
