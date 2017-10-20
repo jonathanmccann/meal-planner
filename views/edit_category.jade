@@ -15,7 +15,7 @@ block content
       form(action='/edit-category', method='post')
         input(type="hidden", name="categoryId", value="#{categoryId}")
         | Category Name:
-        input(type="text", name="name", value="#{name}", required)
+        input(type="text", name="name", value="#{name}", autofocus, required)
         br
         input(type='submit', name='action', value='Edit Category')
         input(type='submit', class="delete-button", name='action', value='Delete Category')

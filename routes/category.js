@@ -46,50 +46,85 @@ router.post('/add-category', function(req, res) {
 });
 
 router.get('/edit-category/:categoryId', function(req, res) {
-  connection.query('SELECT * FROM Category WHERE ? AND ?', [ {categoryId: req.params.categoryId}, {userId: req.user.userId} ], function(err, rows) {
-    if (err) {
-      console.error(err);
+  var errorMessage = req.flash('errorMessage');
 
-      req.flash('errorMessage', 'The category was unable to be found.');
+  if (errorMessage && errorMessage.length) {
+    console.log("Stepped in");
 
-      res.redirect('/view-categories');
-    }
-    else {
-      res.render('edit_category', {
-        categoryId: req.params.categoryId,
-        name: rows[0].name,
-        title: "Edit Category",
-        user: req.user
-      });
-    }
-  });
+    res.render('edit_category', {
+      categoryId: req.params.categoryId,
+      errorMessage: errorMessage,
+      name: req.flash('categoryName'),
+      title: "Edit Category",
+      user: req.user
+    });
+  }
+  else {
+    connection.query('SELECT name FROM Category WHERE ? AND ?', [{categoryId: req.params.categoryId}, {userId: req.user.userId}], function (err, rows) {
+      if (err) {
+        console.error(err);
+
+        req.flash('errorMessage', 'The category was unable to be found.');
+
+        res.redirect('/view-categories');
+      }
+      else {
+        res.render('edit_category', {
+          categoryId: req.params.categoryId,
+          name: rows[0].name,
+          title: "Edit Category",
+          user: req.user
+        });
+      }
+    });
+  }
 });
 
 router.post('/edit-category', function(req, res) {
   if (req.body.action === "Edit Category") {
-    connection.query('UPDATE Category SET ? WHERE ? AND ?', [ {name: req.body.name}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
+    var categoryName = req.body.name;
+
+    async.waterfall([
+      function getExistingCategory(callback) {
+        connection.query('SELECT COUNT(*) as categoryCount FROM Category WHERE ? AND ?', [{name: categoryName}, {userId: req.user.userId}], function(err, rows) {
+          if (err) {
+            callback(err);
+          }
+          else if (rows[0].categoryCount > 0) {
+            req.flash('errorMessage', 'There is already a category with this name.');
+  
+            req.flash('categoryName', categoryName);
+  
+            return res.redirect('/edit-category/' + req.body.categoryId);
+          }
+          else {
+            callback(err);
+          }
+        });
+      },
+      function updateCategory(callback) {
+        connection.query('UPDATE Category SET ? WHERE ? AND ?', [ {name: categoryName}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
+          callback(err);
+        });
+      },
+      function updateRecipes(callback) {
+        connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {categoryName: categoryName}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
+          callback(err);
+        });
+      }
+    ], function(err) {
       if (err) {
         console.error(err);
 
         req.flash('errorMessage', 'The category was unable to be edited.');
-  
-        res.redirect('/view-categories');
+        req.flash('categoryName', categoryName);
+
+        res.redirect('/edit-category/' + req.body.categoryId);
       }
       else {
-        connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {categoryName: req.body.name}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
-          if (err) {
-            console.error(err);
-    
-            req.flash('errorMessage', 'The category was unable to be edited.');
-      
-            res.redirect('/view-categories');
-          }
-          else {
-            req.flash('successMessage', 'The category was edited successfully.');
+        req.flash('successMessage', 'The category was edited successfully.');
 
-            res.redirect('/view-categories');
-          }
-        });
+        res.redirect('/view-categories');
       }
     });
   }
