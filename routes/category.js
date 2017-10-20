@@ -1,10 +1,36 @@
+var async = require('async');
 var connection = require('../connection');
 var express = require('express');
 var router = express.Router();
 
 router.post('/add-category', function(req, res) {
-  connection.query('INSERT INTO Category SET ?, ?', [ {name: req.body.name}, {userId: req.user.userId} ], function(err) {
-  	if (err) {
+  var categoryName = req.body.name;
+
+  async.waterfall([
+    function getExistingCategory(callback) {
+      connection.query('SELECT COUNT(*) as categoryCount FROM Category WHERE ? AND ?', [{name: categoryName}, {userId: req.user.userId}], function(err, rows) {
+        if (err) {
+          callback(err);
+        }
+        else if (rows[0].categoryCount > 0) {
+          req.flash('errorMessage', 'There is already a category with this name.');
+
+          req.flash('categoryName', categoryName);
+
+          return res.redirect('/view-categories')
+        }
+        else {
+          callback(err);
+        }
+      });
+    },
+    function addCategory(callback) {
+      connection.query('INSERT INTO Category SET ?, ?', [ {name: categoryName}, {userId: req.user.userId} ], function(err) {
+        callback(err);
+      })
+    }
+  ], function(err) {
+    if (err) {
       console.error(err);
 
       req.flash('errorMessage', 'The category was unable to be added.');
@@ -16,7 +42,7 @@ router.post('/add-category', function(req, res) {
 
       res.redirect('/view-categories');
   	}
-  })
+  });
 });
 
 router.get('/edit-category/:categoryId', function(req, res) {
@@ -104,6 +130,7 @@ router.get('/view-categories', function(req, res) {
     else {
       res.render('view_categories', {
         categories: rows,
+        categoryName: req.flash('categoryName'),
         errorMessage: req.flash('errorMessage'),
         successMessage: req.flash('successMessage'),
         title: "Categories",
