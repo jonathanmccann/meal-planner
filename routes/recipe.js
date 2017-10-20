@@ -123,32 +123,32 @@ router.post('/edit-recipe', function(req, res) {
     }
 
     async.waterfall([
-    function getExistingRecipe(callback) {
-      connection.query('SELECT COUNT(*) as recipeCount FROM Recipe WHERE ? AND ?', [{name: recipeName}, {userId: req.user.userId}], function(err, rows) {
-        if (err) {
+      function getExistingRecipe(callback) {
+        connection.query('SELECT COUNT(*) as recipeCount FROM Recipe WHERE ? AND ?', [{name: recipeName}, {userId: req.user.userId}], function(err, rows) {
+          if (err) {
+            callback(err);
+          }
+          else if (rows[0].recipeCount > 0) {
+            req.flash('errorMessage', 'There is already a recipe with this name.');
+  
+            req.flash('categoryId', categoryId);
+            req.flash('ingredients', ingredients);
+            req.flash('name', recipeName);
+  
+            return res.redirect('/edit-recipe/' + req.body.recipeId);
+          }
+          else {
+            callback(err);
+          }
+        });
+      },
+      function addRecipe(callback) {
+        ingredients = ingredients.trim().replace(/\r?\n|\r/g, ",");
+  
+        connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {name: recipeName, ingredients: ingredients, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}, {userId: req.user.userId}], function(err) {
           callback(err);
-        }
-        else if (rows[0].recipeCount > 0) {
-          req.flash('errorMessage', 'There is already a recipe with this name.');
-
-          req.flash('categoryId', categoryId);
-          req.flash('ingredients', ingredients);
-          req.flash('name', recipeName);
-
-          return res.redirect('/edit-recipe/' + req.body.recipeId);
-        }
-        else {
-          callback(err);
-        }
-      });
-    },
-    function addRecipe(callback) {
-      ingredients = ingredients.trim().replace(/\r?\n|\r/g, ",");
-
-      connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {name: recipeName, ingredients: ingredients, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}, {userId: req.user.userId}], function(err) {
-        callback(err);
-      })
-    }
+        })
+      }
     ], function(err) {
       if (err) {
         console.log(err);
