@@ -7,5 +7,6 @@
   "wunderlistClientId": "",
   "wunderlistClientSecret": "",
   "wunderlistState": "",
-  "domain": ""
+  "domain": "",
+  "sendgridAPIKey": ""
 }
