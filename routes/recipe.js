@@ -63,26 +63,44 @@ router.post('/add-recipe', function(req, res) {
 
 router.get('/edit-recipe/:recipeId', function(req, res) {
   getCategories(req.user.userId, function(categoryRows) {
-    connection.query('SELECT * FROM Recipe WHERE ? AND ?', [ {recipeId: req.params.recipeId}, {userId: req.user.userId} ], function(err, rows) {
-      if (err || rows.length === 0) {
-        console.error(err);
+    var errorMessage = req.flash('errorMessage');
 
-        req.flash('errorMessage', 'The recipe was unable to be found.');
+    if (errorMessage && errorMessage.length) {
+      console.log("Stepped in");
 
-        res.redirect('/view-recipes');
-      }
-      else {
-        res.render('edit_recipe', {
-          categoryId: rows[0].categoryId,
-          categories: categoryRows,
-          ingredients: rows[0].ingredients.replace(/,/g, "\r\n"),
-          name: rows[0].name,
-          recipeId: req.params.recipeId,
-          title: "Edit Recipe",
-          user: req.user
-        });
-      }
-    });
+      res.render('edit_recipe', {
+        categoryId: req.flash('categoryId'),
+        categories: categoryRows,
+        errorMessage: errorMessage,
+        ingredients: req.flash('ingredients'),
+        name: req.flash('name'),
+        recipeId: req.params.recipeId,
+        title: "Edit Recipe",
+        user: req.user
+      });
+    }
+    else {
+      connection.query('SELECT * FROM Recipe WHERE ? AND ?', [{recipeId: req.params.recipeId}, {userId: req.user.userId}], function (err, rows) {
+        if (err || rows.length === 0) {
+          console.error(err);
+
+          req.flash('errorMessage', 'The recipe was unable to be found.');
+
+          res.redirect('/view-recipes');
+        }
+        else {
+          res.render('edit_recipe', {
+            categoryId: rows[0].categoryId,
+            categories: categoryRows,
+            ingredients: rows[0].ingredients.replace(/,/g, "\r\n"),
+            name: rows[0].name,
+            recipeId: req.params.recipeId,
+            title: "Edit Recipe",
+            user: req.user
+          });
+        }
+      });
+    }
   });
 });
 
@@ -90,7 +108,7 @@ router.post('/edit-recipe', function(req, res) {
   if (req.body.action === "Edit Recipe") {
     var recipeName = req.body.name;
 
-    var ingredients = req.body.ingredients.trim().replace(/\r?\n|\r/g, ",");
+    var ingredients = req.body.ingredients
 
     var category = req.body.category;
 
@@ -104,16 +122,43 @@ router.post('/edit-recipe', function(req, res) {
       categoryName = category[1];
     }
 
-    connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {name: recipeName, ingredients: ingredients, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}, {userId: req.user.userId}], function(err) {
-      if (err) {
-        console.error(err);
+    async.waterfall([
+    function getExistingRecipe(callback) {
+      connection.query('SELECT COUNT(*) as recipeCount FROM Recipe WHERE ? AND ?', [{name: recipeName}, {userId: req.user.userId}], function(err, rows) {
+        if (err) {
+          callback(err);
+        }
+        else if (rows[0].recipeCount > 0) {
+          req.flash('errorMessage', 'There is already a recipe with this name.');
 
-        req.flash('errorMessage', 'The recipe was unable to be edited.');
+          req.flash('categoryId', categoryId);
+          req.flash('ingredients', ingredients);
+          req.flash('name', recipeName);
+
+          return res.redirect('/edit-recipe/' + req.body.recipeId);
+        }
+        else {
+          callback(err);
+        }
+      });
+    },
+    function addRecipe(callback) {
+      ingredients = ingredients.trim().replace(/\r?\n|\r/g, ",");
+
+      connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {name: recipeName, ingredients: ingredients, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}, {userId: req.user.userId}], function(err) {
+        callback(err);
+      })
+    }
+    ], function(err) {
+      if (err) {
+        console.log(err);
+  
+        req.flash('errorMessage', 'The recipe was unable to be updated.');
       }
       else {
-        req.flash('successMessage', 'The recipe was edited successfully.');
+        req.flash('successMessage', 'The recipe was updated successfully.');
       }
-
+  
       res.redirect('/view-recipes');
     });
   }
