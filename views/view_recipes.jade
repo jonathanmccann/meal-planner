@@ -17,15 +17,19 @@ block content
       div(class="6u")
         form(action='/add-recipe', method='post')
           | Recipe Name:
-          input(type="text", name="name", autofocus, required)
+          input(type="text", name="name", value="#{name}", autofocus, required)
           br
           | Recipe Category:
           select(class="dropdown" name = "category")
             for category in categories
-              option(value = category.categoryId + "," + category.name) #{category.name}
+              if categoryId == category.categoryId
+                option(selected, value = category.categoryId + "," + category.name) #{category.name}
+              else
+                option(value = category.categoryId + "," + category.name) #{category.name}
           br
           | Recipe Ingredients:
           textarea(name="ingredients", rows="5", required)
+            | #{ingredients}
           br
           input(type='submit', value='Add Recipe')
       div(class="6u")

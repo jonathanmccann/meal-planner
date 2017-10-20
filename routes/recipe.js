@@ -1,11 +1,12 @@
+var async = require('async');
 var connection = require('../connection');
 var express = require('express');
 var router = express.Router();
 
 router.post('/add-recipe', function(req, res) {
-  var name = req.body.name;
+  var recipeName = req.body.name;
 
-  var ingredients = req.body.ingredients.trim().replace(/\r?\n|\r/g, ",");
+  var ingredients = req.body.ingredients;
 
   var category = req.body.category;
 
@@ -19,17 +20,44 @@ router.post('/add-recipe', function(req, res) {
     categoryName = category[1];
   }
 
-  connection.query('INSERT INTO Recipe(name, ingredients, categoryId, categoryName, userId) VALUES(?, ?, ?, ?, ?)', [name, ingredients, categoryId, categoryName, req.user.userId], function(err) {
-  	if (err) {
-      console.error(err);
+  async.waterfall([
+    function getExistingRecipe(callback) {
+      connection.query('SELECT COUNT(*) as recipeCount FROM Recipe WHERE ? AND ?', [{name: recipeName}, {userId: req.user.userId}], function(err, rows) {
+        if (err) {
+          callback(err);
+        }
+        else if (rows[0].recipeCount > 0) {
+          req.flash('errorMessage', 'There is already a recipe with this name.');
+
+          req.flash('categoryId', categoryId);
+          req.flash('ingredients', ingredients);
+          req.flash('name', recipeName);
+
+          return res.redirect('/view-recipes')
+        }
+        else {
+          callback(err);
+        }
+      });
+    },
+    function addRecipe(callback) {
+      ingredients = ingredients.trim().replace(/\r?\n|\r/g, ",");
+
+      connection.query('INSERT INTO Recipe(name, ingredients, categoryId, categoryName, userId) VALUES(?, ?, ?, ?, ?)', [recipeName, ingredients, categoryId, categoryName, req.user.userId], function(err) {
+        callback(err);
+      })
+    }
+  ], function(err) {
+    if (err) {
+      console.log(err);
 
       req.flash('errorMessage', 'The recipe was unable to be added.');
-  	}
-  	else {
-  	  req.flash('successMessage', 'The recipe was added successfully.');
-  	}
+    }
+    else {
+      req.flash('successMessage', 'The recipe was added successfully.');
+    }
 
-  	res.redirect('/view-recipes');
+    res.redirect('/view-recipes');
   })
 });
 
@@ -120,18 +148,23 @@ router.get('/view-recipes', function(req, res) {
       else {
         for (var i = 0; i < recipeRows.length; i++) {
           var categoryName = recipeRows[i].categoryName;
-  
+
           if (!categoryRecipeMap[categoryName]) {
             categoryRecipeMap[categoryName] = [];
           }
-  
+
           categoryRecipeMap[categoryName].push(recipeRows[i]);
         }
-  
+
+        console.log("Category rows = " + categoryRows.length);
+
         res.render('view_recipes', {
+          categoryId: req.flash('categoryId'),
           categoryRecipes: categoryRecipeMap,
           categories: categoryRows,
           errorMessage: req.flash('errorMessage'),
+          ingredients: req.flash('ingredients'),
+          name: req.flash('name'),
           successMessage: req.flash('successMessage'),
           title: "Recipes",
           user: req.user
