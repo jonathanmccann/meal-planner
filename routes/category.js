@@ -84,48 +84,66 @@ router.post('/edit-category', function(req, res) {
   if (req.body.action === "Edit Category") {
     var categoryName = req.body.name;
 
-    async.waterfall([
-      function getExistingCategory(callback) {
-        connection.query('SELECT COUNT(*) as categoryCount FROM Category WHERE ? AND ?', [{name: categoryName}, {userId: req.user.userId}], function(err, rows) {
-          if (err) {
-            callback(err);
-          }
-          else if (rows[0].categoryCount > 0) {
-            req.flash('errorMessage', 'There is already a category with this name.');
-  
-            req.flash('categoryName', categoryName);
-  
-            return res.redirect('/edit-category/' + req.body.categoryId);
-          }
-          else {
-            callback(err);
-          }
-        });
-      },
-      function updateCategory(callback) {
-        connection.query('UPDATE Category SET ? WHERE ? AND ?', [ {name: categoryName}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
-          callback(err);
-        });
-      },
-      function updateRecipes(callback) {
-        connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {categoryName: categoryName}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
-          callback(err);
-        });
-      }
-    ], function(err) {
+    connection.beginTransaction(function (err) {
       if (err) {
-        console.error(err);
+        console.log(err);
 
         req.flash('errorMessage', 'The category was unable to be edited.');
         req.flash('categoryName', categoryName);
 
-        res.redirect('/edit-category/' + req.body.categoryId);
+        return res.redirect('/edit-category/' + req.body.categoryId);
       }
-      else {
-        req.flash('successMessage', 'The category was edited successfully.');
 
-        res.redirect('/view-categories');
-      }
+      async.waterfall([
+        function getExistingCategory(callback) {
+          connection.query('SELECT COUNT(*) as categoryCount FROM Category WHERE ? AND ?', [{name: categoryName}, {userId: req.user.userId}], function (err, rows) {
+            if (err) {
+              callback(err);
+            }
+            else if (rows[0].categoryCount > 0) {
+              req.flash('errorMessage', 'There is already a category with this name.');
+
+              req.flash('categoryName', categoryName);
+
+              return res.redirect('/edit-category/' + req.body.categoryId);
+            }
+            else {
+              callback(err);
+            }
+          });
+        },
+        function updateCategory(callback) {
+          connection.query('UPDATE Category SET ? WHERE ? AND ?', [{name: categoryName}, {categoryId: req.body.categoryId}, {userId: req.user.userId}], function (err) {
+            callback(err);
+          });
+        },
+        function updateRecipes(callback) {
+          connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [{categoryName: categoryName}, {categoryId: req.body.categoryId}, {userId: req.user.userId}], function (err) {
+            callback(err);
+          });
+        },
+        function commitUpdates(callback) {
+          connection.commit(function(err) {
+            callback(err);
+          })
+        }
+      ], function (err) {
+        if (err) {
+          console.error(err);
+
+          connection.rollback();
+
+          req.flash('errorMessage', 'The category was unable to be edited.');
+          req.flash('categoryName', categoryName);
+
+          res.redirect('/edit-category/' + req.body.categoryId);
+        }
+        else {
+          req.flash('successMessage', 'The category was edited successfully.');
+
+          res.redirect('/view-categories');
+        }
+      });
     });
   }
   else {
