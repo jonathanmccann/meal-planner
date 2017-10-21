@@ -1,11 +1,12 @@
 var config = require('../config');
 var connection = require('../connection');
 var express = require('express');
+var oauth = require('simple-oauth2');
 var request = require('request');
 var router = express.Router();
 var wunderlist = require('./wunderlist');
 
-const credentials = {
+const wunderlistCredentials = {
   client: {
     id: config.configuration.wunderlistClientId,
     secret: config.configuration.wunderlistClientSecret
@@ -15,14 +16,14 @@ const credentials = {
   }
 };
 
-const oauth2 = require('simple-oauth2').create(credentials);
+const wunderlistOauth = oauth.create(wunderlistCredentials);
 
-const authorizationUri = oauth2.authorizationCode.authorizeURL({
-  redirect_uri: config.configuration.domain + '/callback',
+const wunderlistAuthorizationUri = wunderlistOauth.authorizationCode.authorizeURL({
+  redirect_uri: config.configuration.domain + '/wunderlist',
   state: config.configuration.wunderlistState
 });
 
-router.get('/callback', function(req, res) {
+router.get('/wunderlist', function(req, res) {
   var code = req.query.code;
 
   var state = req.query.state;
@@ -55,7 +56,7 @@ router.get('/callback', function(req, res) {
         return res.redirect('/my-account');
       }
       else {
-        connection.query('UPDATE User_ SET ? WHERE ?', [ {wunderlistAccessToken: accessToken, wunderlistListId: listId}, {userId: req.user.userId} ], function(err) {
+        connection.query('UPDATE User_ SET ? WHERE ?', [ {accessToken: accessToken, listId: listId}, {userId: req.user.userId} ], function(err) {
           if (err) {
             console.error(err);
     
@@ -72,8 +73,8 @@ router.get('/callback', function(req, res) {
   });
 });
 
-router.post('/authorize', function(req, res) {
-  res.redirect(authorizationUri);
+router.post('/wunderlist', function(req, res) {
+  res.redirect(wunderlistAuthorizationUri);
 });
 
 module.exports = router;

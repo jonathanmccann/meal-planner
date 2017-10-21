@@ -145,7 +145,7 @@ router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
 				return next(err);
 			}
 
-			wunderlist.getList(user.wunderlistAccessToken, user.wunderlistListId, function(err) {
+			wunderlist.getList(user.accessToken, user.listId, function(err) {
 				if (err) {
 					req.flash('errorMessage', 'Unable to contact Wunderlist. Please try reconnecting.');
 
