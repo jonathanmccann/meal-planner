@@ -26,6 +26,12 @@ block content
         | New Password:
         input(type="password", name="newPassword", required)
         input(type='submit', name='action', value='Update Password')
+      form(action='/todoist', method='post')
+        h3
+          | Todoist
+        | Got a new Todoist account or lost the old to-do list? Reconnect!
+        br
+        input(type='submit', value='Connect With Todoist')
       form(action='/wunderlist', method='post')
         h3
           | Wunderlist
