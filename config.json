@@ -3,10 +3,12 @@
   "user": "",
   "password": "",
   "database": "",
+  "oauthState": "",
   "sessionSecret": "",
+  "todoistClientId": "",
+  "todoistClientSecret": "",
   "wunderlistClientId": "",
   "wunderlistClientSecret": "",
-  "wunderlistState": "",
   "domain": "",
   "sendgridAPIKey": ""
 }

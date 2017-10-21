@@ -20,7 +20,7 @@ const wunderlistOauth = oauth.create(wunderlistCredentials);
 
 const wunderlistAuthorizationUri = wunderlistOauth.authorizationCode.authorizeURL({
   redirect_uri: config.configuration.domain + '/wunderlist',
-  state: config.configuration.wunderlistState
+  state: config.configuration.oauthState
 });
 
 router.get('/wunderlist', function(req, res) {
@@ -28,7 +28,7 @@ router.get('/wunderlist', function(req, res) {
 
   var state = req.query.state;
 
-  if (state !== config.configuration.wunderlistState) {
+  if (state !== config.configuration.oauthState) {
     console.error("A Wunderlist response was attempted to be forged.");
 
     req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
