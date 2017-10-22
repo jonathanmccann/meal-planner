@@ -1,6 +1,6 @@
 var request = require('request');
 
-function addProject(accessToken, callback) {
+function addList(accessToken, callback) {
   request({
     url: 'https://beta.todoist.com/API/v8/projects',
     qs: {
@@ -13,15 +13,13 @@ function addProject(accessToken, callback) {
   }, function(err, todoistResponse) {
     var json = JSON.parse(todoistResponse.body);
 
-    var projectId = json.id;
+    var listId = json.id;
 
-    console.log(projectId);
-
-    callback(err, projectId);
+    callback(err, listId);
   });
 }
 
-function addTask(accessToken, projectId, taskTitle, callback) {
+function addTask(accessToken, listId, taskTitle, callback) {
   request({
     url: 'https://beta.todoist.com/API/v8/tasks',
     qs: {
@@ -30,16 +28,16 @@ function addTask(accessToken, projectId, taskTitle, callback) {
     method: 'POST',
     form: {
       'content': taskTitle,
-      'project_id': projectId
+      'project_id': listId
     }
   }, function(err) {
     callback(err);
   });
 }
 
-function getProject(accessToken, projectId, callback) {
+function getList(accessToken, listId, callback) {
 	request({
-    url: 'https://beta.todoist.com/API/v8/projects/' + projectId,
+    url: 'https://beta.todoist.com/API/v8/projects/' + listId,
     qs: {
       token: accessToken
     },
@@ -50,7 +48,7 @@ function getProject(accessToken, projectId, callback) {
 }
 
 module.exports = {
-  addProject: addProject,
+  addList: addList,
   addTask: addTask,
-	getProject: getProject
+	getList: getList
 };

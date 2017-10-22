@@ -2,15 +2,25 @@ var async = require('async');
 var connection = require('../connection');
 var express = require('express');
 var router = express.Router();
+var todoist = require('./todoist');
 var wunderlist = require('./wunderlist');
 
 router.post('/add-ingredients', function(req, res) {
   var calls = [];
 
+  var provider;
+
+  if (req.user.toDoProvider === "Todoist") {
+    provider = todoist;
+  }
+  else if (req.user.toDoProvider === "Wunderlist") {
+    provider = wunderlist;
+  }
+
   for (var ingredient in req.body) {
     (function(innerIngredient) {
       calls.push(function (callback) {
-        wunderlist.addTask(req.user.accessToken, req.user.listId, innerIngredient, function (err) {
+        provider.addTask(req.user.accessToken, req.user.listId, innerIngredient, function (err) {
           if (err) {
             console.error("An error occurred while adding ingredients");
             console.error(err.error);
@@ -27,12 +37,12 @@ router.post('/add-ingredients', function(req, res) {
 
   async.parallel(calls, function(err) {
     if (err) {
-      req.flash('errorMessage', 'The ingredients were unable to be added to Wunderlist.');
+      req.flash('errorMessage', 'The ingredients were unable to be added to your to do list.');
 
       return res.redirect('/plan-meals');
     }
     else {
-      req.flash('successMessage', 'The ingredients were added to Wunderlist successfully.');
+      req.flash('successMessage', 'The ingredients were added to your to do list successfully.');
 
       return res.redirect('/plan-meals');
     }

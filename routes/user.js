@@ -8,6 +8,7 @@ var express = require('express');
 var sendgrid = require('@sendgrid/mail');
 var passport = require('passport');
 var router = express.Router();
+var todoist = require('./todoist');
 var wunderlist = require('./wunderlist');
 
 sendgrid.setApiKey(config.configuration.sendgridAPIKey);
@@ -145,9 +146,18 @@ router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
 				return next(err);
 			}
 
-			wunderlist.getList(user.accessToken, user.listId, function(err) {
+      var provider;
+
+      if (req.user.toDoProvider === "Todoist") {
+        provider = todoist;
+      }
+      else if (req.user.toDoProvider === "Wunderlist") {
+        provider = wunderlist;
+      }
+
+			provider.getList(user.accessToken, user.listId, function(err) {
 				if (err) {
-					req.flash('errorMessage', 'Unable to contact Wunderlist. Please try reconnecting.');
+					req.flash('errorMessage', 'Unable to fetch your to do list. Please try reconnecting.');
 
 					return res.redirect('/my-account');
 				}
