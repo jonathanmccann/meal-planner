@@ -76,7 +76,7 @@ router.get('/todoist', function(req, res) {
         return res.redirect('/my-account');
       }
       else {
-        connection.query('UPDATE User_ SET ? WHERE ?', [ {accessToken: accessToken, listId: projectId}, {userId: req.user.userId} ], function(err) {
+        connection.query('UPDATE User_ SET ? WHERE ?', [ {toDoProvider: "Todoist", accessToken: accessToken, listId: projectId}, {userId: req.user.userId} ], function(err) {
           if (err) {
             console.error(err);
     
@@ -126,7 +126,7 @@ router.get('/wunderlist', function(req, res) {
         return res.redirect('/my-account');
       }
       else {
-        connection.query('UPDATE User_ SET ? WHERE ?', [ {accessToken: accessToken, listId: listId}, {userId: req.user.userId} ], function(err) {
+        connection.query('UPDATE User_ SET ? WHERE ?', [ {toDoProvider: "Wunderlist", accessToken: accessToken, listId: listId}, {userId: req.user.userId} ], function(err) {
           if (err) {
             console.error(err);
     

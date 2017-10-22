@@ -25,6 +25,7 @@ CREATE TABLE User_(
 	userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	emailAddress VARCHAR(300) NOT NULL UNIQUE,
 	password VARCHAR(300),
+	toDoProvider VARCHAR(25),
 	accessToken VARCHAR(300),
 	listId VARCHAR(30),
 	passwordResetToken VARCHAR(100),
