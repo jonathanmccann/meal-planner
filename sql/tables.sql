@@ -31,5 +31,7 @@ CREATE TABLE User_(
 	toDoProvider VARCHAR(25),
 	accessToken VARCHAR(300),
 	listId VARCHAR(30),
-	mealsToDisplay INT DEFAULT 7
+	mealsToDisplay INT DEFAULT 7,
+	customerId VARCHAR(100),
+	subscriptionId VARCHAR(100)
 );

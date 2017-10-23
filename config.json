@@ -10,5 +10,7 @@
   "wunderlistClientId": "",
   "wunderlistClientSecret": "",
   "domain": "",
-  "sendgridAPIKey": ""
+  "sendgridAPIKey": "",
+  "stripePublishableKey": "",
+  "stripeSecretKey": ""
 }

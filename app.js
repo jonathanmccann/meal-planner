@@ -16,6 +16,7 @@ var category = require('./routes/category');
 var myAccount = require('./routes/my_account');
 var planMeals = require('./routes/plan_meals');
 var recipe = require('./routes/recipe');
+var subscription = require('./routes/subscription');
 var user = require('./routes/user');
 
 require('./config/passport')(passport);
@@ -67,6 +68,7 @@ app.use('/', isLoggedIn, category);
 app.use('/', isLoggedIn, myAccount);
 app.use('/', isLoggedIn, planMeals);
 app.use('/', isLoggedIn, recipe);
+app.use('/', isLoggedIn, subscription);
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

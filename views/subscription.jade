@@ -1,0 +1,85 @@
+extends header
+
+block content
+  div(class="container")
+    header(class="major")
+      h2= title
+  div(class="container user-input")
+    if errorMessage && errorMessage.length
+      div(class="error")
+        | #{errorMessage}
+    if successMessage && successMessage.length
+      div(class="success")
+        | #{successMessage}
+    div(class="info")
+      | #{subscriptionInformation}
+    div(class="padding-top")
+      h3
+        | Billing
+      div(class="indent")
+        if !user.customerId || !user.subscriptionId
+          form(action='/add-subscription', method='post')
+            h5
+              | Subscribe
+            p
+              | Subscribe today
+            script(
+              src="https://checkout.stripe.com/v2/checkout.js",
+              class="stripe-button",
+              data-allow-remember-me="false",
+              data-amount="100",
+              data-description="Subscription ($1.00 per month)",
+              data-email="#{user.emailAddress}"
+              data-key="#{publishableKey}",
+              data-label="Subscribe",
+              data-locale="auto",
+              data-name="Meal Planner",
+              data-panel-label="Subscribe {{amount}}"
+              data-zip-code="true")
+        else if isSubscriptionActive && !isPendingCancellation
+          form(action='/update-card', method='post')
+            h5
+              | Update
+            p
+              | Your new credit card details will be used for the next billing period.
+            script(
+            src="https://checkout.stripe.com/v2/checkout.js",
+            class="stripe-button",
+            data-allow-remember-me="false",
+            data-email="#{user.emailAddress}"
+            data-key="#{publishableKey}",
+            data-label="Update Card Details",
+            data-locale="auto",
+            data-name="Meal Planner",
+            data-panel-label="Update Card Details",
+            data-zip-code="true")
+        else
+          form(action='/update-subscription', method='post')
+            h5
+              | Subscribe
+            if isPendingCancellation
+              p
+                | Sign up for a subscription today to continue using this site. Note that you will not be charged until the next normal billing period.
+            else
+              p
+                | Sign up for a subscription today to continue using this site. Note that you will be charged immediately.
+            script(
+              src="https://checkout.stripe.com/v2/checkout.js",
+              class="stripe-button",
+              data-allow-remember-me="false",
+              data-amount="100",
+              data-description="Subscription ($1.00 per month)",
+              data-email="#{user.emailAddress}"
+              data-key="#{publishableKey}",
+              data-label="Subscribe",
+              data-locale="auto",
+              data-name="Meal Planner",
+              data-panel-label="Subscribe {{amount}}"
+              data-zip-code="true")
+        if isSubscriptionActive && !isPendingCancellation
+          form(action='/cancel-subscription', method='post')
+            h5
+              | Cancel
+            p
+              | After cancelling, your subscription will end at the end of the current billing cycle, allowing you full access to the site until that time. Once cancelled, you will not be charged again.
+            input(class="delete-button", type='submit', value='Cancel Subscription')
