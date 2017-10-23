@@ -29,5 +29,9 @@ block content
         textarea(name="ingredients", rows="5", required)
           | #{ingredients}
         br
+        | Recipe Directions:
+        textarea(name="directions", rows="5", required)
+          | #{directions}
+        br
         input(type='submit', name='action', value='Edit Recipe')
         input(type='submit', class="delete-button", name='action', value='Delete Recipe')

@@ -17,6 +17,7 @@ CREATE TABLE Recipe(
 	userId INT NOT NULL,
 	name VARCHAR(300),
 	ingredients TEXT,
+	directions TEXT,
 	categoryId INT,
 	categoryName VARCHAR(300)
 );

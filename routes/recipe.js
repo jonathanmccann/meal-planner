@@ -7,6 +7,7 @@ router.post('/add-recipe', function(req, res) {
   var recipeName = req.body.name;
 
   var ingredients = req.body.ingredients;
+  var directions = req.body.directions;
 
   var category = req.body.category;
 
@@ -30,6 +31,7 @@ router.post('/add-recipe', function(req, res) {
           req.flash('errorMessage', 'There is already a recipe with this name.');
 
           req.flash('categoryId', categoryId);
+          req.flash('directions', directions);
           req.flash('ingredients', ingredients);
           req.flash('name', recipeName);
 
@@ -43,15 +45,19 @@ router.post('/add-recipe', function(req, res) {
     function addRecipe(callback) {
       ingredients = ingredients.trim().replace(/\r?\n|\r/g, ",");
 
-      connection.query('INSERT INTO Recipe(name, ingredients, categoryId, categoryName, userId) VALUES(?, ?, ?, ?, ?)', [recipeName, ingredients, categoryId, categoryName, req.user.userId], function(err) {
+      connection.query('INSERT INTO Recipe(name, ingredients, directions, categoryId, categoryName, userId) VALUES(?, ?, ?, ?, ?, ?)', [recipeName, ingredients, directions, categoryId, categoryName, req.user.userId], function(err) {
         callback(err);
       })
     }
   ], function(err) {
     if (err) {
       console.log(err);
-
+  
       req.flash('errorMessage', 'The recipe was unable to be added.');
+      req.flash('categoryId', categoryId);
+      req.flash('directions', directions);
+      req.flash('ingredients', ingredients);
+      req.flash('name', recipeName);
     }
     else {
       req.flash('successMessage', 'The recipe was added successfully.');
@@ -66,11 +72,10 @@ router.get('/edit-recipe/:recipeId', function(req, res) {
     var errorMessage = req.flash('errorMessage');
 
     if (errorMessage && errorMessage.length) {
-      console.log("Stepped in");
-
       res.render('edit_recipe', {
         categoryId: req.flash('categoryId'),
         categories: categoryRows,
+        directions: req.flash('directions'),
         errorMessage: errorMessage,
         ingredients: req.flash('ingredients'),
         name: req.flash('name'),
@@ -92,6 +97,7 @@ router.get('/edit-recipe/:recipeId', function(req, res) {
           res.render('edit_recipe', {
             categoryId: rows[0].categoryId,
             categories: categoryRows,
+            directions: rows[0].directions,
             ingredients: rows[0].ingredients.replace(/,/g, "\r\n"),
             name: rows[0].name,
             recipeId: req.params.recipeId,
@@ -108,7 +114,8 @@ router.post('/edit-recipe', function(req, res) {
   if (req.body.action === "Edit Recipe") {
     var recipeName = req.body.name;
 
-    var ingredients = req.body.ingredients
+    var ingredients = req.body.ingredients;
+    var directions = req.body.directions;
 
     var category = req.body.category;
 
@@ -132,6 +139,7 @@ router.post('/edit-recipe', function(req, res) {
             req.flash('errorMessage', 'There is already a recipe with this name.');
   
             req.flash('categoryId', categoryId);
+            req.flash('directions', directions);
             req.flash('ingredients', ingredients);
             req.flash('name', recipeName);
   
@@ -145,7 +153,7 @@ router.post('/edit-recipe', function(req, res) {
       function addRecipe(callback) {
         ingredients = ingredients.trim().replace(/\r?\n|\r/g, ",");
   
-        connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {name: recipeName, ingredients: ingredients, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}, {userId: req.user.userId}], function(err) {
+        connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {name: recipeName, ingredients: ingredients, directions: directions, categoryId: categoryId, categoryName: categoryName}, { recipeId: req.body.recipeId}, {userId: req.user.userId}], function(err) {
           callback(err);
         })
       }
@@ -155,6 +163,7 @@ router.post('/edit-recipe', function(req, res) {
   
         req.flash('errorMessage', 'The recipe was unable to be updated.');
         req.flash('categoryId', categoryId);
+        req.flash('directions', directions);
         req.flash('ingredients', ingredients);
         req.flash('name', recipeName);
 
@@ -212,6 +221,7 @@ router.get('/view-recipes', function(req, res) {
           categoryId: req.flash('categoryId'),
           categoryRecipes: categoryRecipeMap,
           categories: categoryRows,
+          directions: req.flash('directions'),
           errorMessage: req.flash('errorMessage'),
           ingredients: req.flash('ingredients'),
           name: req.flash('name'),

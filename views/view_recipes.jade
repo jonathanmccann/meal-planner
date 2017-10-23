@@ -31,6 +31,10 @@ block content
           textarea(name="ingredients", rows="5", required)
             | #{ingredients}
           br
+          | Recipe Directions:
+          textarea(name="directions", rows="5")
+            | #{directions}
+          br
           input(type='submit', value='Add Recipe')
       div(class="6u")
         if categoryRecipes == null
