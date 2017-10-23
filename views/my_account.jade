@@ -26,6 +26,22 @@ block content
         | New Password:
         input(type="password", name="newPassword", required)
         input(type='submit', name='action', value='Update Password')
+      form(action='/update-calendar', method='post')
+        h3
+          | Update Calendar
+        | Choose which meals you wish to have displayed on the calendar.
+        br
+        br
+        input(type='checkbox', id='displayBreakfast', name='displayBreakfast', checked='#{displayBreakfast}' > 0)
+        label(for='displayBreakfast') Breakfast
+        br
+        input(type='checkbox', id='displayLunch', name='displayLunch', checked='#{displayLunch}' > 0)
+        label(for='displayLunch') Lunch
+        br
+        input(type='checkbox', id='displayDinner', name='displayDinner', checked='#{displayDinner}' > 0)
+        label(for='displayDinner') Dinner
+        br
+        input(type='submit', value='Update Calendar')
       form(action='/todoist', method='post')
         h3
           | Todoist
