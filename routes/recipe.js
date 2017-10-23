@@ -131,7 +131,7 @@ router.post('/edit-recipe', function(req, res) {
 
     async.waterfall([
       function getExistingRecipe(callback) {
-        connection.query('SELECT COUNT(*) as recipeCount FROM Recipe WHERE ? AND ?', [{name: recipeName}, {userId: req.user.userId}], function(err, rows) {
+        connection.query('SELECT COUNT(*) as recipeCount FROM Recipe WHERE name = ? AND userId = ? AND recipeId != ?', [recipeName, req.user.userId, req.body.recipeId], function(err, rows) {
           if (err) {
             callback(err);
           }
