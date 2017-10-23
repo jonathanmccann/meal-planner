@@ -28,36 +28,39 @@ block content
             th Thursday
             th Friday
             th Saturday
-          tr
-            td Breakfast
-            -for (var i = 0; i < 7; i++) {
-              td(id="#{i}0", class="accept-container")
-                if calendarDayAndRecipeMap["" + i + 0] != null
-                  -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 0].length; j++) {
-                    label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + i + 0][j][0]}")
-                      | #{calendarDayAndRecipeMap["" + i + 0][j][1]}
-                  -}
-            -}
-          tr
-            td Lunch
-            -for (var i = 0; i < 7; i++) {
-              td(id="#{i}1", class="accept-container")
-                if calendarDayAndRecipeMap["" + i + 1] != null
-                  -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 1].length; j++) {
-                    label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + i + 1][j][0]}")
-                      | #{calendarDayAndRecipeMap["" + i + 1][j][1]}
-                  -}
-            -}
-          tr
-            td Dinner
-            -for (var i = 0; i < 7; i++) {
-              td(id="#{i}2", class="accept-container")
-                if calendarDayAndRecipeMap["" + i + 2] != null
-                  -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 2].length; j++) {
-                    label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + i + 2][j][0]}")
-                      | #{calendarDayAndRecipeMap["" + i + 2][j][1]}
-                  -}
-            -}
+          if displayBreakfast
+            tr
+              td Breakfast
+              -for (var i = 0; i < 7; i++) {
+                td(id="#{i}0", class="accept-container")
+                  if calendarDayAndRecipeMap["" + i + 0] != null
+                    -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 0].length; j++) {
+                      label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + i + 0][j][0]}")
+                        | #{calendarDayAndRecipeMap["" + i + 0][j][1]}
+                    -}
+              -}
+          if displayLunch
+            tr
+              td Lunch
+              -for (var i = 0; i < 7; i++) {
+                td(id="#{i}1", class="accept-container")
+                  if calendarDayAndRecipeMap["" + i + 1] != null
+                    -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 1].length; j++) {
+                      label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + i + 1][j][0]}")
+                        | #{calendarDayAndRecipeMap["" + i + 1][j][1]}
+                    -}
+              -}
+          if displayDinner
+            tr
+              td Dinner
+              -for (var i = 0; i < 7; i++) {
+                td(id="#{i}2", class="accept-container")
+                  if calendarDayAndRecipeMap["" + i + 2] != null
+                    -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 2].length; j++) {
+                      label(class="draggable padding-top", id="#{calendarDayAndRecipeMap['' + i + 2][j][0]}")
+                        | #{calendarDayAndRecipeMap["" + i + 2][j][1]}
+                    -}
+              -}
         input(type='submit', name='action', value='Submit Calendar')
         input(class="delete-button", name='action', type='submit', value='Clear Calendar')
       div(id="recipes", class="recipes")

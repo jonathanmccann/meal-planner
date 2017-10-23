@@ -2,6 +2,10 @@ var connection = require('../connection');
 var express = require('express');
 var router = express.Router();
 
+const breakfastBitwseValue = 1;
+const lunchBitwseValue = 2;
+const dinnerBitwseValue = 4;
+
 router.get('/calendar', function(req, res) {
   connection.query('SELECT * FROM Calendar WHERE ?', {userId: req.user.userId}, function(err, calendarRows) {
     if (err) {
@@ -48,9 +52,13 @@ router.get('/calendar', function(req, res) {
 						categoryRecipeMap[categoryName].push(recipeRows[i]);
 					}
 
+          
 					res.render('calendar', {
 						calendarDayAndRecipeMap: calendarDayAndRecipeMap,
 						categoryRecipes: categoryRecipeMap,
+						displayBreakfast: req.user.mealsToDisplay & breakfastBitwseValue,
+						displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
+						displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
 						errorMessage: req.flash('errorMessage'),
 						successMessage: req.flash('successMessage'),
 						test: "test",
