@@ -26,9 +26,9 @@ function addTask(accessToken, listId, taskTitle, callback) {
       token: accessToken
     },
     method: 'POST',
-    form: {
-      'content': taskTitle,
-      'project_id': listId
+    json: {
+      "content": taskTitle,
+      "project_id": parseInt(listId)
     }
   }, function(err) {
     callback(err);
