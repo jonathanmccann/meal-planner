@@ -13,10 +13,11 @@ html
       nav(id = "nav")
         if (user)
           ul
-            li: a(href="/view-recipes") Recipes
-            li: a(href="/view-categories") Categories
-            li: a(href="/calendar") Calendar
-            li: a(class='button special' href="/plan-meals") Plan Meals
+            if user.isSubscribed
+              li: a(href="/view-recipes") Recipes
+              li: a(href="/view-categories") Categories
+              li: a(href="/calendar") Calendar
+              li: a(class='button special' href="/plan-meals") Plan Meals
             li: a(class='button special' href="/my-account") My Account
             li: a(class='button special' href="/log-out") Log Out
         else
