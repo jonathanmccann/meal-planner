@@ -200,7 +200,7 @@ router.get('/reset-password/:passwordResetToken', function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.log(err);
+      console.error(err);
 
       req.flash('errorMessage', 'Your password reset link is either expired or invalid. Please request a new link.');
     
@@ -238,7 +238,7 @@ router.post('/reset-password', userBruteForce.prevent, function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.log(err);
+      console.error(err);
 
       req.flash('errorMessage', 'Your password reset link is either expired or invalid. Please request a new link.');
     

@@ -49,8 +49,6 @@ router.get('/edit-category/:categoryId', function(req, res) {
   var errorMessage = req.flash('errorMessage');
 
   if (errorMessage && errorMessage.length) {
-    console.log("Stepped in");
-
     res.render('edit_category', {
       categoryId: req.params.categoryId,
       errorMessage: errorMessage,
@@ -86,7 +84,7 @@ router.post('/edit-category', function(req, res) {
 
     connection.beginTransaction(function (err) {
       if (err) {
-        console.log(err);
+        console.error(err);
 
         req.flash('errorMessage', 'The category was unable to be edited.');
         req.flash('categoryName', categoryName);

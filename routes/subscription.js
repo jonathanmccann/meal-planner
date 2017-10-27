@@ -30,13 +30,13 @@ function addSubscription(subscription, req, res) {
 function handleStripeError(err, req, res) {
   switch (err.type) {
     case 'StripeCardError':
-      console.log(err.message);
+      console.error(err.message);
 
       req.flash('errorMessage', "Your card has been declined. Please check your card's details and try again.");
       
       break;
     default:
-      console.log(err.message);
+      console.error(err.message);
 
       req.flash('errorMessage', 'Your subscription request failed to complete. Please contact an administrator.');
 

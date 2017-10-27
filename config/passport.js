@@ -128,10 +128,8 @@ module.exports = function(passport) {
           ).then(function(subscription) {
             var subscriptionStatus = subscription.status;
 
-            console.log(subscriptionStatus);
             if ((subscription.cancel_at_period_end && (subscriptionStatus !== "canceled")) || (subscriptionStatus === "active") || (subscriptionStatus === "trialing")) {
               connection.query('UPDATE User_ SET ? WHERE ?', [{isSubscribed: 1}, {userId: user.userId}], function(err, rows) {
-                console.log("Updated to true");
                 if (err) {
                   console.error(err);
 
@@ -146,7 +144,6 @@ module.exports = function(passport) {
             }
             else {
               connection.query('UPDATE User_ SET ? WHERE ?', [{isSubscribed: 0}, {userId: user.userId}], function(err, rows) {
-                console.log("Updated to false");
                 if (err) {
                   console.error(err);
 

@@ -51,7 +51,7 @@ router.post('/add-recipe', function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.log(err);
+      console.error(err);
   
       req.flash('errorMessage', 'The recipe was unable to be added.');
       req.flash('categoryId', categoryId);
@@ -159,7 +159,7 @@ router.post('/edit-recipe', function(req, res) {
       }
     ], function(err) {
       if (err) {
-        console.log(err);
+        console.error(err);
   
         req.flash('errorMessage', 'The recipe was unable to be updated.');
         req.flash('categoryId', categoryId);
@@ -214,8 +214,6 @@ router.get('/view-recipes', function(req, res) {
 
           categoryRecipeMap[categoryName].push(recipeRows[i]);
         }
-
-        console.log("Category rows = " + categoryRows.length);
 
         res.render('view_recipes', {
           categoryId: req.flash('categoryId'),
