@@ -1,5 +1,7 @@
 extends header
 
+block extraScripts
+  script(src="https://checkout.stripe.com/checkout.js")
 block content
   div(class="container")
     header(class="major")
@@ -18,43 +20,21 @@ block content
         | Billing
       div(class="indent")
         if !user.customerId || !user.subscriptionId
-          form(action='/add-subscription', method='post')
+          form(action='/add-subscription', id='addSubscriptionForm', method='post')
             h5
               | Subscribe
             p
               | Subscribe today
-            script(
-              src="https://checkout.stripe.com/v2/checkout.js",
-              class="stripe-button",
-              data-allow-remember-me="false",
-              data-amount="100",
-              data-description="Subscription ($1.00 per month)",
-              data-email="#{user.emailAddress}"
-              data-key="#{publishableKey}",
-              data-label="Subscribe",
-              data-locale="auto",
-              data-name="Meal Planner",
-              data-panel-label="Subscribe {{amount}}"
-              data-zip-code="true")
+            input(class="button", id='addSubscriptionButton', type='submit', value='Subscribe')
         else if isSubscriptionActive && !isPendingCancellation
-          form(action='/update-card', method='post')
+          form(action='/update-card', id='updateCardForm', method='post')
             h5
               | Update
             p
               | Your new credit card details will be used for the next billing period.
-            script(
-            src="https://checkout.stripe.com/v2/checkout.js",
-            class="stripe-button",
-            data-allow-remember-me="false",
-            data-email="#{user.emailAddress}"
-            data-key="#{publishableKey}",
-            data-label="Update Card Details",
-            data-locale="auto",
-            data-name="Meal Planner",
-            data-panel-label="Update Card Details",
-            data-zip-code="true")
+            input(class="button", id='updateCardButton', type='submit', value='Update Card Details')
         else
-          form(action='/update-subscription', method='post')
+          form(action='/update-subscription', id='updateSubscriptionForm', method='post')
             h5
               | Subscribe
             if isPendingCancellation
@@ -63,19 +43,7 @@ block content
             else
               p
                 | Sign up for a subscription today to continue using this site. Note that you will be charged immediately.
-            script(
-              src="https://checkout.stripe.com/v2/checkout.js",
-              class="stripe-button",
-              data-allow-remember-me="false",
-              data-amount="100",
-              data-description="Subscription ($1.00 per month)",
-              data-email="#{user.emailAddress}"
-              data-key="#{publishableKey}",
-              data-label="Subscribe",
-              data-locale="auto",
-              data-name="Meal Planner",
-              data-panel-label="Subscribe {{amount}}"
-              data-zip-code="true")
+            input(class="button", id='updateSubscriptionButton', type='submit', value='Subscribe')
         if isSubscriptionActive && !isPendingCancellation
           form(action='/cancel-subscription', method='post')
             h5
@@ -83,3 +51,94 @@ block content
             p
               | After cancelling, your subscription will end at the end of the current billing cycle, allowing you full access to the site until that time. Once cancelled, you will not be charged again.
             input(class="delete-button", type='submit', value='Cancel Subscription')
+    script.
+      var addSubscriptionButton = document.getElementById("addSubscriptionButton");
+
+      if (addSubscriptionButton) {
+        var addSubscription = StripeCheckout.configure({
+          allowRememberMe: false,
+          amount: 100,
+          description: "Subscription ($1.00 per month)",
+          email: "#{user.emailAddress}",
+          key: "#{publishableKey}",
+          locale: "auto",
+          name: "Meal Planner",
+          panelLabel: "Subscribe {{amount}}",
+          zipCode: true,
+          token: function (token) {
+            var addSubscriptionForm = $('#addSubscriptionForm');
+
+            addSubscriptionForm.append($('<input id="stripeToken" name="stripeToken" type="hidden">').val(token.id));
+
+            addSubscriptionForm.submit();
+          }
+        });
+
+        addSubscriptionButton.addEventListener("click", function (e) {
+          addSubscription.open({
+            email: "#{user.emailAddress}"
+          });
+
+          e.preventDefault();
+        })
+      }
+
+      var updateCardButton = document.getElementById("updateCardButton");
+
+      if (updateCardButton) {
+        var updateCard = StripeCheckout.configure({
+          allowRememberMe: false,
+          email: "#{user.emailAddress}",
+          key: "#{publishableKey}",
+          locale: "auto",
+          name: "Meal Planner",
+          panelLabel: "Update Card Details",
+          zipCode: true,
+          token: function (token) {
+            var updateCardForm = $('#updateCardForm');
+
+            updateCardForm.append($('<input id="stripeToken" name="stripeToken" type="hidden">').val(token.id));
+
+            updateCardForm.submit();
+          }
+        });
+
+        updateCardButton.addEventListener("click", function (e) {
+          updateCard.open({
+            email: "#{user.emailAddress}"
+          });
+
+          e.preventDefault();
+        })
+      }
+
+      var updateSubscriptionButton = document.getElementById("updateSubscriptionButton");
+
+      if (updateSubscriptionButton) {
+        var updateSubscription = StripeCheckout.configure({
+          allowRememberMe: false,
+          amount: 100,
+          description: "Subscription ($1.00 per month)",
+          email: "#{user.emailAddress}",
+          key: "#{publishableKey}",
+          locale: "auto",
+          name: "Meal Planner",
+          panelLabel: "Subscribe {{amount}}",
+          zipCode: true,
+          token: function (token) {
+            var updateSubscriptionForm = $('#updateSubscriptionForm');
+
+            updateSubscriptionForm.append($('<input id="stripeToken" name="stripeToken" type="hidden">').val(token.id));
+
+            updateSubscriptionForm.submit();
+          }
+        });
+
+        updateSubscriptionButton.addEventListener("click", function (e) {
+          updateSubscription.open({
+            email: "#{user.emailAddress}"
+          });
+
+          e.preventDefault();
+        })
+      }

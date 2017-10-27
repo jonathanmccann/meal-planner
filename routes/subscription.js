@@ -20,7 +20,7 @@ function addSubscription(subscription, req, res) {
       res.redirect('/subscription');
     }
     else {
-      req.flash('successMessage', 'Thank you for subscribing! Please enjoy the full features of the site.');
+      req.flash('successMessage', 'Thank you for subscribing! Please enjoy all of the features of the site.');
 
       res.redirect('/subscription');
     }
@@ -121,7 +121,7 @@ router.post('/update-subscription', function(req, res) {
             ]
           }
         ).then(function() {
-          req.flash('successMessage', 'You have successfully resubscribed! Please continue enjoying the full features of the site.');
+          req.flash('successMessage', 'You have successfully resubscribed! Please continue enjoying all of the features of the site.');
 
           res.redirect('/subscription');
         }).catch(function(err) {
