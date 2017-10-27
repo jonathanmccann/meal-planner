@@ -208,7 +208,7 @@ router.get('/subscription', function(req, res) {
         var trialEndDate = new Date(subscription.trial_end * 1000);
 
         subscriptionInformation =
-          "Your next charge will occur on " +
+          "Your free trial will end on " +
             monthNames[trialEndDate.getMonth()] + " " +
               trialEndDate.getDate() + ", " +
                 trialEndDate.getFullYear() +
