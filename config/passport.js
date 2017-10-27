@@ -1,8 +1,13 @@
+var async = require('async');
 var bcrypt = require('bcrypt-nodejs');
+var config = require('../config');
 var connection = require('../connection');
 var LocalStrategy = require('passport-local').Strategy;
 
 var emailAddressRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$");
+
+const trialPeriodsDays = 14;
+const stripe = require('stripe')(config.configuration.stripeSecretKey);
 
 module.exports = function(passport) {
   passport.serializeUser(function(user, done) {
@@ -23,19 +28,26 @@ module.exports = function(passport) {
       passReqToCallback: true
     },
     function(req, emailAddress, password, done) {
-      connection.query('SELECT * FROM User_ WHERE emailAddress = ?', [emailAddress], function(err, rows) {
-        if (err) {
-          console.error(err);
-
-          return done(err);
-        }
-        else if (rows.length) {
-          return done(null, false, req.flash('errorMessage', 'That email address is already taken.'));
-        }
-        else if (!emailAddress || !password || !emailAddressRegex.test(emailAddress)) {
-          return done(null, false, req.flash('errorMessage', 'Please enter a valid email address and password.'));
-        }
-        else {
+      async.waterfall([
+        function fetchExistingUser(callback) {
+          connection.query('SELECT * FROM User_ WHERE emailAddress = ?', [emailAddress], function(err, rows) {
+            if (rows.length) {
+              return done(null, false, req.flash('errorMessage', 'That email address is already taken.'));
+            }
+            else {
+              callback(err);
+            }
+          });
+        },
+        function validateUser(callback) {
+          if (!emailAddress || !password || !emailAddressRegex.test(emailAddress)) {
+            return done(null, false, req.flash('errorMessage', 'Please enter a valid email address and password.'));
+          }
+          else {
+            callback();
+          }
+        },
+        function addUser(callback) {
           var user = {
             emailAddress: emailAddress,
             password: password
@@ -43,14 +55,49 @@ module.exports = function(passport) {
 
           connection.query('INSERT INTO User_ (emailAddress, password) VALUES (?, ?)', [emailAddress, bcrypt.hashSync(password)], function(err, rows) {
             if (err) {
-              return done(err);
+              callback(err);
             }
             else {
               user.userId = rows.insertId;
 
-              return done(null, user, req.flash('successMessage', 'You account has been successfully created. Please connect with Wunderlist to start planning meals.'));
+              callback(err, user);
             }
           })
+        },
+        function addUserToStripe(user, callback) {
+          stripe.customers.create({
+            email: user.emailAddress
+          }).then(function(customer) {
+            return stripe.subscriptions.create({
+              customer: customer.id,
+              items: [
+                {
+                  plan: "meal-planner"
+                }
+              ],
+              trial_period_days: trialPeriodsDays
+            })
+          }).then(function(subscription) {
+            connection.query('UPDATE User_ SET ? WHERE ?', [{customerId: subscription.customer, subscriptionId: subscription.id}, {userId: user.userId}], function(err) {
+              if (err) {
+                callback(err);
+              }
+              else {
+                callback(err, user);
+              }
+            });
+          }).catch(function(err) {
+            callback(err)
+          });
+        }
+      ], function(err, user) {
+        if (err) {
+          console.error(err);
+
+          return done(err);
+        }
+        else {
+          return done(null, user, req.flash('successMessage', 'You account has been successfully created. Please connect with Wunderlist to start planning meals.'));
         }
       });
     })
