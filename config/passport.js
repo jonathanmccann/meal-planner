@@ -121,7 +121,49 @@ module.exports = function(passport) {
           return done(null, false, req.flash('errorMessage', 'Unable to login'));
         }
         else {
-          return done(null, rows[0]);
+          var user = rows[0];
+
+          stripe.subscriptions.retrieve(
+            user.subscriptionId
+          ).then(function(subscription) {
+            var subscriptionStatus = subscription.status;
+
+            console.log(subscriptionStatus);
+            if (subscription.cancel_at_period_end || (subscriptionStatus === "active") || (subscriptionStatus === "trialing")) {
+              connection.query('UPDATE User_ SET ? WHERE ?', [{isSubscribed: 1}, {userId: user.userId}], function(err, rows) {
+                console.log("Updated to true");
+                if (err) {
+                  console.error(err);
+
+                  return done(err);
+                }
+                else {
+                  user.isSubscribed = 1;
+
+                  return done(null, user);
+                }
+              });
+            }
+            else {
+              connection.query('UPDATE User_ SET ? WHERE ?', [{isSubscribed: 0}, {userId: user.userId}], function(err, rows) {
+                console.log("Updated to false");
+                if (err) {
+                  console.error(err);
+
+                  return done(err);
+                }
+                else {
+                  user.isSubscribed = 0;
+
+                  return done(null, user);
+                }
+              });
+            }
+          }).catch(function(err) {
+            console.error(err);
+
+            return done(err);
+          });
         }
       })
     })

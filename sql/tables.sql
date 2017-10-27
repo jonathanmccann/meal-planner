@@ -33,5 +33,6 @@ CREATE TABLE User_(
 	listId VARCHAR(30),
 	mealsToDisplay INT DEFAULT 7,
 	customerId VARCHAR(100),
-	subscriptionId VARCHAR(100)
+	subscriptionId VARCHAR(100),
+	isSubscribed BOOLEAN DEFAULT 1
 );
