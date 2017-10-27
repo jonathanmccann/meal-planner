@@ -185,7 +185,7 @@ router.get('/subscription', function(req, res) {
       var isPendingCancellation = subscription.cancel_at_period_end;
       var subscriptionStatus = subscription.status;
 
-      if (isPendingCancellation) {
+      if (isPendingCancellation && (subscriptionStatus !== "canceled")) {
         var subscriptionEndDate = new Date(subscription.current_period_end * 1000);
 
         subscriptionInformation =

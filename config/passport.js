@@ -129,7 +129,7 @@ module.exports = function(passport) {
             var subscriptionStatus = subscription.status;
 
             console.log(subscriptionStatus);
-            if (subscription.cancel_at_period_end || (subscriptionStatus === "active") || (subscriptionStatus === "trialing")) {
+            if ((subscription.cancel_at_period_end && (subscriptionStatus !== "canceled")) || (subscriptionStatus === "active") || (subscriptionStatus === "trialing")) {
               connection.query('UPDATE User_ SET ? WHERE ?', [{isSubscribed: 1}, {userId: user.userId}], function(err, rows) {
                 console.log("Updated to true");
                 if (err) {
