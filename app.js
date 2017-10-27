@@ -54,6 +54,17 @@ function isLoggedIn(req, res, next) {
     }
 }
 
+function isSubscribed(req, res, next) {
+  if (req.user.isSubscribed) {
+    next();
+  }
+  else {
+    req.flash('errorMessage', 'Please subscribe in order to access that feature.');
+
+    res.redirect('/subscription');
+  }
+}
+
 app.get('/', function(req, res) {
   res.render('home', {
     title: "Meal Planner",
@@ -62,13 +73,15 @@ app.get('/', function(req, res) {
 });
 
 app.use('/', user);
-app.use('/', isLoggedIn, authorize);
-app.use('/', isLoggedIn, calendar);
-app.use('/', isLoggedIn, category);
+
 app.use('/', isLoggedIn, myAccount);
-app.use('/', isLoggedIn, planMeals);
-app.use('/', isLoggedIn, recipe);
 app.use('/', isLoggedIn, subscription);
+
+app.use('/', isLoggedIn, isSubscribed, authorize);
+app.use('/', isLoggedIn, isSubscribed, calendar);
+app.use('/', isLoggedIn, isSubscribed, category);
+app.use('/', isLoggedIn, isSubscribed, planMeals);
+app.use('/', isLoggedIn, isSubscribed, recipe);
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

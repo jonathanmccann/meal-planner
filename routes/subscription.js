@@ -11,7 +11,7 @@ const monthNames = [
 ];
 
 function addSubscription(subscription, req, res) {
-  connection.query('UPDATE User_ SET ? WHERE ?', [{customerId: subscription.customer, subscriptionId: subscription.id}, {userId: req.user.userId}], function(err) {
+  connection.query('UPDATE User_ SET ? WHERE ?', [{customerId: subscription.customer, subscriptionId: subscription.id, isSubscribed: 1}, {userId: req.user.userId}], function(err) {
     if (err) {
       console.error(err);
 
