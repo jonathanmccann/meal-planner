@@ -1,9 +1,8 @@
-var config = require('../config');
 var connection = require('../connection');
 var express = require('express');
 var router = express.Router();
 
-const stripe = require('stripe')(config.configuration.stripeSecretKey);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const monthNames = [
   "January", "February", "March", "April", "May", "June", "July", "August",
@@ -170,7 +169,7 @@ router.get('/subscription', function(req, res) {
       infoMessage: req.flash('infoMessage'),
       successMessage: req.flash('successMessage'),
       isSubscriptionActive: false,
-      publishableKey: config.configuration.stripePublishableKey,
+      publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
       subscriptionInformation: subscriptionInformation,
       title: "Subscription",
       user: req.user
@@ -225,7 +224,7 @@ router.get('/subscription', function(req, res) {
         successMessage: req.flash('successMessage'),
         isPendingCancellation: isPendingCancellation,
         isSubscriptionActive: subscription.status === "active",
-        publishableKey: config.configuration.stripePublishableKey,
+        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
         subscriptionInformation: subscriptionInformation,
         title: "Subscription",
         user: req.user

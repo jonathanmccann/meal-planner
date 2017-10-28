@@ -1,4 +1,3 @@
-var config = require('../config');
 var connection = require('../connection');
 var express = require('express');
 var oauth = require('simple-oauth2');
@@ -9,8 +8,8 @@ var wunderlist = require('./wunderlist');
 
 const todoistCredentials = {
   client: {
-    id: config.configuration.todoistClientId,
-    secret: config.configuration.todoistClientSecret
+    id: process.env.TODOIST_CLIENT_ID,
+    secret: process.env.TODOIST_CLIENT_SECRET
   },
   auth: {
     tokenHost: 'https://todoist.com/oauth/authorize'
@@ -21,13 +20,13 @@ const todoistOauth = oauth.create(todoistCredentials);
 
 const todoistAuthorizationUri = todoistOauth.authorizationCode.authorizeURL({
   scope: "data:read_write,data:delete",
-  state: config.configuration.oauthState
+  state: process.env.OAUTH_STATE
 });
 
 const wunderlistCredentials = {
   client: {
-    id: config.configuration.wunderlistClientId,
-    secret: config.configuration.wunderlistClientSecret
+    id: process.env.WUNDERLIST_CLIENT_ID,
+    secret: process.env.WUNDERLIST_CLIENT_SECRET
   },
   auth: {
     tokenHost: 'https://www.wunderlist.com/oauth/authorize'
@@ -37,8 +36,8 @@ const wunderlistCredentials = {
 const wunderlistOauth = oauth.create(wunderlistCredentials);
 
 const wunderlistAuthorizationUri = wunderlistOauth.authorizationCode.authorizeURL({
-  redirect_uri: config.configuration.domain + '/wunderlist',
-  state: config.configuration.oauthState
+  redirect_uri: process.env.DOMAIN + '/wunderlist',
+  state: process.env.OAUTH_STATE
 });
 
 router.get('/todoist', function(req, res) {
@@ -46,7 +45,7 @@ router.get('/todoist', function(req, res) {
 
   var state = req.query.state;
 
-  if (state !== config.configuration.oauthState) {
+  if (state !== process.env.OAUTH_STATE) {
     console.error("A Wunderlist response was attempted to be forged.");
 
     req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
@@ -58,8 +57,8 @@ router.get('/todoist', function(req, res) {
     url: 'https://todoist.com/oauth/access_token',
     method: 'POST',
     form: {
-      'client_id': config.configuration.todoistClientId,
-      'client_secret': config.configuration.todoistClientSecret,
+      'client_id': process.env.TODOIST_CLIENT_ID,
+      'client_secret': process.env.TODOIST_CLIENT_SECRET,
       'code': code
     }
   }, function(err, todoistResponse) {
@@ -96,7 +95,7 @@ router.get('/wunderlist', function(req, res) {
 
   var state = req.query.state;
 
-  if (state !== config.configuration.oauthState) {
+  if (state !== process.env.OAUTH_STATE) {
     console.error("A Wunderlist response was attempted to be forged.");
 
     req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
@@ -108,8 +107,8 @@ router.get('/wunderlist', function(req, res) {
     url: 'https://www.wunderlist.com/oauth/access_token',
     method: 'POST',
     form: {
-      'client_id': config.configuration.wunderlistClientId,
-      'client_secret': config.configuration.wunderlistClientSecret,
+      'client_id': process.env.WUNDERLIST_CLIENT_ID,
+      'client_secret': process.env.WUNDERLIST_CLIENT_SECRET,
       'code': code
     }
   }, function(err, wunderlistResponse) {

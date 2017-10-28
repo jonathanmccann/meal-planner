@@ -1,13 +1,12 @@
 var async = require('async');
 var bcrypt = require('bcrypt-nodejs');
-var config = require('../config');
 var connection = require('../connection');
 var LocalStrategy = require('passport-local').Strategy;
 
 var emailAddressRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$");
 
 const trialPeriodsDays = 14;
-const stripe = require('stripe')(config.configuration.stripeSecretKey);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 module.exports = function(passport) {
   passport.serializeUser(function(user, done) {

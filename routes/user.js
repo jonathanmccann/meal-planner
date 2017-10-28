@@ -1,6 +1,5 @@
 var async = require('async');
 var bcrypt = require('bcrypt-nodejs');
-var config = require('../config');
 var connection = require('../connection');
 var crypto = require('crypto');
 var expressBrute = require('express-brute');
@@ -11,7 +10,7 @@ var router = express.Router();
 var todoist = require('./todoist');
 var wunderlist = require('./wunderlist');
 
-sendgrid.setApiKey(config.configuration.sendgridAPIKey);
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 var store = new expressBrute.MemoryStore();
 

@@ -1,5 +1,4 @@
 var bodyParser = require('body-parser');
-var config = require('./config');
 var cookieParser = require('cookie-parser');
 var express = require('express');
 var favicon = require('serve-favicon');
@@ -37,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   resave: true,
   saveUninitialized: true,
-  secret: config.configuration.sessionSecret
+  secret: process.env.SESSION_SECRET
 }));
 
 app.use(passport.initialize());

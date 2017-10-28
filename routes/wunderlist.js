@@ -1,4 +1,3 @@
-var config = require('../config');
 var wunderlistSDK = require('wunderlist');
 
 function addList(accessToken, callback) {
@@ -45,7 +44,7 @@ function getWunderlistAPI(accessToken, callback) {
 
 	return new wunderlistSDK({
     'accessToken': accessToken,
-    'clientID': config.configuration.wunderlistClientId
+    'clientID': process.env.WUNDERLIST_CLIENT_ID
   });
 }
 
