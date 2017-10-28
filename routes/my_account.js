@@ -64,18 +64,39 @@ router.post('/update-calendar', function(req, res) {
 router.post('/update-email', function(req, res) {
   var emailAddress = req.body.emailAddress;
 
-  connection.query('UPDATE User_ SET ? WHERE ?', [{emailAddress: emailAddress}, {userId: req.user.userId}], function(err) {
-  	if (err) {
-      console.error(err);
+  async.waterfall([
+    function fetchExistingUser(callback) {
+      connection.query('SELECT * FROM User_ WHERE emailAddress = ?', [emailAddress], function(err, rows) {
+        if (err) {
+          callback(err);
+        }
+        else if (rows.length) {
+          req.flash('errorMessage', 'That email address is already taken.');
 
+          return res.redirect('/my-account');
+        }
+        else {
+          callback(err);
+        }
+      });
+    },
+    function updateEmailAddress(callback) {
+      connection.query('UPDATE User_ SET ? WHERE ?', [{emailAddress: emailAddress}, {userId: req.user.userId}], function(err) {
+        callback(err);
+      })
+    }
+  ], function(err) {
+    if (err) {
+      console.error(err);
+    
       req.flash('errorMessage', 'Your email address was unable to be updated.');
-  	}
-  	else {
+    }
+    else {
   	  req.flash('successMessage', 'Your email address was updated successfully.');
   	}
 
   	res.redirect('/my-account');
-  })
+  });
 });
 
 router.post('/update-password', function(req, res) {
