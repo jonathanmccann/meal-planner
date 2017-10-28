@@ -2,9 +2,11 @@ var containerIds = ['00', '01', '02', '10', '11', '12', '20', '21', '22', '30', 
 
 function appendToForm(form) {
   for (var i = 0; i < containerIds.length; i++) {
-    var recipes = document.getElementById(containerIds[i]).getElementsByClassName("padding-top");
+    var recipeContainer = document.getElementById(containerIds[i]);
 
-    if (recipes) {
+    if (recipeContainer) {
+      var recipes = recipeContainer.getElementsByClassName("padding-top");
+
       for (var j = 0; j < recipes.length; j++) {
         $('<input />').attr('type', 'hidden')
           .attr('name', recipes[j].id + "_" + containerIds[i])
