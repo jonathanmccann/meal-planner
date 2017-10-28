@@ -144,31 +144,12 @@ router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
 			if (err) {
 				return next(err);
 			}
-
-      var provider;
-
-      if (req.user.toDoProvider === "Todoist") {
-        provider = todoist;
+      else if (req.body.originalUrl === "") {
+        return res.redirect('/');
       }
-      else if (req.user.toDoProvider === "Wunderlist") {
-        provider = wunderlist;
+      else {
+        return res.redirect(req.body.originalUrl);
       }
-
-			provider.getList(user.accessToken, user.listId, function(err) {
-				if (err) {
-					req.flash('errorMessage', 'Unable to fetch your to do list. Please try reconnecting.');
-
-					return res.redirect('/my-account');
-				}
-				else {
-				  if (req.body.originalUrl === "") {
-            return res.redirect('/');
-          }
-          else {
-            return res.redirect(req.body.originalUrl);
-          }
-				}
-			});
 		})
   })(req, res, next);
 });
