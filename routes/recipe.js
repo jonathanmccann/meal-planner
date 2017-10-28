@@ -229,7 +229,13 @@ router.get('/view-recipes', function(req, res) {
     getRecipes(req.user.userId, function(recipeRows) {
       if (recipeRows.length === 0) {
         res.render('view_recipes', {
+          categoryId: req.flash('categoryId'),
           categories: categoryRows,
+          directions: req.flash('directions'),
+          errorMessage: req.flash('errorMessage'),
+          ingredients: req.flash('ingredients'),
+          name: req.flash('name'),
+          successMessage: req.flash('successMessage'),
           title: "Recipes",
           user: req.user
         });
