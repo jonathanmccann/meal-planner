@@ -64,6 +64,12 @@ router.post('/update-calendar', function(req, res) {
 router.post('/update-email', function(req, res) {
   var emailAddress = req.body.emailAddress;
 
+  if (emailAddress === req.user.emailAddress) {
+    req.flash('successMessage', 'Your email address was updated successfully.');
+
+  	return res.redirect('/my-account');
+  }
+
   async.waterfall([
     function fetchExistingUser(callback) {
       connection.query('SELECT * FROM User_ WHERE emailAddress = ?', [emailAddress], function(err, rows) {
