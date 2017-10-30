@@ -688,7 +688,7 @@
 		-ms-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 		transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 		background-color: #3cadd4;
-		border-radius: 30px;
+		border-radius: 10px;
 		border: 0;
 		color: #ffffff !important;
 		cursor: pointer;
@@ -836,18 +836,20 @@
 		}
 
 	#header {
-		background-color: #383b43;
-		color: #ffffff;
+		background-color: white;
+		border-bottom: 1px solid #eee;
+		color: black;
 		cursor: default;
 		font-size: 1.1em;
-		height: 6em;
-		line-height: 6em;
+		height: 4em;
+		line-height: 4em;
+		position: fixed;
 		width: 100%;
 		z-index: 10000;
 	}
 
 		#header h1 {
-			color: #ffffff;
+			color: #565656;
 			height: inherit;
 			left: 3em;
 			line-height: inherit;
@@ -887,13 +889,13 @@
 						-o-transition: color 0.2s ease-in-out;
 						-ms-transition: color 0.2s ease-in-out;
 						transition: color 0.2s ease-in-out;
-						color: #cdced0;
+						color: #565656;
 						display: inline-block;
 						text-decoration: none;
 					}
 
 						#header nav > ul > li a:active, #header nav > ul > li a:hover {
-							color: #ffffff;
+							color: #cdced0;
 						}
 
 					#header nav > ul > li:first-child {
@@ -923,6 +925,51 @@
 			#header .container nav {
 				right: 0;
 			}
+
+/* Banner */
+
+	#banner {
+		background-image: url(../images/background.jpg);
+		background-position: center center;
+		background-size: cover;
+		color: #565656;
+		padding: 10em 0em 10em;
+		/*text-align: center;*/
+	}
+
+		#banner :last-child {
+			margin-bottom: 0;
+		}
+
+		#banner h2 {
+			font-size: 4em;
+			line-height: 1.25em;
+			color: #565656;
+			/*margin: 0 0 0.5em 0;
+			padding: 0 0 2em 4em;*/
+		}
+
+		#banner p {
+			font-size: 1.5em;
+			margin-bottom: 1.75em;
+		}
+
+		#banner .banner-input {
+			align-content: center;
+			margin: 0 0 0.5em 0;
+			padding: 0 0 2em 4em;
+			width: 45%;
+		}
+
+		#banner label {
+			font-size: 1.25em;
+		}
+
+		#banner input[type="text"],
+		#banner input[type="password"] {
+			background: rgba(255, 255, 255, 0.75);
+			width: 75%;
+		}
 
 /* Wrapper */
 
@@ -1058,6 +1105,10 @@
 
 /* Custom */
 
+	.banner {
+		background-image: url("../images/background.jpg")
+	}
+
 	.delete-button {
 		background-color: #df323c !important;
 		margin: 1em;
@@ -1084,6 +1135,24 @@
 		border-radius:.5em;
 	}
 
+	.homepage-form {
+		display: inline-block;
+		width: 75%;
+	}
+
+		.homepage-form label {
+			font-size: 1.25em;
+			text-align: left;
+		}
+
+		.homepage-form input[type="submit"] {
+			float: left;
+		}
+
+		.homepage-form h2 {
+			line-height: 1em;
+		}
+
 	.indent {
 		padding: 0 0 0 2em
 	}
@@ -1103,6 +1172,10 @@
 
 	.recipes {
 		height: 200px;		
+	}
+
+	#rotatingHeader {
+		padding: 1em 0 0 1em;
 	}
 
 	.success {

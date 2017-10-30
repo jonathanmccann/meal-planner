@@ -30,6 +30,24 @@
 		display: none;
 	}
 
+/* Banner */
+
+	#banner {
+		padding: 6em 0em 6em;
+	}
+
+		#banner h2 {
+			font-size: 2.25em;
+		}
+
+		#banner p {
+			font-size: 1.25em;
+		}
+
+		#banner .container {
+			padding-left: 7em;
+		}
+
 /* Layers */
 
 	#navButton .toggle {
@@ -115,4 +133,10 @@
 
 	#footer .icons {
 		text-align: center;
+	}
+
+/* Custom */
+
+	#rotatingHeader {
+		display: none !important;
 	}
