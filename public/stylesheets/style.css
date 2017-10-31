@@ -1135,6 +1135,10 @@
 		border-radius:.5em;
 	}
 
+	.heading {
+		padding-top: 3em;
+	}
+
 	.homepage-form {
 		display: inline-block;
 		width: 75%;
