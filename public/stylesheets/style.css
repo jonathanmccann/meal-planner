@@ -1109,6 +1109,14 @@
 		background-image: url("../images/background.jpg")
 	}
 
+	.calendar-message {
+		display: inline-block;
+	}
+
+	.calendar-width {
+		width: 85%
+	}
+
 	.delete-button {
 		background-color: #df323c !important;
 		margin: 1em;
@@ -1197,120 +1205,52 @@
 		width: 45%;
 	}
 
-	/*!
-	// CSS only Responsive Tables
-	// http://dbushell.com/2016/03/04/css-only-responsive-tables/
-	// by David Bushell
-	*/
-	.rtable {
-		display: inline-block;
-		vertical-align: top;
-		max-width: 100%;
+/* Calendar Table */
 
-		overflow-x: auto;
-
-		white-space: nowrap;
-
-		border-collapse: collapse;
-		border-spacing: 0;
-	}
-
-	.rtable,
-	.rtable--flip tbody {
-		-webkit-overflow-scrolling: touch;
-
-		background: -webkit-radial-gradient(left ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 0 center, -webkit-radial-gradient(right ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 100% center;
-		background: radial-gradient(ellipse at left, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 0 center, radial-gradient(ellipse at right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 100% center;
-		background-size: 10px 100%, 10px 100%;
-		background-attachment: scroll, scroll;
-		background-repeat: no-repeat;
-	}
-
-	.rtable td:first-child,
-	.rtable--flip tbody tr:first-child {
-		background-image: -webkit-linear-gradient(left, white 50%, rgba(255, 255, 255, 0) 100%);
-		background-image: linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 100%);
-		background-repeat: no-repeat;
-		background-size: 20px 100%;
-	}
-
-	.rtable td:last-child,
-	.rtable--flip tbody tr:last-child {
-		background-image: -webkit-linear-gradient(right, white 50%, rgba(255, 255, 255, 0) 100%);
-		background-image: linear-gradient(to left, white 50%, rgba(255, 255, 255, 0) 100%);
-		background-repeat: no-repeat;
-		background-position: 100% 0;
-		background-size: 20px 100%;
-	}
-
-	.rtable th {
-		font-size: 11px;
-		text-align: left;
-		text-transform: uppercase;
-		background: #f2f0e6;
-	}
-
-	.rtable th,
-	.rtable td {
-		padding: 6px 12px;
-		border: 1px solid #d9d7ce;
-		width: 250px;
-	}
-
-	.rtable--flip {
-		display: -webkit-box;
-		display: -ms-flexbox;
+	.flextable {
 		display: flex;
+		flex-wrap: wrap;
+		margin: 0 0 3em 0;
+		padding: 0;
+	}
+	
+	.flextable-cell {
+		box-sizing: border-box;
+		flex-grow: 1;
+		width: 100%;
+		padding: 0.8em 1.2em;
 		overflow: hidden;
-		background: none;
+		list-style: none;
+		background: #EEF0F1;
 	}
-
-	.rtable--flip thead {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-ms-flex-negative: 0;
-			flex-shrink: 0;
-		min-width: -webkit-min-content;
-		min-width: -moz-min-content;
-		min-width: min-content;
+	
+		.flextable-cell label {
+			white-space: normal;
+		}
+	
+		.flextable-cell .box {
+			background: white;
+			height: 100%;
+			margin-bottom: 0em;
+			min-height: 100px;
+			padding: 0 1.5em 1.5em 0.5em;
+		}
+	
+			.flextable-cell .box div {
+				min-height: 100px;
+			}
+	
+			.flextable-cell .box p {
+				color: #ceced6;
+				font-size: 14px;
+				margin: 0 0 0 0;
+			}
+	
+	.flextable-cell-header {
+		background: #3cadd4;
+		color: white;
 	}
-
-	.rtable--flip tbody {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		position: relative;
-		overflow-x: auto;
-		overflow-y: hidden;
-	}
-
-	.rtable--flip tr {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-			-ms-flex-direction: column;
-				flex-direction: column;
-		min-width: -webkit-min-content;
-		min-width: -moz-min-content;
-		min-width: min-content;
-		-ms-flex-negative: 0;
-			flex-shrink: 0;
-	}
-
-	.rtable--flip td,
-	.rtable--flip th {
-		display: block;
-	}
-
-	.rtable--flip td {
-		background-image: none !important;
-		border-left: 0;
-	}
-
-	.rtable--flip th:not(:last-child),
-	.rtable--flip td:not(:last-child) {
-		border-bottom: 0;
+	
+	.flextable > .flextable-cell {
+		width: 14%;
 	}

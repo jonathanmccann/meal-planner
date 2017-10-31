@@ -9,7 +9,7 @@ function appendToForm(form) {
 
       for (var j = 0; j < recipes.length; j++) {
         $('<input />').attr('type', 'hidden')
-          .attr('name', recipes[j].id + "_" + containerIds[i])
+          .attr('name', recipes[j].title + "_" + containerIds[i])
           .attr('value', recipes[j].textContent)
           .appendTo(form);
       }
@@ -45,8 +45,8 @@ window.onload = function() {
 			return el.classList.contains('draggable')
 		},
 		removeOnSpill: true
-  }).on('drop', function(el, target, source) {
-  	el.classList.remove('indent');
+  }).on('cloned', function(clone) {
+  	clone.classList.remove('indent');
   });
 
   $("#calendar-form").submit(function(e) {
