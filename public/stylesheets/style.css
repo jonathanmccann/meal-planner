@@ -1143,6 +1143,10 @@
 		border-radius:.5em;
 	}
 
+	.flex {
+		display: flex;
+	}
+
 	.heading {
 		padding-top: 3em;
 	}
@@ -1188,6 +1192,10 @@
 
 	#rotatingHeader {
 		padding: 1em 0 0 1em;
+	}
+
+	.second {
+		order: 2;
 	}
 
 	.success {

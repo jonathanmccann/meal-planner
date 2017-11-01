@@ -140,3 +140,13 @@
 	#rotatingHeader {
 		display: none !important;
 	}
+
+/* Calendar Table */
+
+	.flextable > .flextable-cell {
+		width: 33%;
+	}
+
+	.flextable > .flextable-cell-header {
+		width: 100%;
+	}

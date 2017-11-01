@@ -3,7 +3,7 @@ extends header
 block content
   link(href='/stylesheets/dragula.css', rel='stylesheet')
   script(src="/javascripts/dragula.min.js")
-  script(src="/javascripts/initDragula.js")
+  script(src="/javascripts/drag_and_drop_calendar.js")
   script(src="/javascripts/realtime_search.js")
 
   div(class="container heading")
@@ -18,19 +18,10 @@ block content
         div(class="success")
           | #{successMessage}
   div(class="container calendar-width")
-    div(class="padding-top row")
-      div(id="recipes", class="2u recipes")
-        input(type="text", id="searchInput", onkeyup="realtimeSearch()" placeholder="Search for recipes")
-        -for (var categoryRecipe in categoryRecipes)
-          div(id="#{categoryRecipe}", class="source-container")
-            h3 #{categoryRecipe}
-            -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
-              label(class="draggable indent padding-top", title="#{categoryRecipes[categoryRecipe][i].recipeId}")
-                | #{categoryRecipes[categoryRecipe][i].name}
-            -}
-      div(class="10u")
+    div(class="flex padding-top row")
+      div(class="10u 12u(small) second")
         form(id="calendar-form", action='/calendar', method='post')
-          div(class="flextable")
+          div(class="flextable", id="calendarTable")
             div(class="flextable-cell flextable-cell-header")
               | Sunday
             div(class="flextable-cell flextable-cell-header")
@@ -86,3 +77,12 @@ block content
               -}
           input(type='submit', name='action', value='Submit Calendar')
           input(class="delete-button", name='action', type='submit', value='Clear Calendar')
+      div(id="recipes", class="2u 12u(small) recipes")
+        input(type="text", id="searchInput", onkeyup="realtimeSearch()" placeholder="Search for recipes")
+        -for (var categoryRecipe in categoryRecipes)
+          div(id="#{categoryRecipe}", class="source-container")
+            h3 #{categoryRecipe}
+            -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
+              label(class="draggable indent padding-top", title="#{categoryRecipes[categoryRecipe][i].recipeId}")
+                | #{categoryRecipes[categoryRecipe][i].name}
+            -}

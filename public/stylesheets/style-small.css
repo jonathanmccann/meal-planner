@@ -43,3 +43,13 @@
 			padding-left: 0;
 			display: block;
 		}
+
+/* Custom */
+
+	.flex {
+		display: inline;
+	}
+
+	.flextable > .flextable-cell {
+		width: 100%;
+	}

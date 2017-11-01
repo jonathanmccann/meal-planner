@@ -1,4 +1,7 @@
+const daysInWeek = 7;
+
 var containerIds = ['00', '01', '02', '10', '11', '12', '20', '21', '22', '30', '31', '32', '40', '41', '42', '50', '51', '52', '60', '61', '62' ];
+var previousWidth = $(window).width();
 
 function appendToForm(form) {
   for (var i = 0; i < containerIds.length; i++) {
@@ -17,6 +20,38 @@ function appendToForm(form) {
   }
 }
 
+function showFullCalendar() {
+  var flextableCells = $('#calendarTable').find('.flextable-cell');
+
+  flextableCells.each(function() {
+    $(this).show();
+  })
+}
+
+function showSingleDay(dayToDisplay) {
+  var flextableCells = $('#calendarTable').find('.flextable-cell');
+
+  flextableCells.each(function(index) {
+    if (index === dayToDisplay) {
+      $(this).show();
+
+      dayToDisplay += daysInWeek;
+    }
+    else {
+      $(this).hide();
+    }
+  })
+}
+
+$(document).ready(function() {
+  if (previousWidth <= 980) {
+    showSingleDay(new Date().getDay());
+  }
+  else if (previousWidth > 980) {
+    showFullCalendar();
+  }
+});
+
 window.onload = function() {
 	var containers = $('.accept-container').toArray();
 
@@ -31,7 +66,7 @@ window.onload = function() {
 			var children = target.children;
 
 			for (var i = 0; i < children.length; i++) {
-				if (!children[i].classList.contains('gu-transit') && children[i].id === el.id) {
+				if (!children[i].classList.contains('gu-transit') && children[i].title === el.title) {
 					return false;
 				}
 			}
@@ -63,3 +98,14 @@ window.onload = function() {
 };
 
 window.addEventListener('touchmove', function() {});
+
+$(window).resize(function() {
+  if ((previousWidth <= 980) && ($(this).width() > 980)) {
+    showFullCalendar();
+  }
+  else if ((previousWidth > 980) && ($(this).width() <= 980)) {
+    showSingleDay(new Date().getDay());
+  }
+
+  previousWidth = $(this).width();
+});
