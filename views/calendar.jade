@@ -22,19 +22,19 @@ block content
       div(class="10u 12u(small) second")
         form(id="calendar-form", action='/calendar', method='post')
           div(class="flextable", id="calendarTable")
-            div(class="flextable-cell flextable-cell-header")
+            div(class="flextable-cell flextable-cell-header", id="sunday")
               | Sunday
-            div(class="flextable-cell flextable-cell-header")
+            div(class="flextable-cell flextable-cell-header", id="monday")
               | Monday
-            div(class="flextable-cell flextable-cell-header")
+            div(class="flextable-cell flextable-cell-header", id="tuesday")
               | Tuesday
-            div(class="flextable-cell flextable-cell-header")
+            div(class="flextable-cell flextable-cell-header", id="wednesday")
               | Wednesday
-            div(class="flextable-cell flextable-cell-header")
+            div(class="flextable-cell flextable-cell-header", id="thursday")
               | Thursday
-            div(class="flextable-cell flextable-cell-header")
+            div(class="flextable-cell flextable-cell-header", id="friday")
               | Friday
-            div(class="flextable-cell flextable-cell-header")
+            div(class="flextable-cell flextable-cell-header", id="saturday")
               | Saturday
             if displayBreakfast
               -for (var i = 0; i < 7; i++) {

@@ -5,5 +5,5 @@
 */
 
 .calendar-width {
-	width: 95%;
+	width: 95% !important;
 }

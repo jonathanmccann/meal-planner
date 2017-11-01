@@ -1262,3 +1262,16 @@
 	.flextable > .flextable-cell {
 		width: 14%;
 	}
+
+	.tab {
+		cursor: pointer;
+		text-align: center;
+	}
+
+	.tab:hover {
+		background-color: #2da2ca;
+	}
+
+	.tab.active {
+		background-color: #2891b5;
+	}

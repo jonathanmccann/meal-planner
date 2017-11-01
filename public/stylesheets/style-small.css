@@ -53,3 +53,7 @@
 	.flextable > .flextable-cell {
 		width: 100%;
 	}
+
+	.flextable > .flextable-cell-header {
+		width: 14%;
+	}
