@@ -54,7 +54,7 @@ router.get('/create-account', function(req, res) {
     errorMessage: req.flash('errorMessage'),
     infoMessage: req.flash('infoMessage'),
     successMessage: req.flash('successMessage'),
-    title: "Create Account",
+    title: "Create an Account",
     user: req.user
   });
 });

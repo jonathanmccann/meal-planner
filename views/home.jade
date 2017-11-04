@@ -4,9 +4,9 @@ block content
   script.
     $(document).ready(function() {
       $('#rotatingHeader').delay(1500).fadeOut(500, function() {
-        $(this).text('Plan meals.').fadeIn(500).delay(1500).fadeOut(500, function() {
-          $(this).text('Create grocery lists.').fadeIn(500).delay(1500).fadeOut(500, function() {
-            $(this).text('Your week, simplified.').fadeIn(500);
+        $(this).text('Plan meals').fadeIn(500).delay(1500).fadeOut(500, function() {
+          $(this).text('Create grocery lists').fadeIn(500).delay(1500).fadeOut(500, function() {
+            $(this).text('Your week, streamlined').fadeIn(500);
           });
         });
       });
@@ -56,10 +56,10 @@ block content
                 input(type="text", name="emailAddress", required)
                 label(for='password') Password:
                 input(type="password", name="password", required)
-                input(type='submit', name='action', value='Create Account')
+                input(type='submit', name='action', value='Create an Account')
           div(class="6u", id="rotatingContainer")
             h2(id="rotatingHeader")
-              | Add recipes.
+              | Add recipes
     section(class="wrapper style2 special")
       div(class="container 75%")
         div(class="row")
@@ -130,4 +130,4 @@ block content
           input(type="text", name="emailAddress", required)
           label(for='password') Password:
           input(type="password", name="password", required)
-          input(type='submit', name='action', value='Create Account')
+          input(type='submit', name='action', value='Create an Account')
