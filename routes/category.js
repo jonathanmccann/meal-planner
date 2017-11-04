@@ -145,7 +145,7 @@ router.post('/edit-category', function(req, res) {
     });
   }
   else {
-    connection.query('DELETE FROM Category WHERE ? AND ?', [ {categoryId: req.params.categoryId}, {userId: req.user.userId} ], function(err) {
+    connection.query('DELETE FROM Category WHERE ? AND ?', [ {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
       if (err) {
         console.error(err);
 
