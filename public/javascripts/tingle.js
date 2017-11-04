@@ -74,6 +74,13 @@
 
     Modal.prototype.open = function() {
 
+        if (document.selection) {
+            document.selection.empty();
+        }
+        else if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        }
+
         var self = this;
 
         // before open callback
@@ -214,11 +221,21 @@
     };
 
 
-    Modal.prototype.addFooterBtn = function(label, cssClass, callback) {
-        var btn = document.createElement("button");
+    Modal.prototype.addFooterBtn = function(label, id, cssClass, callback) {
+        var btn = document.createElement("input");
+
+        btn.type = "submit";
 
         // set label
-        btn.innerHTML = label;
+        btn.value = label;
+
+        btn.id = id;
+
+        var existingButton = document.getElementById(id);
+
+        if (existingButton) {
+          existingButton.remove();
+        }
 
         // bind callback
         btn.addEventListener('click', callback);

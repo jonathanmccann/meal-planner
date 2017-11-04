@@ -31,6 +31,7 @@ router.get('/calendar', function(req, res) {
 				else {
 					var calendarDayAndRecipeMap = {};
 					var categoryRecipeMap = {};
+					var recipes = {};
 
 					for (var i = 0; i < calendarRows.length; i++) {
 						var mealKey = calendarRows[i].mealKey;
@@ -43,6 +44,9 @@ router.get('/calendar', function(req, res) {
 					}
 
 					for (var i = 0; i < recipeRows.length; i++) {
+					  recipes[recipeRows[i].recipeId] = [];
+					  recipes[recipeRows[i].recipeId].push(recipeRows[i].name, recipeRows[i].ingredients, recipeRows[i].directions);
+
 						var categoryName = recipeRows[i].categoryName;
 
 						if (!categoryRecipeMap[categoryName]) {
@@ -52,7 +56,6 @@ router.get('/calendar', function(req, res) {
 						categoryRecipeMap[categoryName].push(recipeRows[i]);
 					}
 
-          
 					res.render('calendar', {
 						calendarDayAndRecipeMap: calendarDayAndRecipeMap,
 						categoryRecipes: categoryRecipeMap,
@@ -60,6 +63,7 @@ router.get('/calendar', function(req, res) {
 						displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
 						displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
 						errorMessage: req.flash('errorMessage'),
+						recipes: JSON.stringify(recipes),
 						successMessage: req.flash('successMessage'),
 						test: "test",
 						title: "Calendar",

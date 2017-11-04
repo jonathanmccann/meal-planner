@@ -2,87 +2,94 @@ extends header
 
 block content
   link(href='/stylesheets/dragula.css', rel='stylesheet')
+  link(href='/stylesheets/tingle.css', rel='stylesheet')
+  script.
+    var recipes = !{recipes};
+
+  script(src="/javascripts/tingle.js")
+
   script(src="/javascripts/dragula.min.js")
   script(src="/javascripts/drag_and_drop_calendar.js")
   script(src="/javascripts/realtime_search.js")
 
-  div(class="container heading")
-    header(class="major")
-      h2= title
-  div(class="align-center")
-    div(class="calendar-message")
-      if errorMessage && errorMessage.length
-        div(class="error")
-          | #{errorMessage}
-      if successMessage && successMessage.length
-        div(class="success")
-          | #{successMessage}
-  div(class="container calendar-width")
-    div(class="flex padding-top row")
-      div(class="10u 12u(small) second")
-        form(id="calendar-form", action='/calendar', method='post')
-          div(class="flextable", id="calendarTable")
-            div(class="flextable-cell flextable-cell-header", id="sunday")
-              | Sunday
-            div(class="flextable-cell flextable-cell-header", id="monday")
-              | Monday
-            div(class="flextable-cell flextable-cell-header", id="tuesday")
-              | Tuesday
-            div(class="flextable-cell flextable-cell-header", id="wednesday")
-              | Wednesday
-            div(class="flextable-cell flextable-cell-header", id="thursday")
-              | Thursday
-            div(class="flextable-cell flextable-cell-header", id="friday")
-              | Friday
-            div(class="flextable-cell flextable-cell-header", id="saturday")
-              | Saturday
-            if displayBreakfast
-              -for (var i = 0; i < 7; i++) {
-              div(class="flextable-cell", id="#{i}0")
-                section(class="box")
-                  p
-                    | Breakfast
-                  div(class="accept-container")
-                    if calendarDayAndRecipeMap["" + i + 0] != null
-                      -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 0].length; j++) {
-                      label(class="draggable padding-top", title="#{calendarDayAndRecipeMap['' + i + 0][j][0]}")
-                        | #{calendarDayAndRecipeMap["" + i + 0][j][1]}
-                      -}
+  div(class="tingle-content-wrapper")
+    div(class="container heading")
+      header(class="major")
+        h2= title
+    div(class="align-center")
+      div(class="calendar-message")
+        if errorMessage && errorMessage.length
+          div(class="error")
+            | #{errorMessage}
+        if successMessage && successMessage.length
+          div(class="success")
+            | #{successMessage}
+    div(class="container calendar-width")
+      div(class="flex padding-top row")
+        div(class="10u 12u(small) second")
+          form(id="calendar-form", action='/calendar', method='post')
+            div(class="flextable", id="calendarTable")
+              div(class="flextable-cell flextable-cell-header", id="sunday")
+                | Sunday
+              div(class="flextable-cell flextable-cell-header", id="monday")
+                | Monday
+              div(class="flextable-cell flextable-cell-header", id="tuesday")
+                | Tuesday
+              div(class="flextable-cell flextable-cell-header", id="wednesday")
+                | Wednesday
+              div(class="flextable-cell flextable-cell-header", id="thursday")
+                | Thursday
+              div(class="flextable-cell flextable-cell-header", id="friday")
+                | Friday
+              div(class="flextable-cell flextable-cell-header", id="saturday")
+                | Saturday
+              if displayBreakfast
+                -for (var i = 0; i < 7; i++) {
+                div(class="flextable-cell", id="#{i}0")
+                  section(class="box")
+                    p
+                      | Breakfast
+                    div(class="accept-container")
+                      if calendarDayAndRecipeMap["" + i + 0] != null
+                        -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 0].length; j++) {
+                        label(class="draggable padding-top", title="#{calendarDayAndRecipeMap['' + i + 0][j][0]}")
+                          | #{calendarDayAndRecipeMap["" + i + 0][j][1]}
+                        -}
+                -}
+              if displayLunch
+                -for (var i = 0; i < 7; i++) {
+                div(class="flextable-cell", id="#{i}1")
+                  section(class="box")
+                    p
+                      | Lunch
+                    div(class="accept-container")
+                      if calendarDayAndRecipeMap["" + i + 1] != null
+                        -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 1].length; j++) {
+                        label(class="draggable padding-top", title="#{calendarDayAndRecipeMap['' + i + 1][j][0]}")
+                          | #{calendarDayAndRecipeMap["" + i + 1][j][1]}
+                        -}
+                -}
+              if displayDinner
+                -for (var i = 0; i < 7; i++) {
+                div(class="flextable-cell", id="#{i}2")
+                  section(class="box")
+                    p
+                      | Dinner
+                    div(class="accept-container")
+                      if calendarDayAndRecipeMap["" + i + 2] != null
+                        -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 2].length; j++) {
+                        label(class="draggable padding-top", title="#{calendarDayAndRecipeMap['' + i + 2][j][0]}")
+                          | #{calendarDayAndRecipeMap["" + i + 2][j][1]}
+                        -}
+                -}
+            input(type='submit', name='action', value='Submit Calendar')
+            input(class="delete-button", name='action', type='submit', value='Clear Calendar')
+        div(id="recipes", class="2u 12u(small) recipes")
+          input(type="text", id="searchInput", onkeyup="realtimeSearch()" placeholder="Search for recipes")
+          -for (var categoryRecipe in categoryRecipes)
+            div(id="#{categoryRecipe}", class="source-container")
+              h3 #{categoryRecipe}
+              -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
+                label(class="draggable indent padding-top", title="#{categoryRecipes[categoryRecipe][i].recipeId}")
+                  | #{categoryRecipes[categoryRecipe][i].name}
               -}
-            if displayLunch
-              -for (var i = 0; i < 7; i++) {
-              div(class="flextable-cell", id="#{i}1")
-                section(class="box")
-                  p
-                    | Lunch
-                  div(class="accept-container")
-                    if calendarDayAndRecipeMap["" + i + 1] != null
-                      -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 1].length; j++) {
-                      label(class="draggable padding-top", title="#{calendarDayAndRecipeMap['' + i + 1][j][0]}")
-                        | #{calendarDayAndRecipeMap["" + i + 1][j][1]}
-                      -}
-              -}
-            if displayDinner
-              -for (var i = 0; i < 7; i++) {
-              div(class="flextable-cell", id="#{i}2")
-                section(class="box")
-                  p
-                    | Dinner
-                  div(class="accept-container")
-                    if calendarDayAndRecipeMap["" + i + 2] != null
-                      -for (var j = 0; j < calendarDayAndRecipeMap["" + i + 2].length; j++) {
-                      label(class="draggable padding-top", title="#{calendarDayAndRecipeMap['' + i + 2][j][0]}")
-                        | #{calendarDayAndRecipeMap["" + i + 2][j][1]}
-                      -}
-              -}
-          input(type='submit', name='action', value='Submit Calendar')
-          input(class="delete-button", name='action', type='submit', value='Clear Calendar')
-      div(id="recipes", class="2u 12u(small) recipes")
-        input(type="text", id="searchInput", onkeyup="realtimeSearch()" placeholder="Search for recipes")
-        -for (var categoryRecipe in categoryRecipes)
-          div(id="#{categoryRecipe}", class="source-container")
-            h3 #{categoryRecipe}
-            -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
-              label(class="draggable indent padding-top", title="#{categoryRecipes[categoryRecipe][i].recipeId}")
-                | #{categoryRecipes[categoryRecipe][i].name}
-            -}

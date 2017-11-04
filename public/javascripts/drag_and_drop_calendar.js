@@ -7,6 +7,13 @@ const smallDayHeadings = ['S', 'M', 'T', 'W', 'Th', 'F', 'S'];
 var containerIds = ['00', '01', '02', '10', '11', '12', '20', '21', '22', '30', '31', '32', '40', '41', '42', '50', '51', '52', '60', '61', '62' ];
 var previousWidth = $(window).width();
 
+var modal = new tingle.modal({
+  footer: true,
+  stickyFooter: true,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: "Close"
+});
+
 function appendToForm(form) {
   for (var i = 0; i < containerIds.length; i++) {
     var recipeContainer = document.getElementById(containerIds[i]);
@@ -53,6 +60,36 @@ function dayHeadingsSmall() {
 
     $(this).addClass('tab');
   });
+}
+
+function displayRecipeModal(e) {
+  var recipeId = e.target.title;
+
+  var recipeName = recipes[recipeId][0];
+  var recipeIngredients = recipes[recipeId][1];
+  var recipeDirections = recipes[recipeId][2];
+
+  if ((recipeDirections === null) || (recipeDirections === "")) {
+    recipeDirections = "There are no directions for this recipe.";
+  }
+
+  modal.setContent(
+    '<h2>' + recipeName + '</h2>' +
+    '<h3>Ingredients</h3>' + 
+    '<pre>' + recipeIngredients.replace(/,/g, "\r\n") + '</pre>' +
+    '<h3 class="padding-top">Directions</h3>' + 
+    '<pre>' + recipeDirections + '</pre>'
+  );
+
+  modal.addFooterBtn('Close', 'close', 'delete-button tingle-btn--pull-right', function() {
+    modal.close();
+  });
+  
+  modal.addFooterBtn('Edit Recipe', 'edit-recipe', 'tingle-btn--pull-right', function() {
+    window.open("/edit-recipe/" + recipeId, '_blank');
+  });
+  
+  modal.open();
 }
 
 function showFullCalendar() {
@@ -111,6 +148,10 @@ $(document).ready(function() {
     if (e.target.classList.contains('tab')) {
       showSingleDay(dayOfWeekMap[e.target.id]);
     }
+  });
+
+  $(document).on('click', 'label', function (e) {
+    displayRecipeModal(e);
   });
 });
 

@@ -135,18 +135,12 @@
 	}
 
 	pre {
-		-webkit-overflow-scrolling: touch;
-		font-family: "Courier New", monospace;
-		font-size: 0.9em;
-		margin: 0 0 2em 0;
+		white-space: pre-wrap;
+		white-space: -moz-pre-wrap;
+		white-space: -pre-wrap;
+		white-space: -o-pre-wrap;
+		word-wrap: break-word;
 	}
-
-		pre code {
-			display: block;
-			line-height: 1.75em;
-			padding: 1em 1.5em;
-			overflow-x: auto;
-		}
 
 	.align-left {
 		text-align: left;
@@ -1120,6 +1114,10 @@
 	.delete-button {
 		background-color: #df323c !important;
 		margin: 1em;
+	}
+
+	.draggable {
+		cursor: pointer;
 	}
 
 	.dropdown {
