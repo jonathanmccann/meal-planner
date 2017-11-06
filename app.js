@@ -14,7 +14,7 @@ var calendar = require('./routes/calendar');
 var category = require('./routes/category');
 var home = require('./routes/home');
 var myAccount = require('./routes/my_account');
-var planMeals = require('./routes/plan_meals');
+var groceryList = require('./routes/grocery_list');
 var recipe = require('./routes/recipe');
 var subscription = require('./routes/subscription');
 var user = require('./routes/user');
@@ -74,7 +74,7 @@ app.use('/', isLoggedIn, subscription);
 app.use('/', isLoggedIn, isSubscribed, authorize);
 app.use('/', isLoggedIn, isSubscribed, calendar);
 app.use('/', isLoggedIn, isSubscribed, category);
-app.use('/', isLoggedIn, isSubscribed, planMeals);
+app.use('/', isLoggedIn, isSubscribed, groceryList);
 app.use('/', isLoggedIn, isSubscribed, recipe);
 
 app.use(function(req, res, next) {

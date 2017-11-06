@@ -39,17 +39,17 @@ router.post('/add-ingredients', function(req, res) {
     if (err) {
       req.flash('errorMessage', 'The ingredients were unable to be added to your to do list.');
 
-      return res.redirect('/plan-meals');
+      return res.redirect('/grocery-list');
     }
     else {
       req.flash('successMessage', 'The ingredients were added to your to do list successfully.');
 
-      return res.redirect('/plan-meals');
+      return res.redirect('/grocery-list');
     }
   });
 });
 
-router.get('/plan-meals', function(req, res) {
+router.get('/grocery-list', function(req, res) {
   var provider;
 
   if (req.user.toDoProvider === "Todoist") {
@@ -75,7 +75,7 @@ router.get('/plan-meals', function(req, res) {
             res.render('add_ingredients', {
               errorMessage: req.flash('errorMessage'),
               successMessage: req.flash('successMessage'),
-              title: "Plan Meals",
+              title: "Grocery List",
               user: req.user
             });
           }
@@ -96,7 +96,7 @@ router.get('/plan-meals', function(req, res) {
                 res.render('add_ingredients', {
                   errorMessage: req.flash('errorMessage'),
                   successMessage: req.flash('successMessage'),
-                  title: "Plan Meals",
+                  title: "Grocery List",
                   user: req.user
                 });
               }
@@ -121,7 +121,7 @@ router.get('/plan-meals', function(req, res) {
                   infoMessage: req.flash('infoMessage'),
                   recipes: recipeRows,
                   successMessage: req.flash('successMessage'),
-                  title: "Plan Meals",
+                  title: "Grocery List",
                   user: req.user
                 });
               }
@@ -132,7 +132,7 @@ router.get('/plan-meals', function(req, res) {
     });
   }
   else {
-    req.flash('errorMessage', 'Unable to fetch your to do list. Please set up your to do list in order to plan your groceries.');
+    req.flash('errorMessage', 'Unable to fetch your to do list. Please set up your to do list in order to make your grocery list.');
 
     return res.redirect('/my-account');
   }
