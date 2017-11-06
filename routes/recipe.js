@@ -207,17 +207,49 @@ router.post('/edit-recipe', function(req, res) {
     });
   }
   else {
-    connection.query('DELETE FROM Recipe WHERE ? AND ?', [ {recipeId: req.body.recipeId}, {userId: req.user.userId} ], function(err) {
+    connection.beginTransaction(function (err) {
       if (err) {
         console.error(err);
 
-        req.flash('errorMessage', 'The recipe was unable to be deleted.');
-      }
-      else {
-        req.flash('successMessage', 'The recipe was deleted successfully.');
+        req.flash('errorMessage', 'The recipe was unable to be updated.');
+        req.flash('categoryId', categoryId);
+        req.flash('directions', directions);
+        req.flash('ingredients', ingredients);
+        req.flash('name', recipeName);
+
+        return res.redirect('/edit-recipe/' + req.body.recipeId);
       }
 
-      res.redirect('/view-recipes');
+      async.waterfall([
+        function deleteRecipe(callback) {
+          connection.query('DELETE FROM Recipe WHERE ? AND ?', [ {recipeId: req.body.recipeId}, {userId: req.user.userId} ], function(err) {
+            callback(err);
+          });
+        },
+        function deleteRecipeFromCalendar(callback) {
+          connection.query('DELETE FROM Calendar WHERE ? AND ?', [ {recipeId: req.body.recipeId}, {userId: req.user.userId} ], function(err) {
+            callback(err);
+          });
+        },
+        function commitDeletions(callback) {
+          connection.commit(function (err) {
+            callback(err);
+          })
+        }
+      ], function (err) {
+        if (err) {
+          console.error(err);
+
+          req.flash('errorMessage', 'The recipe was unable to be deleted.');
+
+          return res.redirect('/edit-recipe/' + req.body.recipeId);
+        }
+        else {
+          req.flash('successMessage', 'The recipe was deleted successfully.');
+
+          res.redirect('/view-recipes');
+        }
+      });
     });
   }
 });
