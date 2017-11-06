@@ -15,7 +15,9 @@ function addList(accessToken, callback) {
 
     var listId = json.id;
 
-    callback(err, listId);
+    handleError(
+      callback, err, String(todoistResponse.statusCode), todoistResponse.body,
+      listId);
   });
 }
 
@@ -30,8 +32,9 @@ function addTask(accessToken, listId, taskTitle, callback) {
       "content": taskTitle,
       "project_id": parseInt(listId)
     }
-  }, function(err) {
-    callback(err);
+  }, function(err, todoistResponse) {
+    handleError(
+      callback, err, String(todoistResponse.statusCode), todoistResponse.body);
   });
 }
 
@@ -42,9 +45,22 @@ function getList(accessToken, listId, callback) {
       token: accessToken
     },
     method: 'GET'
-  }, function(err) {
-    callback(err);
+  }, function(err, todoistResponse) {
+    handleError(
+      callback, err, String(todoistResponse.statusCode), todoistResponse.body);
   });
+}
+
+function handleError(callback, err, statusCode, body, listId) {
+  if (err) {
+    callback(err, listId);
+  }
+  else if (statusCode.startsWith("4") || statusCode.startsWith("5")) {
+    callback(body, listId);
+  }
+  else {
+    callback(err, listId);
+  }
 }
 
 module.exports = {

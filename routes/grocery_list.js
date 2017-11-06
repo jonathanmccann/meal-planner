@@ -61,8 +61,9 @@ router.get('/grocery-list', function(req, res) {
 
   if (provider !== undefined) {
     provider.getList(req.user.accessToken, req.user.listId, function (err) {
-      console.log("Called back");
       if (err) {
+        console.error(err);
+
         req.flash('errorMessage', 'Unable to fetch your to do list. Please try reconnecting in order to plan your groceries.');
 
         return res.redirect('/my-account');
