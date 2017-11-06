@@ -3,10 +3,12 @@ extends header
 block content
   script.
     $(document).ready(function() {
-      $('#rotatingHeader').delay(1500).fadeOut(500, function() {
-        $(this).text('Plan meals').fadeIn(500).delay(1500).fadeOut(500, function() {
-          $(this).text('Create grocery lists').fadeIn(500).delay(1500).fadeOut(500, function() {
-            $(this).text('Your week, streamlined').fadeIn(500);
+      $('#rotatingHeader').delay(1000).fadeOut(500, function() {
+        $(this).text('Plan meals').fadeIn(500).delay(1000).fadeOut(500, function() {
+          $(this).text('Create grocery lists').fadeIn(500).delay(1000).fadeOut(500, function() {
+            $(this).text('Your week, simplified').fadeIn(500).delay(100, function() {
+              $('#banner-caption').fadeIn(500);
+            });
           });
         });
       });
@@ -60,69 +62,55 @@ block content
           div(class="6u", id="rotatingContainer")
             h2(id="rotatingHeader")
               | Add recipes
+            div(class="banner-caption", id="banner-caption")
+              h3
+                | Meal planning shouldn't be stressful.
+                | Take charge of your meals today with this straight forward meal planner. 
     section(class="wrapper style2 special")
-      div(class="container 75%")
-        div(class="row")
-          div(class="6u 12u(medium)")
-            i(class="icon big rounded color1 fa-book")
-          div(class="6u 12u(medium)")
-            h3
-              | Add Recipes
-            p
-              | Add all of your favorite recipes quickly and easily.
-        div(class="row")
-          div(class="6u 12u(medium)")
-            h3 Dotted lines image here
-          div(class="6u 12u(medium)")
-            i(class="icon big rounded color8 fa-cutlery")
-        div(class="row")
-          div(class="6u 12u(medium)")
-            i(class="icon big rounded color8 fa-shopping-basket")
-          div(class="6u 12u(medium)")
-            h3
-              | Plan Meals
-            p
-              | Plan your meals using simple drag and drop.
-        div(class="row")
-          div(class="6u 12u(medium)")
-            h3
-              | Buy Groceries
-            p
-              | All of your necessary ingredients are added seamlessly to your favorite grocery list.
+      div(class="container")
+        div(class="container 50%")
+          h2 Add Recipes
+          h3 Add all of your favorite recipes quickly and easily.
+        img(id="recipe-gif")
+        hr
+        div(class="container 50%")
+            h2 Plan Meals
+            h3 Plan your week using drag and drop.
+        img(id="calendar-gif")
+        hr
+        div(class="container 50%")
+          h2 Make A List
+          h3 All of your necessary ingredients are added seamlessly to your favorite grocery list.
+        img(id="list-gif")
     section(class="wrapper style1 special")
       div(class="container 75%")
-            h2
-              | One Simple Price
-            h3
-              | There are no plans to decide between.
-              br
-              | You get all you can eat access.
-            p
-              | Unlimited Recipes
-              br
-              | Unlimited Categories
-              br
-              | Weekly Meal Planning Calendar
-              br
-              | Integration with your favorite to do applications
-            hr
-            h4
-              | Best of all, it's affordable
-            p
-              | $1 / month for stress free meal planning.
-            hr
-            h4
-              | You're also doing good in the local community.
-            p
-              | 10% of all net proceeds are donated to a 
-              a(href="https://www.feedoc.org/", target="_blank") local food bank
-              |  to help provide meals to others.
+        h2
+          | One Simple Price
+        h2
+          | $1 / month for stress free meal planning.
+        h3
+          | No premium plans, no upsell.
+        p
+          | Unlimited Recipes
+          br
+          | Unlimited Categories
+          br
+          | Weekly Meal Planning Calendar
+          br
+          | Integration with your favorite to do applications
+        hr
+        h3
+          | You're also doing good in the local community.
+        p
+          | 10% of all net proceeds are donated to a 
+          a(href="https://www.feedoc.org/", target="_blank") local food bank
+          |  to help provide meals to others.
     section(class="wrapper style2 special")
       div(class="container 50% homepage-form")
         h2
           | Not convinced?
         h3
-          | Give it a spin with a 14 day free trial.
+          | Sign up for a 14 day free trial.
         p
           | You don't even need to enter your credit card.
         form(action='/create-account', method='post')

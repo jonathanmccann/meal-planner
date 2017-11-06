@@ -57,3 +57,47 @@
 	.flextable > .flextable-cell-header {
 		width: 14%;
 	}
+
+/* GIF */
+
+	#calendar-gif {
+		content: url("../images/calendar-small.gif");
+		display: block;
+		margin: 0 auto;
+		width: 100%;
+	}
+
+	#calendar-gif::after {
+		content: url("../images/calendar-small.gif");
+		display: block;
+		margin: 0 auto;
+		width: 100%;
+	}
+
+	#list-gif {
+		content: url("../images/list-small.gif");
+		display: block;
+		margin: 0 auto;
+		width: 100%;
+	}
+
+	#list-gif::after {
+		content: url("../images/list-small.gif");
+		display: block;
+		margin: 0 auto;
+		width: 100%;
+	}
+
+	#recipe-gif {
+		content: url("../images/recipe-small.gif");
+		display: block;
+		margin: 0 auto;
+		width: 100%;
+	}
+
+	#recipe-gif::after {
+		content: url("../images/recipe-small.gif");
+		display: block;
+		margin: 0 auto;
+		width: 100%;
+	}

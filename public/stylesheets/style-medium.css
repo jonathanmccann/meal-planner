@@ -137,7 +137,7 @@
 
 /* Custom */
 
-	#rotatingHeader {
+	#rotatingContainer {
 		display: none !important;
 	}
 
@@ -149,4 +149,37 @@
 
 	.flextable > .flextable-cell-header {
 		width: 14%;
+	}
+
+/* GIF */
+
+	#calendar-gif {
+		content: url("../images/calendar-medium.gif");
+		width: 100%;
+	}
+
+	#calendar-gif::after {
+		content: url("../images/calendar-medium.gif");
+		display: inline-flex;
+		width: 100%;
+	}
+
+	#list-gif {
+		content: url("../images/list-small.gif");
+	}
+
+	#list-gif::after {
+		content: url("../images/list-small.gif");
+		display: inline-flex;
+	}
+
+	#recipe-gif {
+		content: url("../images/recipe-medium.gif");
+		width: 100%;
+	}
+
+	#recipe-gif::after {
+		content: url("../images/recipe-medium.gif");
+		display: inline-flex;
+		width: 100%;
 	}

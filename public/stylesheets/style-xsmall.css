@@ -67,3 +67,15 @@
 	#banner {
 		padding: 8em 2em 8em;
 	}
+
+/* Custom */
+
+	h2 {
+		line-height: 0.75em;
+	}
+
+	.indent {
+		columns: 1;
+		-webkit-columns: 1;
+		-moz-columns: 1;
+	}
