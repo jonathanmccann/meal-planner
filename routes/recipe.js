@@ -111,7 +111,7 @@ router.get('/edit-recipe/:recipeId', function(req, res) {
 });
 
 router.post('/edit-recipe', function(req, res) {
-  if (req.body.action === "Edit Recipe") {
+  if (req.body.action === "Save Recipe") {
     var recipeName = req.body.name;
 
     var ingredients = req.body.ingredients;

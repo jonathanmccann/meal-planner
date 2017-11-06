@@ -79,7 +79,7 @@ router.get('/edit-category/:categoryId', function(req, res) {
 });
 
 router.post('/edit-category', function(req, res) {
-  if (req.body.action === "Edit Category") {
+  if (req.body.action === "Save Category") {
     var categoryName = req.body.name;
 
     connection.beginTransaction(function (err) {
