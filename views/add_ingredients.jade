@@ -2,11 +2,50 @@ extends header
 
 block content
   script.
-    var toggle = function(divId, isChecked) {
+    var toggleAllIngredients = function(divId, isChecked) {
       var checkboxes = document.querySelectorAll('#' + divId + ' input[type="checkbox"]');
 
       for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].checked = isChecked;
+      }
+    }
+
+    var toggleSelectAll = function (recipeId) {
+      var selectAllCheckbox = document.getElementById(recipeId + '_select')
+
+      var isSelectAllChecked = selectAllCheckbox.checked;
+
+      var checkboxes = document.querySelectorAll('#div' + recipeId + ' input[type="checkbox"]');
+
+      if (isSelectAllChecked) {
+        var updateSelectAllCheckbox = false;
+
+        for (var i = 0; i < checkboxes.length; i++) {
+          if (!checkboxes[i].checked) {
+            updateSelectAllCheckbox = true;
+
+            break;
+          }
+        }
+
+        if (updateSelectAllCheckbox) {
+          selectAllCheckbox.checked = false;
+        }
+      }
+      else {
+        var updateSelectAllCheckbox = true;
+
+        for (var i = 0; i < checkboxes.length; i++) {
+          if (!checkboxes[i].checked) {
+            updateSelectAllCheckbox = false;
+
+            break;
+          }
+        }
+
+        if (updateSelectAllCheckbox) {
+          selectAllCheckbox.checked = true;
+        }
       }
     }
   div(class="container heading")
@@ -30,7 +69,7 @@ block content
         form(action='/add-ingredients', method='post')
           each recipe in recipes
             h2 #{recipe.name}
-            input(type="checkbox", id="#{recipe.recipeId}_select", onClick='toggle("div" + "#{recipe.recipeId}", this.checked)')
+            input(type="checkbox", id="#{recipe.recipeId}_select", onClick='toggleAllIngredients("div" + "#{recipe.recipeId}", this.checked)')
             label(for="#{recipe.recipeId}_select") Select All
             div(class="indent", id="div" + "#{recipe.recipeId}")
               ul(class="alt")
