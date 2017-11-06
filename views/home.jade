@@ -18,20 +18,71 @@ block content
       div(class="container")
         if user.isSubscribed
           div(class="row 150%")
-            div(class="4u 12u$(medium)")
+            div(class="12u")
+              div(class="flextable")
+                if calendarError && calendarError.length
+                  div(class="error")
+                    | #{calendarError}
+                else
+                  -var currentDay = new Date().getDay();
+                  div(class="flextable-cell flextable-cell-header-home")
+                    h3 Today at a glance
+                  if displayBreakfast
+                    div(class="flextable-cell")
+                      a(href="/calendar")
+                        section(class="box")
+                          p
+                            | Breakfast
+                          div
+                            if calendarDayAndRecipeMap["" + currentDay + 0] != null
+                              -for (var j = 0; j < calendarDayAndRecipeMap["" + currentDay + 0].length; j++) {
+                              | #{calendarDayAndRecipeMap["" + currentDay + 0][j][1]}
+                              br
+                              -}
+                  if displayLunch
+                    div(class="flextable-cell")
+                      a(href="/calendar")
+                        section(class="box")
+                          p
+                            | Lunch
+                          div
+                            if calendarDayAndRecipeMap["" + currentDay + 1] != null
+                              -for (var j = 0; j < calendarDayAndRecipeMap["" + currentDay + 1].length; j++) {
+                              | #{calendarDayAndRecipeMap["" + currentDay + 1][j][1]}
+                              br
+                              -}
+                  if displayDinner
+                    div(class="flextable-cell")
+                      a(href="/calendar")
+                        section(class="box")
+                          p
+                            | Dinner
+                          div
+                            if calendarDayAndRecipeMap["" + currentDay + 2] != null
+                              -for (var j = 0; j < calendarDayAndRecipeMap["" + currentDay + 2].length; j++) {
+                              | #{calendarDayAndRecipeMap["" + currentDay + 2][j][1]}
+                              br
+                              -}
+          div(class="row 150%")
+            div(class="3u 12u$(medium)")
               a(href="/view-recipes")
                 section(class="box")
                   i(class="icon big rounded color1 fa-book")
                   h3 Recipes
-            div(class="4u 12u$(medium)")
+            div(class="3u 12u$(medium)")
               a(href="/view-categories")
                 section(class="box")
-                  i(class="icon big rounded color8 fa-cog")
+                  i(class="icon big rounded color2 fa-cog")
                   h3 Categories
-            div(class="4u 12u$(medium)")
+            div(class="3u 12u$(medium)")
+              a(href="/calendar")
+                section(class="box")
+                  i(class="icon big rounded color3 fa-calendar")
+                  h3 Calendar
+            div(class="3u 12u$(medium)")
               a(href="/plan-meals")
                 section(class="box")
-                  i(class="icon big rounded color7 fa-cutlery")
+                  i(class="icon big rounded color4 fa-cutlery")
                   h3 Plan Meals
         else
           div(class="container padding-top")

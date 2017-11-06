@@ -151,6 +151,10 @@
 		width: 14%;
 	}
 
+	.flextable > .flextable-cell-header-home {
+		width: 100%;
+	}
+
 /* GIF */
 
 	#calendar-gif {

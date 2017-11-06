@@ -12,6 +12,7 @@ var stylus = require('stylus');
 var authorize = require('./routes/authorize');
 var calendar = require('./routes/calendar');
 var category = require('./routes/category');
+var home = require('./routes/home');
 var myAccount = require('./routes/my_account');
 var planMeals = require('./routes/plan_meals');
 var recipe = require('./routes/recipe');
@@ -64,13 +65,7 @@ function isSubscribed(req, res, next) {
   }
 }
 
-app.get('/', function(req, res) {
-  res.render('home', {
-    title: "Meal Planner",
-    user: req.user
-  });
-});
-
+app.use('/', home);
 app.use('/', user);
 
 app.use('/', isLoggedIn, myAccount);

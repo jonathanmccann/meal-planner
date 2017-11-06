@@ -465,19 +465,19 @@
 			}
 
 			.icon.rounded.color2 {
-				background-color: #3c61d4;
+				background-color: #610CE8;
 			}
 
 			.icon.rounded.color3 {
-				background-color: #633cd4;
+				background-color: #FF0000;
 			}
 
 			.icon.rounded.color4 {
-				background-color: #af3cd4;
+				background-color: #E8920C;
 			}
 
 			.icon.rounded.color5 {
-				background-color: #d43cad;
+				background-color: #E1FF0D;
 			}
 
 			.icon.rounded.color6 {
@@ -1235,7 +1235,11 @@
 		margin: 0 0 3em 0;
 		padding: 0;
 	}
-	
+
+		.flextable a:hover {
+			text-decoration: none;
+		}
+
 	.flextable-cell {
 		box-sizing: border-box;
 		flex-grow: 1;
@@ -1276,6 +1280,15 @@
 	.flextable > .flextable-cell {
 		width: 14%;
 	}
+
+	.flextable > .flextable-cell-header-home {
+		background: #3cadd4;
+		width: 100%;
+	}
+
+		.flextable > .flextable-cell-header-home h3 {
+			color: white;
+		}
 
 	.tab {
 		cursor: pointer;
