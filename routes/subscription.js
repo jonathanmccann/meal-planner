@@ -184,6 +184,8 @@ router.get('/subscription', function(req, res) {
       var isPendingCancellation = subscription.cancel_at_period_end;
       var subscriptionStatus = subscription.status;
 
+      var isReceivingDiscount = false;
+
       if (isPendingCancellation && (subscriptionStatus !== "canceled")) {
         var subscriptionEndDate = new Date(subscription.current_period_end * 1000);
 
@@ -195,13 +197,23 @@ router.get('/subscription', function(req, res) {
                   ". After that time, you will no longer have access to this website, but can still resubscribe if you decide to do so later.";
       }
       else if (subscriptionStatus === "active") {
-        var nextChargeDate = new Date(subscription.current_period_end * 1000);
+        var discount = subscription.discount;
 
-        subscriptionInformation =
-          "Your next charge will occur on " +
-            monthNames[nextChargeDate.getMonth()] + " " +
-              nextChargeDate.getDate() + ", " +
-                nextChargeDate.getFullYear();
+        if (discount) {
+          isReceivingDiscount = true;
+
+          subscriptionInformation =
+            "You are currently on the free forever plan so you will never be charged."
+        }
+        else {
+          var nextChargeDate = new Date(subscription.current_period_end * 1000);
+
+          subscriptionInformation =
+            "Your next charge will occur on " +
+              monthNames[nextChargeDate.getMonth()] + " " +
+                nextChargeDate.getDate() + ", " +
+                  nextChargeDate.getFullYear();
+        }
       }
       else if (subscriptionStatus === "trialing") {
         var trialEndDate = new Date(subscription.trial_end * 1000);
@@ -219,6 +231,7 @@ router.get('/subscription', function(req, res) {
       }
 
       res.render('subscription', {
+        isReceivingDiscount: isReceivingDiscount,
         errorMessage: req.flash('errorMessage'),
         infoMessage: req.flash('infoMessage'),
         successMessage: req.flash('successMessage'),
