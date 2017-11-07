@@ -71,7 +71,7 @@ block content
             h2 #{recipe.name}
             input(type="checkbox", id="#{recipe.recipeId}_select", onClick='toggleAllIngredients("div" + "#{recipe.recipeId}", this.checked)')
             label(for="#{recipe.recipeId}_select") Select All
-            div(class="indent", id="div" + "#{recipe.recipeId}")
+            div(class="columns indent", id="div" + "#{recipe.recipeId}")
               ul(class="alt")
                 -var ingredients = recipe.ingredients.split(",");
                 -for (var i = 0; i < ingredients.length; i++) {

@@ -74,7 +74,7 @@
 		line-height: 0.75em;
 	}
 
-	.indent {
+	.columns {
 		columns: 1;
 		-webkit-columns: 1;
 		-moz-columns: 1;

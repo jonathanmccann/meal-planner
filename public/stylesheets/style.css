@@ -1120,6 +1120,12 @@
 		width: 85%
 	}
 
+	.columns {
+		columns: 2;
+		-webkit-columns: 2;
+		-moz-columns: 2;
+	}
+
 	.delete-button {
 		background-color: #df323c !important;
 		margin: 1em;
@@ -1178,9 +1184,6 @@
 
 	.indent {
 		padding: 0 0 0 2em;
-		columns: 2;
-		-webkit-columns: 2;
-		-moz-columns: 2;
 	}
 
 	.info {
