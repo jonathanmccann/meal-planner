@@ -6,6 +6,14 @@ block content
   div(class="container heading")
     header(class="major")
       h2= title
+  div(class="container 50%")
+    div(class="row")
+      div(class="6u")
+        a(href="/my-account")
+          | Account Settings
+      div(class="6u", style="text-align: right")
+        a(href="/subscription")
+          | Subscription Settings
   div(class="container user-input")
     if errorMessage && errorMessage.length
       div(class="error")
