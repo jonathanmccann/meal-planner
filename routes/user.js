@@ -11,6 +11,7 @@ var todoist = require('./todoist');
 var wunderlist = require('./wunderlist');
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+sendgrid.setSubstitutionWrappers('{{', '}}');
 
 var store = new expressBrute.MemoryStore();
 
@@ -98,9 +99,12 @@ router.post('/forgot-password', userBruteForce.prevent, function(req, res) {
     function emailPasswordResetLink(passwordResetToken, callback) {
       var message = {
         to: emailAddress,
-        from: 'no-reply@demo.com',
-        subject: 'Test Password Reset Link',
-        text: 'Here is the token - ' + passwordResetToken
+        from: 'no-reply@quickmealplanner.com',
+        subject: 'Quick Meal Planner - Password Reset Link',
+        templateId: process.env.SENDGRID_FORGOT_PASSWORD_TEMPLATE_ID,
+        substitutions: {
+          passwordResetToken: passwordResetToken
+        }
       };
 
       sendgrid.send(message, function(err) {
