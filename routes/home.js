@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
       if (err) {
         res.render('home', {
           calendarError: "Unable to fetch calendar",
-          title: "Meal Planner",
+          title: "Quick Meal Planner",
           user: req.user
         });
       }
@@ -34,7 +34,7 @@ router.get('/', function(req, res) {
           displayBreakfast: req.user.mealsToDisplay & breakfastBitwseValue,
           displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
           displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
-          title: "Meal Planner",
+          title: "Quick Meal Planner",
           user: req.user
         });
       }
@@ -42,7 +42,7 @@ router.get('/', function(req, res) {
   }
   else {
     res.render('home', {
-      title: "Meal Planner",
+      title: "Quick Meal Planner",
       user: req.user
     });
   }

@@ -71,7 +71,7 @@ module.exports = function(passport) {
               customer: customer.id,
               items: [
                 {
-                  plan: "meal-planner"
+                  plan: "quick-meal-planner"
                 }
               ],
               trial_period_days: trialPeriodsDays

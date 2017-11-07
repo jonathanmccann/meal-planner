@@ -54,7 +54,7 @@ router.post('/add-subscription', function(req, res) {
       customer: customer.id,
       items: [
         {
-          plan: "meal-planner"
+          plan: "quick-meal-planner"
         }
       ]
     })
@@ -115,7 +115,7 @@ router.post('/update-subscription', function(req, res) {
             items: [
               {
                 id: subscription.items.data[0].id,
-                plan: "meal-planner"
+                plan: "quick-meal-planner"
               }
             ]
           }
@@ -142,7 +142,7 @@ router.post('/update-subscription', function(req, res) {
           customer: req.user.customerId,
           items: [
             {
-              plan: "meal-planner"
+              plan: "quick-meal-planner"
             }
           ]
         }).then(function(subscription) {
