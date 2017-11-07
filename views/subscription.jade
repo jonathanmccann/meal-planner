@@ -48,10 +48,10 @@ block content
                 | Subscribe
               if isPendingCancellation
                 p
-                  | Sign up for a subscription today to continue using this site. Note that you will not be charged until the next normal billing period.
+                  | Sign up for a subscription today to continue meal planning. Note that you will not be charged until the next normal billing period.
               else
                 p
-                  | Sign up for a subscription today to continue using this site. Note that you will be charged immediately.
+                  | Sign up for a subscription today to continue meal planning. Note that you will be charged immediately.
               input(class="button", id='updateSubscriptionButton', type='submit', value='Subscribe')
           if isSubscriptionActive && !isPendingCancellation
             form(action='/cancel-subscription', method='post')

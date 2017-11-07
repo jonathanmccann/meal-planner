@@ -194,7 +194,7 @@ router.get('/subscription', function(req, res) {
             monthNames[subscriptionEndDate.getMonth()] + " " +
               subscriptionEndDate.getDate() + ", " +
                 subscriptionEndDate.getFullYear() +
-                  ". After that time, you will no longer have access to this website, but can still resubscribe if you decide to do so later.";
+                  ". After that time you will no longer be able to meal plan, but you will be able to resubscribe if you decide to do so later.";
       }
       else if (subscriptionStatus === "active") {
         var discount = subscription.discount;
@@ -223,11 +223,11 @@ router.get('/subscription', function(req, res) {
             monthNames[trialEndDate.getMonth()] + " " +
               trialEndDate.getDate() + ", " +
                 trialEndDate.getFullYear() +
-                  ". Be sure to subscribe soon in order to continue using this site.";
+                  ". Subscribe soon in order to continue meal planning.";
       }
       else {
         subscriptionInformation =
-          "Your subscription has ended. Subscribe now to continue using this site.";
+          "Your subscription has ended. Subscribe now to start meal planning again.";
       }
 
       res.render('subscription', {
