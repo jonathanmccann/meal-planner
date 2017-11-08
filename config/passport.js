@@ -96,7 +96,7 @@ module.exports = function(passport) {
           return done(err);
         }
         else {
-          return done(null, user, req.flash('successMessage', 'You account has been successfully created. Please connect with Wunderlist to start planning meals.'));
+          return done(null, user, req.flash('successMessage', 'You account has been successfully created. Start by adding some recipes and planning your week on the calendar.'));
         }
       });
     })

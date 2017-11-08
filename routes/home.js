@@ -34,6 +34,7 @@ router.get('/', function(req, res) {
           displayBreakfast: req.user.mealsToDisplay & breakfastBitwseValue,
           displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
           displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
+          successMessage: req.flash('successMessage'),
           title: "Quick Meal Planner",
           user: req.user
         });

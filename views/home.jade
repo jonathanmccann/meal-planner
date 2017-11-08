@@ -17,6 +17,9 @@ block content
     section(class="wrapper style1 special")
       div(class="container")
         if user.isSubscribed
+          if successMessage && successMessage.length
+            div(class="success")
+              | #{successMessage}
           div(class="row 150%")
             div(class="12u")
               div(class="flextable")
