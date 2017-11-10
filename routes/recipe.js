@@ -1,5 +1,6 @@
 var async = require('async');
 var connection = require('../connection');
+var crypto = require('crypto');
 var express = require('express');
 var router = express.Router();
 var sendgrid = require('@sendgrid/mail');
@@ -71,6 +72,42 @@ router.post('/add-recipe', function(req, res) {
 
     res.redirect('/view-recipes');
   })
+});
+
+router.get('/copy-recipe/:hash', function(req, res) {
+  async.waterfall([
+    function getRecipeIdFromHash(callback) {
+      connection.query('SELECT * FROM SharedRecipe WHERE ?', {hash: req.params.hash}, function (err, rows) {
+        callback(err, rows[0].recipeId);
+      });
+    },
+    function getRecipe(recipeId, callback) {
+      connection.query('SELECT * FROM Recipe WHERE ?', {recipeId: recipeId}, function (err, rows) {
+        callback(err, rows[0]);
+      });
+    },
+    function renderRecipe(recipe) {
+      getCategories(req.user.userId, function(categoryRows) {
+          return res.render('copy_recipe', {
+            categories: categoryRows,
+            directions: recipe.directions,
+            infoMessage: "",
+            ingredients: recipe.ingredients,
+            name: recipe.name,
+            title: "Copy Recipe",
+            user: req.user
+          });
+      });
+    }
+  ], function(err) {
+    if (err || rows.length === 0) {
+      console.error(err);
+
+      req.flash('errorMessage', 'The recipe was unable to be copied.');
+    }
+
+    res.redirect('/view-recipes');
+  });
 });
 
 router.get('/edit-recipe/:recipeId', function(req, res) {
@@ -265,53 +302,64 @@ router.post('/share-recipe', function(req, res) {
 
   var emailAddress = req.body.emailAddress;
 
-  if (!emailAddressRegex.test(emailAddress)) {
-    data.error = "Please enter a valid email address.";
-
-    res.send(data);
-  }
-  else {
-    connection.query('SELECT * FROM Recipe WHERE ? AND ?', [{recipeId: req.body.recipeId}, {userId: req.user.userId}], function (err, rows) {
-      if (err || rows.length === 0) {
-        console.error(err);
-
-        data.error = "An unexpected error has occurred.";
-
-        res.send(data);
+  async.waterfall([
+    function validateEmailAddress(callback) {
+      if (!emailAddressRegex.test(emailAddress)) {
+        data.error = "Please enter a valid email address.";
+    
+        return res.send(data);
       }
       else {
-        var message = {
-          to: emailAddress,
-          from: 'no-reply@quickmealplanner.com',
-          subject: 'Quick Meal Planner - ' + rows[0].name + ' recipe has been shared',
-          templateId: process.env.SENDGRID_SHARE_RECIPE_TEMPLATE_ID,
-          asm: {
-            groupId: parseInt(process.env.SENDGRID_UNSUBSCRIBE_GROUP_ID)
-          },
-          substitutions: {
-            name: rows[0].name,
-            ingredients: "<li>" + rows[0].ingredients.replace(/,/g, "</li><li>") + "</li>",
-            directions: rows[0].directions.replace(/\r?\n/g, "<br>")
-          }
-        };
-
-        sendgrid.send(message, function (err) {
-          if (err) {
-            console.error(err);
-
-            data.error = "An unexpected error has occurred.";
-    
-            res.send(data);
-          }
-          else {
-            data.success = "You have successfully shared your recipe.";
-
-            res.send(data);
-          }
-        });
+        callback();
       }
-    });
-  }
+    },
+    function fetchRecipe(callback) {
+      connection.query('SELECT * FROM Recipe WHERE ? AND ?', [{recipeId: req.body.recipeId}, {userId: req.user.userId}], function (err, rows) {
+        callback(err, rows[0]);
+      });
+    },
+    function addHash(recipe, callback) {
+      var hash = crypto.randomBytes(8).toString('hex');
+
+      connection.query('INSERT INTO SharedRecipe (hash, recipeId) VALUES (?, ?)', [hash, recipe.recipeId], function (err, rows) {
+        callback(err, recipe, hash);
+      });
+    },
+    function sendEmail(recipe, hash, callback) {
+      var message = {
+        to: emailAddress,
+        from: 'no-reply@quickmealplanner.com',
+        subject: 'Quick Meal Planner - ' + recipe.name + ' recipe has been shared',
+        templateId: process.env.SENDGRID_SHARE_RECIPE_TEMPLATE_ID,
+        asm: {
+          groupId: parseInt(process.env.SENDGRID_UNSUBSCRIBE_GROUP_ID)
+        },
+        substitutions: {
+          name: recipe.name,
+          ingredients: "<li>" + recipe.ingredients.replace(/,/g, "</li><li>") + "</li>",
+          directions: recipe.directions.replace(/\r?\n/g, "<br>"),
+          hash: hash
+        }
+      };
+
+      sendgrid.send(message, function (err) {
+        callback(err);
+      });
+    }
+  ], function(err) {
+    if (err) {
+      console.error(err);
+
+      data.error = "An unexpected error has occurred.";
+
+      res.send(data);
+    }
+    else {
+      data.success = "You have successfully shared your recipe.";
+
+      res.send(data);
+    }
+  });
 });
 
 router.get('/view-recipes', function(req, res) {

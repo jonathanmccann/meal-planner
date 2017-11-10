@@ -1,0 +1,27 @@
+extends header
+
+block content
+  div(class="tingle-content-wrapper")
+    div(class="container heading")
+      header(class="major")
+        h2= title
+    div(class="container user-input")
+      div(class="padding-top")
+        form(action='/add-recipe', method='post')
+          | Recipe Name:
+          input(type="text", name="name", value="#{name}", required)
+          br
+          | Recipe Category:
+          select(class="dropdown" name = "category")
+            for category in categories
+              option(value = category.categoryId + "," + category.name) #{category.name}
+          br
+          | Recipe Ingredients:
+          textarea(name="ingredients", rows="5", required)
+            | #{ingredients}
+          br
+          | Recipe Directions:
+          textarea(name="directions", rows="5")
+            | #{directions}
+          br
+          input(type='submit', value='Copy Recipe')
