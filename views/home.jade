@@ -17,11 +17,11 @@ block content
     section(class="wrapper style1 special")
       div(class="container")
         if user.subscriptionStatus
-          if successMessage && successMessage.length
-            div(class="success")
-              | #{successMessage}
-          if user.subscriptionStatus === 2
-            div(class="padding-bottom")
+          div(class="padding-bottom")
+            if successMessage && successMessage.length
+              div(class="success")
+                | #{successMessage}
+            if user.subscriptionStatus === 2
               div(class="info")
                 | You are currently on a free trial. 
                 a(href="/subscription") Subscribe soon in order to continue meal planning.
