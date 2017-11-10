@@ -19,12 +19,8 @@ CREATE TABLE Recipe(
 	ingredients TEXT,
 	directions TEXT,
 	categoryId INT,
-	categoryName VARCHAR(300)
-);
-
-CREATE TABLE SharedRecipe(
-	hash VARCHAR(100) NOT NULL PRIMARY KEY,
-	recipeId INT NOT NULL
+	categoryName VARCHAR(300),
+	shareHash VARCHAR(100)
 );
 
 CREATE TABLE User_(

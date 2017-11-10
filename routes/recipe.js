@@ -52,7 +52,7 @@ router.post('/add-recipe', function(req, res) {
     function addRecipe(callback) {
       ingredients = ingredients.trim().replace(/\r?\n|\r/g, ",");
 
-      connection.query('INSERT INTO Recipe(name, ingredients, directions, categoryId, categoryName, userId) VALUES(?, ?, ?, ?, ?, ?)', [recipeName, ingredients, directions, categoryId, categoryName, req.user.userId], function(err) {
+      connection.query('INSERT INTO Recipe(name, ingredients, directions, categoryId, categoryName, shareHash, userId) VALUES(?, ?, ?, ?, ?, ?, ?)', [recipeName, ingredients, directions, categoryId, categoryName, crypto.randomBytes(8).toString('hex'), req.user.userId], function(err) {
         callback(err);
       })
     }
@@ -76,31 +76,35 @@ router.post('/add-recipe', function(req, res) {
 
 router.get('/copy-recipe/:hash', function(req, res) {
   async.waterfall([
-    function getRecipeIdFromHash(callback) {
-      connection.query('SELECT * FROM SharedRecipe WHERE ?', {hash: req.params.hash}, function (err, rows) {
-        callback(err, rows[0].recipeId);
-      });
-    },
-    function getRecipe(recipeId, callback) {
-      connection.query('SELECT * FROM Recipe WHERE ?', {recipeId: recipeId}, function (err, rows) {
-        callback(err, rows[0]);
+    function getRecipe(callback) {
+      connection.query('SELECT * FROM Recipe WHERE ?', {shareHash: req.params.hash}, function (err, rows) {
+        console.log(rows.length);
+        if (err) {
+          callback(err);
+        }
+        else if (rows.length === 0) {
+          callback("No recipe matches hash - " + req.params.hash);
+        }
+        else {
+          callback(null, rows[0]);
+        }
       });
     },
     function renderRecipe(recipe) {
       getCategories(req.user.userId, function(categoryRows) {
-          return res.render('copy_recipe', {
-            categories: categoryRows,
-            directions: recipe.directions,
-            infoMessage: "",
-            ingredients: recipe.ingredients,
-            name: recipe.name,
-            title: "Copy Recipe",
-            user: req.user
-          });
+        return res.render('copy_recipe', {
+          categories: categoryRows,
+          directions: recipe.directions,
+          infoMessage: "",
+          ingredients: recipe.ingredients,
+          name: recipe.name,
+          title: "Copy Recipe",
+          user: req.user
+        });
       });
     }
   ], function(err) {
-    if (err || rows.length === 0) {
+    if (err) {
       console.error(err);
 
       req.flash('errorMessage', 'The recipe was unable to be copied.');
@@ -318,14 +322,7 @@ router.post('/share-recipe', function(req, res) {
         callback(err, rows[0]);
       });
     },
-    function addHash(recipe, callback) {
-      var hash = crypto.randomBytes(8).toString('hex');
-
-      connection.query('INSERT INTO SharedRecipe (hash, recipeId) VALUES (?, ?)', [hash, recipe.recipeId], function (err, rows) {
-        callback(err, recipe, hash);
-      });
-    },
-    function sendEmail(recipe, hash, callback) {
+    function sendEmail(recipe, callback) {
       var message = {
         to: emailAddress,
         from: 'no-reply@quickmealplanner.com',
@@ -338,7 +335,7 @@ router.post('/share-recipe', function(req, res) {
           name: recipe.name,
           ingredients: "<li>" + recipe.ingredients.replace(/,/g, "</li><li>") + "</li>",
           directions: recipe.directions.replace(/\r?\n/g, "<br>"),
-          hash: hash
+          hash: recipe.shareHash
         }
       };
 
