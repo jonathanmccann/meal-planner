@@ -1211,6 +1211,12 @@
 		order: 2;
 	}
 
+	.share {
+		color: black;
+		cursor: pointer;
+		padding-left: 0.5em;
+	}
+
 	.source-container label {
 		display: flex;
 	}

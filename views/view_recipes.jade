@@ -1,55 +1,63 @@
 extends header
 
 block content
-  script(src="/javascripts/realtime_search.js")
+  link(href='/stylesheets/tingle.css', rel='stylesheet')
 
-  div(class="container heading")
-    header(class="major")
-      h2= title
-  div(class="container")
-    if errorMessage && errorMessage.length
-      div(class="error")
-        | #{errorMessage}
-    if successMessage && successMessage.length
-      div(class="success")
-        | #{successMessage}
-    div(class="padding-top row")
-      div(class="6u")
-        form(action='/add-recipe', method='post')
-          | Recipe Name:
-          input(type="text", name="name", value="#{name}", autofocus, required)
-          br
-          | Recipe Category:
-          select(class="dropdown" name = "category")
-            for category in categories
-              if categoryId == category.categoryId
-                option(selected, value = category.categoryId + "," + category.name) #{category.name}
-              else
-                option(value = category.categoryId + "," + category.name) #{category.name}
-          br
-          | Recipe Ingredients:
-          textarea(name="ingredients", rows="5", required)
-            | #{ingredients}
-          br
-          | Recipe Directions:
-          textarea(name="directions", rows="5")
-            | #{directions}
-          br
-          input(type='submit', value='Add Recipe')
-      div(class="6u")
-        if categoryRecipes == null
-          header(class='major')
-            p
-              | There are currently no recipes to display. Go ahead and add some!
-        else
-          | Search for Recipes:
-          input(type="text", id="searchInput", onkeyup="realtimeRecipeSearch()")
-          div(class="padding-top", id="search")
-            -for (var categoryRecipe in categoryRecipes)
-              div(class="categories-container")
-                h2 #{categoryRecipe}
-                div(class="indent")
-                  ul(class="alt")
-                    -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
-                      li: a(href="/edit-recipe/#{categoryRecipes[categoryRecipe][i].recipeId}") #{categoryRecipes[categoryRecipe][i].name}
-                    -}
+  script(src="/javascripts/realtime_search.js")
+  script(src="/javascripts/tingle.js")
+
+  script(src="/javascripts/share_recipe.js")
+
+  div(class="tingle-content-wrapper")
+    div(class="container heading")
+      header(class="major")
+        h2= title
+    div(class="container")
+      if errorMessage && errorMessage.length
+        div(class="error")
+          | #{errorMessage}
+      if successMessage && successMessage.length
+        div(class="success")
+          | #{successMessage}
+      div(class="padding-top row")
+        div(class="6u")
+          form(action='/add-recipe', method='post')
+            | Recipe Name:
+            input(type="text", name="name", value="#{name}", autofocus, required)
+            br
+            | Recipe Category:
+            select(class="dropdown" name = "category")
+              for category in categories
+                if categoryId == category.categoryId
+                  option(selected, value = category.categoryId + "," + category.name) #{category.name}
+                else
+                  option(value = category.categoryId + "," + category.name) #{category.name}
+            br
+            | Recipe Ingredients:
+            textarea(name="ingredients", rows="5", required)
+              | #{ingredients}
+            br
+            | Recipe Directions:
+            textarea(name="directions", rows="5")
+              | #{directions}
+            br
+            input(type='submit', value='Add Recipe')
+        div(class="6u")
+          if categoryRecipes == null
+            header(class='major')
+              p
+                | There are currently no recipes to display. Go ahead and add some!
+          else
+            | Search for Recipes:
+            input(type="text", id="searchInput", onkeyup="realtimeRecipeSearch()")
+            div(class="padding-top", id="search")
+              -for (var categoryRecipe in categoryRecipes)
+                div(class="categories-container")
+                  h2 #{categoryRecipe}
+                  div(class="indent")
+                    ul(class="alt")
+                      -for (var i = 0; i < categoryRecipes[categoryRecipe].length; i++) {
+                        li
+                          a(href="/edit-recipe/#{categoryRecipes[categoryRecipe][i].recipeId}") #{categoryRecipes[categoryRecipe][i].name}
+                          i(class="icon fa-envelope-o share", id="#{categoryRecipes[categoryRecipe][i].recipeId}", title="#{categoryRecipes[categoryRecipe][i].name}")
+                      -}

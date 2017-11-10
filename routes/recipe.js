@@ -2,6 +2,12 @@ var async = require('async');
 var connection = require('../connection');
 var express = require('express');
 var router = express.Router();
+var sendgrid = require('@sendgrid/mail');
+
+const emailAddressRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$");
+
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+sendgrid.setSubstitutionWrappers('{{', '}}');
 
 router.post('/add-recipe', function(req, res) {
   var recipeName = req.body.name;
@@ -250,6 +256,60 @@ router.post('/edit-recipe', function(req, res) {
           res.redirect('/view-recipes');
         }
       });
+    });
+  }
+});
+
+router.post('/share-recipe', function(req, res) {
+  var data = {};
+
+  var emailAddress = req.body.emailAddress;
+
+  if (!emailAddressRegex.test(emailAddress)) {
+    data.error = "Please enter a valid email address.";
+
+    res.send(data);
+  }
+  else {
+    connection.query('SELECT * FROM Recipe WHERE ? AND ?', [{recipeId: req.body.recipeId}, {userId: req.user.userId}], function (err, rows) {
+      if (err || rows.length === 0) {
+        console.error(err);
+
+        data.error = "An unexpected error has occurred.";
+
+        res.send(data);
+      }
+      else {
+        var message = {
+          to: emailAddress,
+          from: 'no-reply@quickmealplanner.com',
+          subject: 'Quick Meal Planner - ' + rows[0].name + ' recipe has been shared',
+          templateId: process.env.SENDGRID_SHARE_RECIPE_TEMPLATE_ID,
+          asm: {
+            groupId: parseInt(process.env.SENDGRID_UNSUBSCRIBE_GROUP_ID)
+          },
+          substitutions: {
+            name: rows[0].name,
+            ingredients: "<li>" + rows[0].ingredients.replace(/,/g, "</li><li>") + "</li>",
+            directions: rows[0].directions.replace(/\r?\n/g, "<br>")
+          }
+        };
+
+        sendgrid.send(message, function (err) {
+          if (err) {
+            console.error(err);
+
+            data.error = "An unexpected error has occurred.";
+    
+            res.send(data);
+          }
+          else {
+            data.success = "You have successfully shared your recipe.";
+
+            res.send(data);
+          }
+        });
+      }
     });
   }
 });
