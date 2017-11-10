@@ -9,7 +9,7 @@ const monthNames = [
   "September", "October", "November", "December"
 ];
 
-function updateSubscription(subscription, req, res) {
+function updateSubscription(subscription, successMessage, req, res) {
   connection.query('UPDATE User_ SET ? WHERE ?', [{customerId: subscription.customer, subscriptionId: subscription.id, subscriptionStatus: 1}, {userId: req.user.userId}], function(err) {
     if (err) {
       console.error(err);
@@ -19,7 +19,7 @@ function updateSubscription(subscription, req, res) {
       res.redirect('/subscription');
     }
     else {
-      req.flash('successMessage', 'Thank you for subscribing! Please enjoy all of the features of the site.');
+      req.flash('successMessage', successMessage);
 
       res.redirect('/subscription');
     }
@@ -80,32 +80,58 @@ router.post('/update-subscription', function(req, res) {
   stripe.subscriptions.retrieve(
     req.user.subscriptionId
   ).then(function(subscription) {
-    stripe.customers.update(
-      req.user.customerId,
-      {
-        email: req.body.stripeEmail,
-        source: req.body.stripeToken
-      }
-    ).then(function() {
-      stripe.subscriptions.update(
-        req.user.subscriptionId,
+    if ((subscription.status === "trialing") || (subscription.cancel_at_period_end)) {
+      stripe.customers.update(
+        req.user.customerId,
         {
-          trial_end: "now",
+          email: req.body.stripeEmail,
+          source: req.body.stripeToken
+        }
+      ).then(function() {
+        stripe.subscriptions.update(
+          req.user.subscriptionId,
+          {
+            trial_end: "now",
+            items: [
+              {
+                id: subscription.items.data[0].id,
+                plan: "quick-meal-planner"
+              }
+            ]
+          }
+        ).then(function(subscription) {
+          updateSubscription(subscription, "You have successfully resubscribed. Please continue enjoying all of the features of the site.", req, res);
+        }).catch(function(err) {
+          handleStripeError(err);
+        });
+      }).catch(function(err) {
+        handleStripeError(err);
+      });
+    }
+    else {
+      stripe.customers.update(
+        req.user.customerId,
+        {
+          email: req.body.stripeEmail,
+          source: req.body.stripeToken
+        }
+      ).then(function() {
+        stripe.subscriptions.create({
+          customer: req.user.customerId,
           items: [
             {
-              id: subscription.items.data[0].id,
               plan: "quick-meal-planner"
             }
           ]
-        }
-      ).then(function(subscription) {
-        updateSubscription(subscription, req, res);
+        }).then(function(subscription) {
+          updateSubscription(subscription, "Thank you for resubscribing. Please enjoy all of the features of the site.", req, res);
+        }).catch(function(err) {
+          handleStripeError(err, req, res);
+        });
       }).catch(function(err) {
-        handleStripeError(err, req, res);
+        handleStripeError(err);
       });
-    }).catch(function(err) {
-      handleStripeError(err);
-    });
+    }
   }).catch(function(err) {
     handleStripeError(err);
   });
