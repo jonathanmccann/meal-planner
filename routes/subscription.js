@@ -80,63 +80,32 @@ router.post('/update-subscription', function(req, res) {
   stripe.subscriptions.retrieve(
     req.user.subscriptionId
   ).then(function(subscription) {
-    if ((subscription.status === "trialing") || (subscription.cancel_at_period_end)) {
-      stripe.customers.update(
-        req.user.customerId,
+    stripe.customers.update(
+      req.user.customerId,
+      {
+        email: req.body.stripeEmail,
+        source: req.body.stripeToken
+      }
+    ).then(function() {
+      stripe.subscriptions.update(
+        req.user.subscriptionId,
         {
-          email: req.body.stripeEmail,
-          source: req.body.stripeToken
+          trial_end: "now",
+          items: [
+            {
+              id: subscription.items.data[0].id,
+              plan: "quick-meal-planner"
+            }
+          ]
         }
-      ).then(function() {
-        stripe.subscriptions.update(
-          req.user.subscriptionId,
-          {
-            trial_end: "now",
-            items: [
-              {
-                id: subscription.items.data[0].id,
-                plan: "quick-meal-planner"
-              }
-            ]
-          }
-        ).then(function() {
-          req.flash('successMessage', 'You have successfully resubscribed! Please continue enjoying all of the features of the site.');
-
-          res.redirect('/subscription');
-        }).catch(function(err) {
-          handleStripeError(err);
-        });
+      ).then(function(subscription) {
+        updateSubscription(subscription, req, res);
       }).catch(function(err) {
-        handleStripeError(err);
+        handleStripeError(err, req, res);
       });
-    }
-    else {
-      stripe.customers.update(
-        req.user.customerId,
-        {
-          email: req.body.stripeEmail,
-          source: req.body.stripeToken
-        }
-      ).then(function() {
-        stripe.subscriptions.update(
-          req.user.subscriptionId,
-          {
-            items: [
-              {
-                id: subscription.items.data[0].id,
-                plan: "quick-meal-planner"
-              }
-            ]
-          }
-        ).then(function(subscription) {
-          updateSubscription(subscription, req, res);
-        }).catch(function(err) {
-          handleStripeError(err, req, res);
-        });
-      }).catch(function(err) {
-        handleStripeError(err);
-      });
-    }
+    }).catch(function(err) {
+      handleStripeError(err);
+    });
   }).catch(function(err) {
     handleStripeError(err);
   });
