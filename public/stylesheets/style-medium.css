@@ -109,6 +109,7 @@
 
 				#navPanel nav ul li {
 					padding: 0;
+					text-align: center;
 				}
 
 					#navPanel nav ul li:first-child a:not(.button), #navPanel nav ul li:first-child span:not(.button) {
