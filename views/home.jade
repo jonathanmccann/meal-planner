@@ -16,10 +16,15 @@ block content
   if user
     section(class="wrapper style1 special")
       div(class="container")
-        if user.isSubscribed
+        if user.subscriptionStatus
           if successMessage && successMessage.length
             div(class="success")
               | #{successMessage}
+          if user.subscriptionStatus === 2
+            div(class="padding-bottom")
+              div(class="info")
+                | You are currently on a free trial. 
+                a(href="/subscription") Subscribe soon in order to continue meal planning.
           div(class="row 150%")
             div(class="12u")
               div(class="flextable")

@@ -127,29 +127,43 @@ module.exports = function(passport) {
           ).then(function(subscription) {
             var subscriptionStatus = subscription.status;
 
-            if ((subscription.cancel_at_period_end && (subscriptionStatus !== "canceled")) || (subscriptionStatus === "active") || (subscriptionStatus === "trialing")) {
-              connection.query('UPDATE User_ SET ? WHERE ?', [{isSubscribed: 1}, {userId: user.userId}], function(err, rows) {
+            if ((subscription.cancel_at_period_end && (subscriptionStatus !== "canceled")) || (subscriptionStatus === "active")) {
+              connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 1}, {userId: user.userId}], function(err, rows) {
                 if (err) {
                   console.error(err);
 
                   return done(err);
                 }
                 else {
-                  user.isSubscribed = 1;
+                  user.subscriptionStatus = 1;
+
+                  return done(null, user);
+                }
+              });
+            }
+            else if (subscriptionStatus === "trialing") {
+              connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 2}, {userId: user.userId}], function(err) {
+                if (err) {
+                  console.error(err);
+
+                  return done(err);
+                }
+                else {
+                  user.subscriptionStatus = 2;
 
                   return done(null, user);
                 }
               });
             }
             else {
-              connection.query('UPDATE User_ SET ? WHERE ?', [{isSubscribed: 0}, {userId: user.userId}], function(err, rows) {
+              connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 0}, {userId: user.userId}], function(err, rows) {
                 if (err) {
                   console.error(err);
 
                   return done(err);
                 }
                 else {
-                  user.isSubscribed = 0;
+                  user.subscriptionStatus = 0;
 
                   return done(null, user);
                 }

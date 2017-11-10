@@ -21,7 +21,7 @@ html
       nav(id = "nav")
         if (user)
           ul
-            if user.isSubscribed
+            if user.subscriptionStatus
               li: a(href="/view-recipes") Recipes
               li: a(href="/view-categories") Categories
               li: a(href="/calendar") Calendar

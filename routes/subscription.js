@@ -9,8 +9,8 @@ const monthNames = [
   "September", "October", "November", "December"
 ];
 
-function addSubscription(subscription, req, res) {
-  connection.query('UPDATE User_ SET ? WHERE ?', [{customerId: subscription.customer, subscriptionId: subscription.id, isSubscribed: 1}, {userId: req.user.userId}], function(err) {
+function updateSubscription(subscription, req, res) {
+  connection.query('UPDATE User_ SET ? WHERE ?', [{customerId: subscription.customer, subscriptionId: subscription.id, subscriptionStatus: 1}, {userId: req.user.userId}], function(err) {
     if (err) {
       console.error(err);
 
@@ -44,26 +44,6 @@ function handleStripeError(err, req, res) {
   
   res.redirect('/subscription');
 }
-
-router.post('/add-subscription', function(req, res) {
-  stripe.customers.create({
-    email: req.body.stripeEmail,
-    source: req.body.stripeToken
-  }).then(function(customer) {
-    return stripe.subscriptions.create({
-      customer: customer.id,
-      items: [
-        {
-          plan: "quick-meal-planner"
-        }
-      ]
-    })
-  }).then(function(subscription) {
-    addSubscription(subscription, req, res);
-  }).catch(function(err) {
-    handleStripeError(err, req, res);
-  });
-});
 
 router.post('/cancel-subscription', function(req, res) {
   stripe.subscriptions.del(
@@ -138,15 +118,18 @@ router.post('/update-subscription', function(req, res) {
           source: req.body.stripeToken
         }
       ).then(function() {
-        stripe.subscriptions.create({
-          customer: req.user.customerId,
-          items: [
-            {
-              plan: "quick-meal-planner"
-            }
-          ]
-        }).then(function(subscription) {
-          addSubscription(subscription, req, res);
+        stripe.subscriptions.update(
+          req.user.subscriptionId,
+          {
+            items: [
+              {
+                id: subscription.items.data[0].id,
+                plan: "quick-meal-planner"
+              }
+            ]
+          }
+        ).then(function(subscription) {
+          updateSubscription(subscription, req, res);
         }).catch(function(err) {
           handleStripeError(err, req, res);
         });

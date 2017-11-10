@@ -28,14 +28,7 @@ block content
         h3
           | Billing
         div(class="indent")
-          if !user.customerId || !user.subscriptionId
-            form(action='/add-subscription', id='addSubscriptionForm', method='post')
-              h5
-                | Subscribe
-              p
-                | Subscribe today
-              input(class="button", id='addSubscriptionButton', type='submit', value='Subscribe')
-          else if isSubscriptionActive && !isPendingCancellation
+          if isSubscriptionActive && !isPendingCancellation
             form(action='/update-card', id='updateCardForm', method='post')
               h5
                 | Update

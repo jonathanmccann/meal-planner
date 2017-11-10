@@ -7,7 +7,7 @@ const lunchBitwseValue = 2;
 const dinnerBitwseValue = 4;
 
 router.get('/', function(req, res) {
-  if ((req.user) && (req.user.isSubscribed)) {
+  if ((req.user) && (req.user.subscriptionStatus)) {
     connection.query('SELECT * FROM Calendar WHERE ?', {userId: req.user.userId}, function(err, calendarRows) {
       if (err) {
         res.render('home', {

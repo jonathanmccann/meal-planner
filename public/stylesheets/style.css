@@ -1195,6 +1195,10 @@
 		border-radius:.5em;
 	}
 
+	.padding-bottom {
+		padding-bottom: 10px;
+	}
+
 	.padding-top {
 		padding-top: 10px;
 	}

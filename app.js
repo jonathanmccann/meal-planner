@@ -55,7 +55,7 @@ function isLoggedIn(req, res, next) {
 }
 
 function isSubscribed(req, res, next) {
-  if (req.user.isSubscribed) {
+  if (req.user.subscriptionStatus) {
     next();
   }
   else {
