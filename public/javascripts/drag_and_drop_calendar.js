@@ -188,7 +188,7 @@ window.onload = function() {
   });
 
   $("#calendar-form").submit(function(e) {
-  	var buttonClicked = $(this).find("input[type=submit]:focus").val();
+  	var buttonClicked = e.originalEvent.explicitOriginalTarget.value;
 
   	if (buttonClicked === "Submit Calendar") {
 			e.preventDefault();
