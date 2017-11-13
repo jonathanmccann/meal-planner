@@ -1,4 +1,7 @@
+var promiseRetry = require('promise-retry');
+var requestPromise = require('request-promise');
 var request = require('request');
+var uuidv1 = require('uuid/v1');
 
 function addList(accessToken, callback) {
   request({
@@ -21,20 +24,38 @@ function addList(accessToken, callback) {
   });
 }
 
-function addTask(accessToken, listId, taskTitle, callback) {
-  request({
-    url: 'https://beta.todoist.com/API/v8/tasks',
-    qs: {
-      token: accessToken
-    },
-    method: 'POST',
-    json: {
-      "content": taskTitle,
-      "project_id": parseInt(listId)
-    }
-  }, function(err, todoistResponse) {
-    handleError(
-      callback, err, String(todoistResponse.statusCode), todoistResponse.body);
+function addTasks(ingredients, accessToken, listId, callback) {
+  listId = parseInt(listId);
+
+  var ingredientsJson = [];
+
+  for (var ingredient in ingredients) {
+    (function (innerIngredient) {
+      ingredientsJson.push({
+        type: "item_add",
+        temp_id: uuidv1(),
+        uuid: uuidv1(),
+        args: {
+          content: innerIngredient,
+          project_id: listId
+        }
+      });
+    })(ingredient);
+  }
+
+  promiseRetry({retries: 2}, function (retry) {
+    return requestPromise({
+      url: 'https://todoist.com/api/v7/sync',
+      method: 'POST',
+      json: {
+        "token": accessToken,
+        "commands": ingredientsJson
+      }
+    }).catch(retry);
+  }).then(function () {
+    callback();
+  }, function (err) {
+    callback(err.error);
   });
 }
 
@@ -65,6 +86,6 @@ function handleError(callback, err, statusCode, body, listId) {
 
 module.exports = {
   addList: addList,
-  addTask: addTask,
+  addTasks: addTasks,
 	getList: getList
 };
