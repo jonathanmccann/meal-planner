@@ -55,6 +55,8 @@ block content
     if errorMessage && errorMessage.length
       div(class="error")
         | #{errorMessage}
+        each failedIngredient in failedIngredients
+          li: !{failedIngredient}
     if successMessage && successMessage.length
       div(class="success")
         | #{successMessage}
