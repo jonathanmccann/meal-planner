@@ -52,8 +52,33 @@ function addTasks(ingredients, accessToken, listId, callback) {
         "commands": ingredientsJson
       }
     }).catch(retry);
-  }).then(function () {
-    callback();
+  }).then(function (todoistResponse) {
+    var syncStatus = todoistResponse.sync_status;
+
+    var failedUuids = [];
+
+    for (var key in syncStatus) {
+      if (syncStatus[key] !== "ok") {
+        console.error("Ingredient failed to sync: " + syncStatus[key]);
+
+        failedUuids.push(key);
+      }
+    }
+
+    if (failedUuids.length) {
+      var failedIngredients = [];
+
+      for (var i = 0; i < ingredientsJson.length; i++) {
+        if (failedUuids.includes(ingredientsJson[i].uuid)) {
+          failedIngredients.push(ingredientsJson[i].args.content);
+        }
+      }
+
+      callback(null, failedIngredients);
+    }
+    else {
+      callback();
+    }
   }, function (err) {
     callback(err.error);
   });

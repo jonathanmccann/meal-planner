@@ -6,12 +6,20 @@ var wunderlist = require('./wunderlist');
 
 router.post('/add-ingredients', function(req, res) {
   if (req.user.toDoProvider === "Todoist") {
-    todoist.addTasks(req.body, req.user.accessToken, req.user.listId, function(err) {
+    todoist.addTasks(req.body, req.user.accessToken, req.user.listId, function(err, failedIngredients) {
       if (err) {
         console.log("Error adding ingredients to Todoist for userId = " + req.user.userId + " and listId = " + req.user.listId);
         console.log(err);
 
         req.flash('errorMessage', 'The ingredients were unable to be added to your to do list.');
+      }
+      else if (failedIngredients && failedIngredients.length) {
+        console.error("Failed ingredients are = " + failedIngredients);
+
+        req.flash('errorMessage', 'The following ingredients were unable to be added to your to do list:');
+        req.flash('failedIngredients', failedIngredients);
+
+        return res.redirect('/grocery-list');
       }
       else {
         req.flash('successMessage', 'The ingredients were added to your to do list successfully.');
