@@ -25,8 +25,13 @@ var failCallback = function (req, res) {
   else if (originalUrl === '/forgot-password') {
     req.flash('errorMessage', "You've requested too many password reset links in a short period of time. Please try again later.")
   }
+  else {
+    req.flash('errorMessage', "You've made too many attempts in a short period of time. Please try again later.");
 
-  res.redirect(req.originalUrl);
+    originalUrl = '/log-in';
+  }
+
+  res.redirect(originalUrl);
 };
 
 var handleStoreError = function (err) {
@@ -173,7 +178,7 @@ router.get('/log-out', function(req, res) {
   res.redirect('/log-in');
 });
 
-router.get('/reset-password/:passwordResetToken', function(req, res) {
+router.get('/reset-password/:passwordResetToken', userBruteForce.prevent, function(req, res) {
   var passwordResetToken = req.params.passwordResetToken;
 
   async.waterfall([
