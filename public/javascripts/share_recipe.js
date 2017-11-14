@@ -21,6 +21,9 @@ function displayShareRecipeModal(e) {
   var recipeId = e.target.id;
 
   modal.addFooterBtn('Share Recipe', 'share-recipe', 'tingle-btn--pull-right', function() {
+    var success = $("#success");
+    var error = $("#error");
+
     var data = {};
   
     data.recipeId = recipeId;
@@ -33,25 +36,25 @@ function displayShareRecipeModal(e) {
       url: 'share-recipe',
       success: function(data) {
         if (data.success) {
-          $("#success").html(data.success);
+          success.html(data.success);
 
-          $("#error").hide();
-          $("#success").show();
+          error.hide();
+          success.show();
         }
         if (data.error) {
-          $("#error").html(data.error);
+          error.html(data.error);
 
-          $("#success").hide();
-          $("#error").show();
+          success.hide();
+          error.show();
         }
       },
       error: function(err) {
         console.error(err);
 
-        $("#error").html("An unexpected error has occurred.");
+        error.html("An unexpected error has occurred.");
 
-        $("#success").hide();
-        $("#error").show();
+        success.hide();
+        error.show();
       }
     })
   });

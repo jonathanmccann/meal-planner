@@ -131,7 +131,7 @@ module.exports = function(passport) {
             var subscriptionStatus = subscription.status;
 
             if ((subscription.cancel_at_period_end && (subscriptionStatus !== "canceled")) || (subscriptionStatus === "active")) {
-              connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 1}, {userId: user.userId}], function(err, rows) {
+              connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 1}, {userId: user.userId}], function(err) {
                 if (err) {
                   logger.error("Unable to log in due to inability to update user's subscription to active for {userId = %s}", user.userId);
                   logger.error(err);
@@ -161,7 +161,7 @@ module.exports = function(passport) {
               });
             }
             else {
-              connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 0}, {userId: user.userId}], function(err, rows) {
+              connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 0}, {userId: user.userId}], function(err) {
                 if (err) {
                   logger.error("Unable to log in due to inability to update user's subscription to cancelled for {userId = %s}", user.userId);
                   logger.error(err);

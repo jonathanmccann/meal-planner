@@ -8,8 +8,6 @@ var logger = require('../logger');
 var sendgrid = require('@sendgrid/mail');
 var passport = require('passport');
 var router = express.Router();
-var todoist = require('./todoist');
-var wunderlist = require('./wunderlist');
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 sendgrid.setSubstitutionWrappers('{{', '}}');
@@ -142,14 +140,14 @@ router.get('/log-in', function(req, res) {
 });
 
 router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
-  passport.authenticate('log-in', function(err, user, info) {
+  passport.authenticate('log-in', function(err, user) {
   	if (err) {
   	  logger.error(err);
 
   		return next(err);
 		}
 		else if (!user) {
-		  req.flash('originalUrl', req.body.originalUrl)
+		  req.flash('originalUrl', req.body.originalUrl);
 
   		return res.redirect('/log-in');
 		}

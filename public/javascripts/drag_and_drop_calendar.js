@@ -1,5 +1,5 @@
 const daysInWeek = 7;
-const dayOfWeekMap = {'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6}
+const dayOfWeekMap = {'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6};
 const fullDayHeadings = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const mediumDayHeadings = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const smallDayHeadings = ['S', 'M', 'T', 'W', 'Th', 'F', 'S'];
@@ -101,7 +101,8 @@ function showFullCalendar() {
 }
 
 function showSingleDay(dayToDisplay) {
-  var flextableHeaderCells = $('#calendarTable').find('.flextable-cell-header');
+  var calendarTable = $('#calendarTable')
+  var flextableHeaderCells = calendarTable.find('.flextable-cell-header');
 
   flextableHeaderCells.each(function(index) {
     if (index === dayToDisplay) {
@@ -112,7 +113,7 @@ function showSingleDay(dayToDisplay) {
     }
   });
 
-  var flextableCells = $('#calendarTable').find('.flextable-cell:not(.flextable-cell-header)');
+  var flextableCells = calendarTable.find('.flextable-cell:not(.flextable-cell-header)');
 
   flextableCells.each(function(index) {
     if (index === dayToDisplay) {
