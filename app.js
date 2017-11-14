@@ -3,7 +3,6 @@ var cookieParser = require('cookie-parser');
 var express = require('express');
 var favicon = require('serve-favicon');
 var flash = require('connect-flash');
-var logger = require('morgan');
 var passport = require('passport');
 var path = require('path');
 var session = require('express-session');
@@ -28,7 +27,6 @@ app.set('view engine', 'jade');
 
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 app.use(flash());
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

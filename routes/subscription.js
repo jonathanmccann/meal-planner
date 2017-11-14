@@ -1,5 +1,6 @@
 var connection = require('../connection');
 var express = require('express');
+var logger = require('../logger');
 var router = express.Router();
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -12,7 +13,8 @@ const monthNames = [
 function updateSubscription(subscription, successMessage, req, res) {
   connection.query('UPDATE User_ SET ? WHERE ?', [{customerId: subscription.customer, subscriptionId: subscription.id, subscriptionStatus: 1}, {userId: req.user.userId}], function(err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to update subscription for {userId = %s, customerId = %s, subscriptionId = %s}", req.user.userId, subscription.customer, subscription.id);
+      logger.error(err);
 
       req.flash('errorMessage', 'Your subscription request failed to complete. Please contact an administrator.');
 
@@ -27,16 +29,15 @@ function updateSubscription(subscription, successMessage, req, res) {
 }
 
 function handleStripeError(err, req, res) {
+  logger.error("Unable to communicate with Stripe");
+  logger.error(err);
+
   switch (err.type) {
     case 'StripeCardError':
-      console.error(err.message);
-
       req.flash('errorMessage', "Your card has been declined. Please check your card's details and try again.");
       
       break;
     default:
-      console.error(err.message);
-
       req.flash('errorMessage', 'Your subscription request failed to complete. Please contact an administrator.');
 
       break;
@@ -56,7 +57,7 @@ router.post('/cancel-subscription', function(req, res) {
   
     res.redirect('/subscription');
   }).catch(function(err) {
-    handleStripeError(err);
+    handleStripeError(err, req, res);
   });
 });
 
@@ -72,7 +73,7 @@ router.post('/update-card', function(req, res) {
 
     res.redirect('/subscription');
   }).catch(function(err) {
-    handleStripeError(err);
+    handleStripeError(err, req, res);
   });
 });
 
@@ -102,10 +103,10 @@ router.post('/update-subscription', function(req, res) {
         ).then(function(subscription) {
           updateSubscription(subscription, "You have successfully resubscribed. Please continue enjoying all of the features of the site.", req, res);
         }).catch(function(err) {
-          handleStripeError(err);
+          handleStripeError(err, req, res);
         });
       }).catch(function(err) {
-        handleStripeError(err);
+        handleStripeError(err, req, res);
       });
     }
     else {
@@ -129,11 +130,11 @@ router.post('/update-subscription', function(req, res) {
           handleStripeError(err, req, res);
         });
       }).catch(function(err) {
-        handleStripeError(err);
+        handleStripeError(err, req, res);
       });
     }
   }).catch(function(err) {
-    handleStripeError(err);
+    handleStripeError(err, req, res);
   });
 });
 
@@ -221,7 +222,7 @@ router.get('/subscription', function(req, res) {
         user: req.user
       });
     }).catch(function(err) {
-      handleStripeError(err);
+      handleStripeError(err, req, res);
     });
   }
 });

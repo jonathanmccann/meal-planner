@@ -1,5 +1,6 @@
 var connection = require('../connection');
 var express = require('express');
+var logger = require('../logger');
 var oauth = require('simple-oauth2');
 var request = require('request');
 var router = express.Router();
@@ -46,7 +47,7 @@ router.get('/todoist', function(req, res) {
   var state = req.query.state;
 
   if (state !== process.env.OAUTH_STATE) {
-    console.error("A Wunderlist response was attempted to be forged.");
+    logger.error("A Todoist response was attempted to be forged for {userId = %s}", req.user.userId);
 
     req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
 
@@ -68,6 +69,9 @@ router.get('/todoist', function(req, res) {
 
     todoist.addList(accessToken, function(err, listId) {
       if (err) {
+        logger.error("Unable to connect to Todoist for {userId = %s}", req.user.userId);
+        logger.error(err);
+
         req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
     
         return res.redirect('/my-account');
@@ -75,7 +79,8 @@ router.get('/todoist', function(req, res) {
       else {
         connection.query('UPDATE User_ SET ? WHERE ?', [ {toDoProvider: "Todoist", accessToken: accessToken, listId: listId}, {userId: req.user.userId} ], function(err) {
           if (err) {
-            console.error(err);
+            logger.error("Unable to update user with new Todoist information for {userId = %s}", req.user.userId);
+            logger.error(err);
     
             req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
           }
@@ -96,7 +101,7 @@ router.get('/wunderlist', function(req, res) {
   var state = req.query.state;
 
   if (state !== process.env.OAUTH_STATE) {
-    console.error("A Wunderlist response was attempted to be forged.");
+    logger.error("A Wunderlist response was attempted to be forged for {userId = %s}", req.user.userId);
 
     req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
 
@@ -118,6 +123,9 @@ router.get('/wunderlist', function(req, res) {
 
     wunderlist.addList(accessToken, function(err, listId) {
       if (err) {
+        logger.error("Unable to connect to Wunderlist for {userId = %s}", req.user.userId);
+        logger.error(err);
+
         req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
     
         return res.redirect('/my-account');
@@ -125,7 +133,8 @@ router.get('/wunderlist', function(req, res) {
       else {
         connection.query('UPDATE User_ SET ? WHERE ?', [ {toDoProvider: "Wunderlist", accessToken: accessToken, listId: listId}, {userId: req.user.userId} ], function(err) {
           if (err) {
-            console.error(err);
+            logger.error("Unable to update user with new Wunderlist information for {userId = %s}", req.user.userId);
+            logger.error(err);
     
             req.flash('errorMessage', 'Your accounts were unable to be linked at this time.');
           }

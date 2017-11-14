@@ -1,3 +1,4 @@
+var logger = require('../logger');
 var promiseRetry = require('promise-retry');
 var requestPromise = require('request-promise');
 var request = require('request');
@@ -59,7 +60,7 @@ function addTasks(ingredients, accessToken, listId, callback) {
 
     for (var key in syncStatus) {
       if (syncStatus[key] !== "ok") {
-        console.error("Ingredient failed to sync: " + syncStatus[key]);
+        logger.error("Ingredient failed to sync: " + syncStatus[key]);
 
         failedUuids.push(key);
       }

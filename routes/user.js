@@ -4,6 +4,7 @@ var connection = require('../connection');
 var crypto = require('crypto');
 var expressBrute = require('express-brute');
 var express = require('express');
+var logger = require('../logger');
 var sendgrid = require('@sendgrid/mail');
 var passport = require('passport');
 var router = express.Router();
@@ -28,8 +29,9 @@ var failCallback = function (req, res) {
   res.redirect(req.originalUrl);
 };
 
-var handleStoreError = function (error) {
-  console.error(error);
+var handleStoreError = function (err) {
+  logger.error("Brute force store error occurred");
+  logger.error(err);
 };
 
 var userBruteForce = new expressBrute(store, {
@@ -113,7 +115,8 @@ router.post('/forgot-password', userBruteForce.prevent, function(req, res) {
     }
   ], function (err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to perform forgot password for {emailAddress = %s}", emailAddress);
+      logger.error(err);
     }
 
     req.flash('successMessage', 'Your password reset link has been sent to your email.');
@@ -136,6 +139,8 @@ router.get('/log-in', function(req, res) {
 router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
   passport.authenticate('log-in', function(err, user, info) {
   	if (err) {
+  	  logger.error(err);
+
   		return next(err);
 		}
 		else if (!user) {
@@ -146,6 +151,8 @@ router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
 
 		req.logIn(user, function(err) {
 			if (err) {
+			  logger.error(err);
+
 				return next(err);
 			}
       else if (req.body.originalUrl === "") {
@@ -184,7 +191,8 @@ router.get('/reset-password/:passwordResetToken', function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to get reset password");
+      logger.error(err);
 
       req.flash('errorMessage', 'Your password reset link is either expired or invalid. Please request a new link.');
     
@@ -222,7 +230,8 @@ router.post('/reset-password', userBruteForce.prevent, function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to reset password");
+      logger.error(err);
 
       req.flash('errorMessage', 'Your password reset link is either expired or invalid. Please request a new link.');
     

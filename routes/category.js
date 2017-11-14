@@ -1,6 +1,7 @@
 var async = require('async');
 var connection = require('../connection');
 var express = require('express');
+var logger = require('../logger');
 var router = express.Router();
 
 router.post('/add-category', function(req, res) {
@@ -31,7 +32,8 @@ router.post('/add-category', function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to add category for {userId = %s, categoryName = %s}", req.user.userId, categoryName);
+      logger.error(err);
 
       req.flash('errorMessage', 'The category was unable to be added.');
 
@@ -60,7 +62,8 @@ router.get('/edit-category/:categoryId', function(req, res) {
   else {
     connection.query('SELECT name FROM Category WHERE ? AND ?', [{categoryId: req.params.categoryId}, {userId: req.user.userId}], function (err, rows) {
       if (err) {
-        console.error(err);
+        logger.error("Unable to find category for {userId = %s, categoryId = %s}", req.user.userId, req.params.categoryId);
+        logger.error(err);
 
         req.flash('errorMessage', 'The category was unable to be found.');
 
@@ -84,7 +87,8 @@ router.post('/edit-category', function(req, res) {
 
     connection.beginTransaction(function (err) {
       if (err) {
-        console.error(err);
+        logger.error("Unable to begin transaction to edit category for {userId = %s, categoryId = %s}", req.user.userId, req.body.categoryId);
+        logger.error(err);
 
         req.flash('errorMessage', 'The category was unable to be edited.');
         req.flash('categoryName', categoryName);
@@ -127,7 +131,8 @@ router.post('/edit-category', function(req, res) {
         }
       ], function (err) {
         if (err) {
-          console.error(err);
+          logger.error("Unable to edit category for {userId = %s, categoryId = %s}", req.user.userId, req.body.categoryId);
+          logger.error(err);
 
           connection.rollback();
 
@@ -147,7 +152,8 @@ router.post('/edit-category', function(req, res) {
   else {
     connection.query('DELETE FROM Category WHERE ? AND ?', [ {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
       if (err) {
-        console.error(err);
+        logger.error("Unable to delete category for {userId = %s, categoryId = %s}", req.user.userId, req.body.categoryId);
+        logger.error(err);
 
         req.flash('errorMessage', 'The category was unable to be deleted.');
   
@@ -156,7 +162,8 @@ router.post('/edit-category', function(req, res) {
       else {
         connection.query('UPDATE Recipe SET ? WHERE ? AND ?', [ {categoryId: 0, categoryName: "No Category"}, {categoryId: req.body.categoryId}, {userId: req.user.userId} ], function(err) {
           if (err) {
-            console.error(err);
+            logger.error("Unable to update recipes to remove category for {userId = %s, categoryId = %s}", req.user.userId, req.body.categoryId);
+            logger.error(err);
 
             req.flash('errorMessage', 'The category was unable to be deleted.');
       
@@ -176,7 +183,12 @@ router.post('/edit-category', function(req, res) {
 router.get('/view-categories', function(req, res) {
   connection.query('SELECT * FROM Category WHERE ? ORDER BY name', [ {userId: req.user.userId} ], function(err, rows) {
     if (err) {
-      throw err;
+      logger.error("Unable to get categories for {userId = %s}", req.user.userId);
+      logger.error(err);
+
+      req.flash('errorMessage', 'Unable to get categories.');
+
+      res.redirect('/');
     }
     else {
       res.render('view_categories', {

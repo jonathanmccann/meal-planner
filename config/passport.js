@@ -2,6 +2,7 @@ var async = require('async');
 var bcrypt = require('bcrypt-nodejs');
 var connection = require('../connection');
 var LocalStrategy = require('passport-local').Strategy;
+var logger = require('../logger');
 
 var emailAddressRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$");
 
@@ -91,7 +92,8 @@ module.exports = function(passport) {
         }
       ], function(err, user) {
         if (err) {
-          console.error(err);
+          logger.error("Unable to create new account for {emailAddress = %s}", emailAddress);
+          logger.error(err);
 
           return done(err);
         }
@@ -112,7 +114,8 @@ module.exports = function(passport) {
     function(req, emailAddress, password, done) {
       connection.query('SELECT * FROM User_ WHERE emailAddress = ?', [emailAddress], function(err, rows) {
         if (err) {
-          console.error(err);
+          logger.error("Unable to retrieve user for {emailAddress = %s}", emailAddress);
+          logger.error(err);
 
           return done(err);
         }
@@ -130,7 +133,8 @@ module.exports = function(passport) {
             if ((subscription.cancel_at_period_end && (subscriptionStatus !== "canceled")) || (subscriptionStatus === "active")) {
               connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 1}, {userId: user.userId}], function(err, rows) {
                 if (err) {
-                  console.error(err);
+                  logger.error("Unable to log in due to inability to update user's subscription to active for {userId = %s}", user.userId);
+                  logger.error(err);
 
                   return done(err);
                 }
@@ -144,7 +148,8 @@ module.exports = function(passport) {
             else if (subscriptionStatus === "trialing") {
               connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 2}, {userId: user.userId}], function(err) {
                 if (err) {
-                  console.error(err);
+                  logger.error("Unable to log in due to inability to update user's subscription to trialing for {userId = %s}", user.userId);
+                  logger.error(err);
 
                   return done(err);
                 }
@@ -158,7 +163,8 @@ module.exports = function(passport) {
             else {
               connection.query('UPDATE User_ SET ? WHERE ?', [{subscriptionStatus: 0}, {userId: user.userId}], function(err, rows) {
                 if (err) {
-                  console.error(err);
+                  logger.error("Unable to log in due to inability to update user's subscription to cancelled for {userId = %s}", user.userId);
+                  logger.error(err);
 
                   return done(err);
                 }
@@ -170,7 +176,8 @@ module.exports = function(passport) {
               });
             }
           }).catch(function(err) {
-            console.error(err);
+            logger.error("Unable to log in due to Stripe error for {userId = %s}", user.userId);
+            logger.error(err);
 
             return done(err);
           });

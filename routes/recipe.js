@@ -2,6 +2,7 @@ var async = require('async');
 var connection = require('../connection');
 var crypto = require('crypto');
 var express = require('express');
+var logger = require('../logger');
 var router = express.Router();
 var sendgrid = require('@sendgrid/mail');
 
@@ -58,7 +59,8 @@ router.post('/add-recipe', function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to add recipe for {userId = %s, categoryId = %s, directions = %s, ingredients = %s, name = %s}", req.user.userId, categoryId, directions, ingredients, recipeName);
+      logger.error(err);
   
       req.flash('errorMessage', 'The recipe was unable to be added.');
       req.flash('categoryId', categoryId);
@@ -78,7 +80,6 @@ router.get('/copy-recipe/:hash', function(req, res) {
   async.waterfall([
     function getRecipe(callback) {
       connection.query('SELECT * FROM Recipe WHERE ?', {shareHash: req.params.hash}, function (err, rows) {
-        console.log(rows.length);
         if (err) {
           callback(err);
         }
@@ -105,7 +106,8 @@ router.get('/copy-recipe/:hash', function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to copy recipe for {userId = %s, shareHash = %s}", req.user.userId, req.params.hash);
+      logger.error(err);
 
       req.flash('errorMessage', 'The recipe was unable to be copied.');
     }
@@ -134,7 +136,8 @@ router.get('/edit-recipe/:recipeId', function(req, res) {
     else {
       connection.query('SELECT * FROM Recipe WHERE ? AND ?', [{recipeId: req.params.recipeId}, {userId: req.user.userId}], function (err, rows) {
         if (err || rows.length === 0) {
-          console.error(err);
+          logger.error("Unable to find recipe for {recipeId = %s, userId = %s}", req.params.recipeId, req.user.userId);
+          logger.error(err);
 
           req.flash('errorMessage', 'The recipe was unable to be found.');
 
@@ -178,7 +181,8 @@ router.post('/edit-recipe', function(req, res) {
 
     connection.beginTransaction(function (err) {
       if (err) {
-        console.error(err);
+        logger.error("Unable to begin transaction to edit recipe for {userId = %s, recipeId = %s, categoryId = %s, directions = %s, ingredients = %s, name = %s}", req.user.userId, req.body.recipeId, categoryId, directions, ingredients, recipeName);
+        logger.error(err);
 
         req.flash('errorMessage', 'The recipe was unable to be updated.');
         req.flash('categoryId', categoryId);
@@ -235,7 +239,8 @@ router.post('/edit-recipe', function(req, res) {
         }
       ], function (err) {
         if (err) {
-          console.error(err);
+          logger.error("Unable to begin transaction to edit recipe for {userId = %s, recipeId = %s, categoryId = %s, directions = %s, ingredients = %s, name = %s}", req.user.userId, req.body.recipeId, categoryId, directions, ingredients, recipeName);
+          logger.error(err);
 
           req.flash('errorMessage', 'The recipe was unable to be updated.');
           req.flash('categoryId', categoryId);
@@ -256,7 +261,8 @@ router.post('/edit-recipe', function(req, res) {
   else {
     connection.beginTransaction(function (err) {
       if (err) {
-        console.error(err);
+        logger.error("Unable to begin transaction to delete recipe for {userId = %s, recipeId = %s, categoryId = %s, directions = %s, ingredients = %s, name = %s}", req.user.userId, req.body.recipeId, categoryId, directions, ingredients, recipeName);
+        logger.error(err);
 
         req.flash('errorMessage', 'The recipe was unable to be updated.');
         req.flash('categoryId', categoryId);
@@ -285,7 +291,8 @@ router.post('/edit-recipe', function(req, res) {
         }
       ], function (err) {
         if (err) {
-          console.error(err);
+          logger.error("Unable to begin transaction to delete recipe for {userId = %s, recipeId = %s, categoryId = %s, directions = %s, ingredients = %s, name = %s}", req.user.userId, req.body.recipeId, categoryId, directions, ingredients, recipeName);
+          logger.error(err);
 
           req.flash('errorMessage', 'The recipe was unable to be deleted.');
 
@@ -345,7 +352,8 @@ router.post('/share-recipe', function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to share recipe for {userId = %s, recipeId = %s, recipientEmailAddress = %s}", req.user.userId, req.body.recipeId, emailAddress);
+      logger.error(err);
 
       data.error = "An unexpected error has occurred.";
 
@@ -408,6 +416,9 @@ router.get('/view-recipes', function(req, res) {
 function getCategories(userId, callback) {
   connection.query('SELECT * FROM Category WHERE ? ORDER BY name', {userId: userId}, function(err, rows) {
     if (err) {
+      logger.error("Unable to get categories for {userId = %s}", userId);
+      logger.error(err);
+
       throw err;
     }
     else {
@@ -419,6 +430,9 @@ function getCategories(userId, callback) {
 function getRecipes(userId, callback) {
   connection.query('SELECT * FROM Recipe WHERE ? ORDER BY categoryName, name', {userId: userId}, function(err, rows) {
     if (err) {
+      logger.error("Unable to get recipes for {userId = %s}", userId);
+      logger.error(err);
+
       throw err;
     }
     else {

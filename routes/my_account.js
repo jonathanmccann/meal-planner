@@ -2,6 +2,7 @@ var async = require('async');
 var bcrypt = require('bcrypt-nodejs');
 var connection = require('../connection');
 var express = require('express');
+var logger = require('../logger');
 var router = express.Router();
 
 const breakfastBitwseValue = 1;
@@ -43,7 +44,8 @@ router.post('/update-calendar', function(req, res) {
   if (mealsToDisplay > 0) {
     connection.query('UPDATE User_ SET ? WHERE ?', [{mealsToDisplay: mealsToDisplay}, {userId: req.user.userId}], function (err) {
       if (err) {
-        console.error(err);
+        logger.error("Unable to update calendar options for {userId = %s, mealsToDisplay = %s}", req.user.userId, mealsToDisplay);
+        logger.error(err);
 
         req.flash('errorMessage', 'Your calendar was unable to be updated.');
       }
@@ -93,7 +95,8 @@ router.post('/update-email', function(req, res) {
     }
   ], function(err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to update email address for {userId = %s, emailAddress = %s}", req.user.userId, emailAddress);
+      logger.error(err);
     
       req.flash('errorMessage', 'Your email address was unable to be updated.');
     }
@@ -129,7 +132,8 @@ router.post('/update-password', function(req, res) {
     }
   ], function (err) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to update password for {userId = %s}", req.user.userId);
+      logger.error(err);
 
       req.flash('errorMessage', 'Your password was unable to be updated.');
 

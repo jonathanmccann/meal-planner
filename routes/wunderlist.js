@@ -1,4 +1,5 @@
 var async = require('async');
+var logger = require('../logger');
 var promiseRetry = require('promise-retry');
 var rp = require('request-promise');
 var wunderlistSDK = require('wunderlist');
@@ -58,7 +59,7 @@ function addTasks(ingredients, accessToken, listId, callback) {
 
     for (var i = 0; i < results.length; i++) {
       if (results[i].error) {
-        console.log(results[i].error);
+        logger.error(results[i].error);
 
         hasFailedIngredients = true; 
       }

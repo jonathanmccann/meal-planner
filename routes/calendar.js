@@ -1,6 +1,7 @@
 var async = require('async');
 var connection = require('../connection');
 var express = require('express');
+var logger = require('../logger');
 var router = express.Router();
 
 const breakfastBitwseValue = 1;
@@ -10,7 +11,8 @@ const dinnerBitwseValue = 4;
 router.get('/calendar', function(req, res) {
   connection.query('SELECT * FROM Calendar WHERE ?', {userId: req.user.userId}, function(err, calendarRows) {
     if (err) {
-      console.error(err);
+      logger.error("Unable to fetch calendar for {userId = %s}", req.user.userId);
+      logger.error(err);
 
       res.render('calendar', {
         errorMessage: "The calendar was unable to be successfully loaded.",
@@ -21,7 +23,8 @@ router.get('/calendar', function(req, res) {
     else {
 			connection.query('SELECT * FROM Recipe WHERE ?', {userId: req.user.userId}, function (err, recipeRows) {
 				if (err) {
-					console.error(err);
+          logger.error("Unable to fetch calendar recipes for {userId = %s}", req.user.userId);
+          logger.error(err);
 
 					res.render('calendar', {
 						errorMessage: "The calendar was unable to be successfully loaded.",
@@ -80,7 +83,8 @@ router.post('/calendar', function(req, res) {
 	if (req.body.action === "Clear Calendar") {
 		connection.query('DELETE FROM Calendar WHERE ?', {userId: req.user.userId}, function(err) {
 			if (err) {
-				console.error(err);
+        logger.error("Unable to delete calendar entries for {userId = %s}", req.user.userId);
+        logger.error(err);
 
 				req.flash('errorMessage', 'The calendar was unable to be saved.');
 
@@ -96,7 +100,8 @@ router.post('/calendar', function(req, res) {
 	else {
     connection.beginTransaction(function (err) {
       if (err) {
-        console.error(err);
+        logger.error("Unable to begin transaction to edit calendar for {userId = %s}", req.user.userId);
+        logger.error(err);
 
 				req.flash('errorMessage', 'The calendar was unable to be saved.');
 
@@ -133,7 +138,8 @@ router.post('/calendar', function(req, res) {
         }
       ], function (err) {
         if (err) {
-          console.error(err);
+          logger.error("Unable to to edit calendar for {userId = %s}", req.user.userId);
+          logger.error(err);
 
           connection.rollback();
 

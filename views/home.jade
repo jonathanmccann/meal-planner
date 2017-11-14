@@ -18,6 +18,9 @@ block content
       div(class="container")
         if user.subscriptionStatus
           div(class="padding-bottom")
+            if errorMessage && errorMessage.length
+              div(class="error")
+                | #{errorMessage}
             if successMessage && successMessage.length
               div(class="success")
                 | #{successMessage}

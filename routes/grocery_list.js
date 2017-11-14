@@ -1,5 +1,6 @@
 var connection = require('../connection');
 var express = require('express');
+var logger = require('../logger');
 var router = express.Router();
 var todoist = require('./todoist');
 var wunderlist = require('./wunderlist');
@@ -8,13 +9,14 @@ router.post('/add-ingredients', function(req, res) {
   if (req.user.toDoProvider === "Todoist") {
     todoist.addTasks(req.body, req.user.accessToken, req.user.listId, function(err, failedIngredients) {
       if (err) {
-        console.log("Error adding ingredients to Todoist for userId = " + req.user.userId + " and listId = " + req.user.listId);
-        console.log(err);
+        logger.error("Error adding ingredients to Todoist for {userId = %s, listId = %s}", req.user.userId, req.user.listId);
+        logger.error(err);
 
         req.flash('errorMessage', 'The ingredients were unable to be added to your to do list.');
       }
       else if (failedIngredients && failedIngredients.length) {
-        console.error("Failed ingredients are = " + failedIngredients);
+        logger.error("Error adding ingredients to Todoist for userId = " + req.user.userId + " and listId = " + req.user.listId);
+        logger.error("Failed ingredients are = " + failedIngredients);
 
         req.flash('errorMessage', 'The following ingredients were unable to be added to your to do list:');
         req.flash('failedIngredients', failedIngredients);
@@ -31,14 +33,16 @@ router.post('/add-ingredients', function(req, res) {
   else if (req.user.toDoProvider === "Wunderlist") {
     wunderlist.addTasks(req.body, req.user.accessToken, req.user.listId, function(err, failedIngredients) {
       if (err) {
-        console.log(err);
+        logger.error("Error adding ingredients to Wunderlist for {userId = %s, listId = %s}", req.user.userId, req.user.listId);
+        logger.error(err);
 
         req.flash('errorMessage', 'The ingredients were unable to be added to your to do list.');
 
         return res.redirect('/grocery-list');
       }
       else if (failedIngredients && failedIngredients.length) {
-        console.error("Failed ingredients are = " + failedIngredients);
+        logger.error("Error adding ingredients to Wunderlist for userId = " + req.user.userId + " and listId = " + req.user.listId);
+        logger.error("Failed ingredients are = " + failedIngredients);
 
         req.flash('errorMessage', 'The following ingredients were unable to be added to your to do list:');
         req.flash('failedIngredients', failedIngredients);
@@ -67,7 +71,8 @@ router.get('/grocery-list', function(req, res) {
   if (provider !== undefined) {
     provider.getList(req.user.accessToken, req.user.listId, function (err) {
       if (err) {
-        console.error(err);
+        logger.error("Unable to fetch to do list for {userId = %s, listId = %s, provider = %s", req.user.userId, req.user.listId, provider);
+        logger.error(err);
 
         req.flash('errorMessage', 'Unable to fetch your to do list. Please try reconnecting in order to plan your groceries.');
 
