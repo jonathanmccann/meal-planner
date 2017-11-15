@@ -61,7 +61,7 @@ block content
     if successMessage && successMessage.length
       div(class="success")
         | #{successMessage}
-    div(class="padding-top")
+    div
       if categoryRecipes == null
         header(class='major')
           p
@@ -71,7 +71,8 @@ block content
       else
         form(action='/add-ingredients', method='post')
           each recipe in recipes
-            h2 #{recipe.name}
+            h2(class="padding-top")
+              | #{recipe.name}
             input(type="checkbox", id="#{recipe.recipeId}_select", onClick='toggleAllIngredients("div" + "#{recipe.recipeId}", this.checked)')
             label(for="#{recipe.recipeId}_select") Select All
             div(class="columns indent", id="div" + "#{recipe.recipeId}")
