@@ -1124,6 +1124,10 @@
 		width: 85%
 	}
 
+	.categories-container h2 {
+		margin: 0;
+	}
+
 	.columns {
 		columns: 2;
 		-webkit-columns: 2;
