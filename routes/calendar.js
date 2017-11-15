@@ -138,7 +138,7 @@ router.post('/calendar', function(req, res) {
         }
       ], function (err) {
         if (err) {
-          logger.error("Unable to to edit calendar for {userId = %s}", req.user.userId);
+          logger.error("Unable to edit calendar for {userId = %s}", req.user.userId);
           logger.error(err);
 
           connection.rollback();
