@@ -104,7 +104,10 @@ router.post('/forgot-password', userBruteForce.prevent, function(req, res) {
     function emailPasswordResetLink(passwordResetToken, callback) {
       var message = {
         to: emailAddress,
-        from: 'no-reply@quickmealplanner.com',
+        from: {
+          email: 'no-reply@quickmealplanner.com',
+          name: 'Quick Meal Planner'
+        },
         subject: 'Quick Meal Planner - Password Reset Link',
         templateId: process.env.SENDGRID_FORGOT_PASSWORD_TEMPLATE_ID,
         substitutions: {

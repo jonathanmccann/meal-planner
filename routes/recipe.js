@@ -332,7 +332,10 @@ router.post('/share-recipe', function(req, res) {
     function sendEmail(recipe, callback) {
       var message = {
         to: emailAddress,
-        from: 'no-reply@quickmealplanner.com',
+        from: {
+          email: 'no-reply@quickmealplanner.com',
+          name: 'Quick Meal Planner'
+        },
         subject: 'Quick Meal Planner - ' + recipe.name + ' recipe has been shared',
         templateId: process.env.SENDGRID_SHARE_RECIPE_TEMPLATE_ID,
         asm: {
