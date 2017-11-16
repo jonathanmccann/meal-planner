@@ -31,11 +31,11 @@ router.get('/', function(req, res) {
             calendarDayAndRecipeMap[mealKey] = [];
           }
 
-          calendarDayAndRecipeMap[mealKey].push([calendarRows[i].recipeId, calendarRows[i].recipeName]);
+          calendarDayAndRecipeMap[mealKey].push(calendarRows[i].recipeName);
         }
 
         res.render('home', {
-          calendarDayAndRecipeMap: calendarDayAndRecipeMap,
+          calendarDayAndRecipeMap: JSON.stringify(calendarDayAndRecipeMap),
           displayBreakfast: req.user.mealsToDisplay & breakfastBitwseValue,
           displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
           displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,

@@ -2,6 +2,8 @@ extends header
 
 block content
   script.
+    var calendarDayAndRecipeMap = !{calendarDayAndRecipeMap};
+
     $(document).ready(function() {
       $('#rotatingHeader').delay(1000).fadeOut(500, function() {
         $(this).text('Plan meals').fadeIn(500).delay(1000).fadeOut(500, function() {
@@ -13,6 +15,7 @@ block content
         });
       });
     })
+  script(src="/javascripts/today_calendar.js")
   if user
     section(class="wrapper style1 special")
       div(class="container")
@@ -35,7 +38,6 @@ block content
                   div(class="error")
                     | #{calendarError}
                 else
-                  -var currentDay = new Date().getDay();
                   div(class="flextable-cell flextable-cell-header-home")
                     h3 Today at a glance
                   if displayBreakfast
@@ -44,36 +46,21 @@ block content
                         section(class="box")
                           p
                             | Breakfast
-                          div
-                            if calendarDayAndRecipeMap["" + currentDay + 0] != null
-                              -for (var j = 0; j < calendarDayAndRecipeMap["" + currentDay + 0].length; j++) {
-                              | #{calendarDayAndRecipeMap["" + currentDay + 0][j][1]}
-                              br
-                              -}
+                          div(id="breakfast")
                   if displayLunch
                     div(class="flextable-cell")
                       a(href="/calendar")
                         section(class="box")
                           p
                             | Lunch
-                          div
-                            if calendarDayAndRecipeMap["" + currentDay + 1] != null
-                              -for (var j = 0; j < calendarDayAndRecipeMap["" + currentDay + 1].length; j++) {
-                              | #{calendarDayAndRecipeMap["" + currentDay + 1][j][1]}
-                              br
-                              -}
+                          div(id="lunch")
                   if displayDinner
                     div(class="flextable-cell")
                       a(href="/calendar")
                         section(class="box")
                           p
                             | Dinner
-                          div
-                            if calendarDayAndRecipeMap["" + currentDay + 2] != null
-                              -for (var j = 0; j < calendarDayAndRecipeMap["" + currentDay + 2].length; j++) {
-                              | #{calendarDayAndRecipeMap["" + currentDay + 2][j][1]}
-                              br
-                              -}
+                          div(id="dinner")
           div(class="row 150%")
             div(class="3u 12u$(medium)")
               a(href="/view-recipes")
