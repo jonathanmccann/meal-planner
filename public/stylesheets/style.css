@@ -1230,6 +1230,11 @@
 
 	.source-container label {
 		display: flex;
+		width: fit-content;
+		width: -moz-fit-content;
+		width: -webkit-fit-content;
+		width: -o-fit-content;
+		width: -ms-fit-content;
 	}
 
 	.success {
