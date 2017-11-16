@@ -78,18 +78,20 @@ app.use('/', isLoggedIn, isSubscribed, category);
 app.use('/', isLoggedIn, isSubscribed, groceryList);
 app.use('/', isLoggedIn, isSubscribed, recipe);
 
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use(function(req, res) {
+  logger.error("Unable to find {path = %s}", req.originalUrl);
+
+  res.status(404);
+
+  res.redirect('/');
 });
 
-app.use(function(err, req, res) {
-  res.locals.message = err.message;
-  res.locals.error = err;
-
+app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error');
+
+  req.flash('errorMessage', 'An unexpected error has occurred.');
+
+  res.redirect('/');
 });
 
 module.exports = app;

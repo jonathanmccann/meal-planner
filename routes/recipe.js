@@ -76,7 +76,7 @@ router.post('/add-recipe', function(req, res) {
   })
 });
 
-router.get('/copy-recipe/:hash', function(req, res) {
+router.get('/copy-recipe/:hash', function(req, res, next) {
   async.waterfall([
     function getRecipe(callback) {
       connection.query('SELECT * FROM Recipe WHERE ?', {shareHash: req.params.hash}, function (err, rows) {
@@ -92,7 +92,7 @@ router.get('/copy-recipe/:hash', function(req, res) {
       });
     },
     function renderRecipe(recipe) {
-      getCategories(req.user.userId, function(categoryRows) {
+      getCategories(req.user.userId, next, function(categoryRows) {
         return res.render('copy_recipe', {
           categories: categoryRows,
           directions: recipe.directions,
@@ -116,8 +116,8 @@ router.get('/copy-recipe/:hash', function(req, res) {
   });
 });
 
-router.get('/edit-recipe/:recipeId', function(req, res) {
-  getCategories(req.user.userId, function(categoryRows) {
+router.get('/edit-recipe/:recipeId', function(req, res, next) {
+  getCategories(req.user.userId, next, function(categoryRows) {
     var errorMessage = req.flash('errorMessage');
 
     if (errorMessage && errorMessage.length) {
@@ -370,11 +370,11 @@ router.post('/share-recipe', function(req, res) {
   });
 });
 
-router.get('/view-recipes', function(req, res) {
+router.get('/view-recipes', function(req, res, next) {
   var categoryRecipeMap = {};
 
-  getCategories(req.user.userId, function(categoryRows) {
-    getRecipes(req.user.userId, function(recipeRows) {
+  getCategories(req.user.userId, next, function(categoryRows) {
+    getRecipes(req.user.userId, next, function(recipeRows) {
       if (recipeRows.length === 0) {
         res.render('view_recipes', {
           categoryId: req.flash('categoryId'),
@@ -416,13 +416,13 @@ router.get('/view-recipes', function(req, res) {
   });
 });
 
-function getCategories(userId, callback) {
+function getCategories(userId, next, callback) {
   connection.query('SELECT * FROM Category WHERE ? ORDER BY name', {userId: userId}, function(err, rows) {
     if (err) {
       logger.error("Unable to get categories for {userId = %s}", userId);
       logger.error(err);
 
-      throw err;
+      return next(err);
     }
     else {
       callback(rows);
@@ -430,13 +430,13 @@ function getCategories(userId, callback) {
   });
 }
 
-function getRecipes(userId, callback) {
+function getRecipes(userId, next, callback) {
   connection.query('SELECT * FROM Recipe WHERE ? ORDER BY categoryName, name', {userId: userId}, function(err, rows) {
     if (err) {
       logger.error("Unable to get recipes for {userId = %s}", userId);
       logger.error(err);
 
-      throw err;
+      return next(err);
     }
     else {
       callback(rows);
