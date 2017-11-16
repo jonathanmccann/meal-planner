@@ -1272,6 +1272,11 @@
 	
 		.flextable-cell label {
 			white-space: normal;
+			width: fit-content;
+			width: -moz-fit-content;
+			width: -webkit-fit-content;
+			width: -o-fit-content;
+			width: -ms-fit-content;
 		}
 	
 		.flextable-cell .box {
