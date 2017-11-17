@@ -2,18 +2,27 @@ var async = require('async');
 var logger = require('../logger');
 var promiseRetry = require('promise-retry');
 var rp = require('request-promise');
-var wunderlistSDK = require('wunderlist');
 
 function addList(accessToken, callback) {
-  var wunderlistAPI = getWunderlistAPI(accessToken, callback);
-
-  wunderlistAPI.http.lists.create({
-    'title': 'Grocery List'
-  }).done(function(listData) {
+  promiseRetry({retries: 2}, function (retry) {
+    return rp({
+      url: 'https://a.wunderlist.com/api/v1/lists',
+      headers: {
+        'X-Access-Token': accessToken,
+        'X-Client-ID': process.env.WUNDERLIST_CLIENT_ID
+      },
+      method: 'POST',
+      json: {
+        'title': 'Grocery List'
+      }
+    }).catch(retry);
+  }).then(function (listData) {
+    logger.error("List Data = " + listData);
+    logger.error("List ID = " + listData.id);
     return callback(null, listData.id);
-  }).fail(function(resp) {
-    return callback(resp);
-  })
+  }, function (err) {
+    return callback(err);
+  });
 }
 
 function addTask(accessToken, ingredient, listId, retry) {
@@ -75,25 +84,19 @@ function addTasks(ingredients, accessToken, listId, callback) {
 }
 
 function getList(accessToken, listId, callback) {
-	var wunderlistAPI = getWunderlistAPI(accessToken, callback);
-
-	wunderlistAPI.http.lists.getID(
-    listId
-  ).done(function() {
+  promiseRetry({retries: 2}, function (retry) {
+    return rp({
+      url: 'https://a.wunderlist.com/api/v1/lists/' + listId,
+      headers: {
+        'X-Access-Token': accessToken,
+        'X-Client-ID': process.env.WUNDERLIST_CLIENT_ID
+      },
+      method: 'GET'
+    }).catch(retry);
+  }).then(function () {
     return callback(null);
-  }).fail(function(resp) {
-    return callback(resp);
-  })
-}
-
-function getWunderlistAPI(accessToken, callback) {
-	if (accessToken === null) {
-		callback("Access token is null");
-	}
-
-	return new wunderlistSDK({
-    'accessToken': accessToken,
-    'clientID': process.env.WUNDERLIST_CLIENT_ID
+  }, function (err) {
+    return callback(err);
   });
 }
 
