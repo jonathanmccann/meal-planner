@@ -9,6 +9,8 @@ var path = require('path');
 var session = require('express-session');
 var stylus = require('stylus');
 
+var redisStore = require('connect-redis')(session);
+
 var authorize = require('./routes/authorize');
 var calendar = require('./routes/calendar');
 var category = require('./routes/category');
@@ -37,7 +39,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   resave: true,
   saveUninitialized: true,
-  secret: process.env.SESSION_SECRET
+  secret: process.env.SESSION_SECRET,
+  store: new redisStore({
+    url: process.env.REDISCLOUD_URL
+  })
 }));
 
 app.use(passport.initialize());
