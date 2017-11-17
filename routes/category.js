@@ -61,7 +61,7 @@ router.get('/edit-category/:categoryId', function(req, res) {
   }
   else {
     connection.query('SELECT name FROM Category WHERE ? AND ?', [{categoryId: req.params.categoryId}, {userId: req.user.userId}], function (err, rows) {
-      if (err) {
+      if (err || !rows.length) {
         logger.error("Unable to find category for {userId = %s, categoryId = %s}", req.user.userId, req.params.categoryId);
         logger.error(err);
 

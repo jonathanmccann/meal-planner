@@ -326,7 +326,14 @@ router.post('/share-recipe', function(req, res) {
     },
     function fetchRecipe(callback) {
       connection.query('SELECT * FROM Recipe WHERE ? AND ?', [{recipeId: req.body.recipeId}, {userId: req.user.userId}], function (err, rows) {
-        callback(err, rows[0]);
+        if (!rows.length) {
+          err = "Unable to find recipe";
+
+          callback(err);
+        }
+        else {
+          callback(err, rows[0]);
+        }
       });
     },
     function sendEmail(recipe, callback) {
