@@ -134,6 +134,9 @@ router.post('/forgot-password', userBruteForce.prevent, function(req, res) {
       logger.error("Unable to perform forgot password for {emailAddress = %s}", emailAddress);
       logger.error(err);
     }
+    else {
+      req.brute.reset();
+    }
 
     req.flash('successMessage', 'Your password reset link has been sent to your email.');
 
@@ -171,7 +174,10 @@ router.post('/log-in', userBruteForce.prevent, function(req, res, next) {
 
 				return next(err);
 			}
-      else if (req.body.originalUrl === "") {
+
+      req.brute.reset();
+
+      if (req.body.originalUrl === "") {
         return res.redirect('/');
       }
       else {
@@ -215,6 +221,8 @@ router.get('/reset-password/:passwordResetToken', userBruteForce.prevent, functi
       res.redirect('/forgot-password');
     }
     else {
+      req.brute.reset();
+
       res.render('reset_password', {
         passwordResetToken: passwordResetToken,
         title: "Reset Password"

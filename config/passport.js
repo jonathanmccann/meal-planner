@@ -98,6 +98,8 @@ module.exports = function(passport) {
           return done(err);
         }
         else {
+          req.brute.reset();
+
           return done(null, user, req.flash('successMessage', 'You account has been successfully created. Start by adding some recipes and planning your week on the calendar.'));
         }
       });
