@@ -5,14 +5,24 @@ var crypto = require('crypto');
 var expressBrute = require('express-brute');
 var express = require('express');
 var logger = require('../logger');
+var redisStore = require('express-brute-redis');
 var sendgrid = require('@sendgrid/mail');
 var passport = require('passport');
 var router = express.Router();
 
+var redisClient = redisStore.Redis.createClient(
+  process.env.REDIS_PORT,
+  process.env.REDIS_HOST
+);
+
+redisClient.auth(process.env.REDIS_PASSWORD);
+
+var store = new redisStore({
+  client: redisClient
+});
+
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 sendgrid.setSubstitutionWrappers('{{', '}}');
-
-var store = new expressBrute.MemoryStore();
 
 var failCallback = function (req, res) {
   var originalUrl = req.originalUrl;
