@@ -5,6 +5,7 @@
  */
 
 var app = require('../app');
+var cluster = require('cluster');
 var http = require('http');
 var logger = require('../logger');
 
@@ -15,19 +16,38 @@ var logger = require('../logger');
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+if (cluster.isMaster) {
+  const numberOfWorkers = process.env.WEB_CONCURRENCY || 1;
 
-var server = http.createServer(app);
+  for (var i = 0; i < numberOfWorkers; i++) {
+    cluster.fork();
+  }
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+  cluster.on('exit', function(worker, code, signal) {
+    logger.debug('Worker ' + worker.process.pid + ' died.');
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+    cluster.fork();
+  });
+
+  cluster.on('listening', function(worker, address) {
+    logger.debug('Worker started with PID ' + worker.process.pid + '.');
+  });
+}
+else {
+  /**
+   * Create HTTP server.
+   */
+
+  var server = http.createServer(app);
+
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+}
 
 /**
  * Normalize a port into a number, string, or false.
