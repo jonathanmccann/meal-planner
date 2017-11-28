@@ -21,7 +21,7 @@ router.get('/calendar', function(req, res) {
       });
     }
     else {
-			connection.query('SELECT * FROM Recipe WHERE ?', {userId: req.user.userId}, function (err, recipeRows) {
+			connection.query('SELECT * FROM Recipe WHERE ? ORDER BY categoryName, name', {userId: req.user.userId}, function (err, recipeRows) {
 				if (err) {
           logger.error("Unable to fetch calendar recipes for {userId = %s}", req.user.userId);
           logger.error(err);
