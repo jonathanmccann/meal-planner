@@ -93,6 +93,9 @@ app.use(function(req, res) {
 });
 
 app.use(function(err, req, res, next) {
+  logger.error("An unexpected error has occurred");
+  logger.error(err);
+
   res.status(err.status || 500);
 
   req.flash('errorMessage', 'An unexpected error has occurred.');
