@@ -6,6 +6,7 @@ var flash = require('connect-flash');
 var logger = require('./logger');
 var passport = require('passport');
 var path = require('path');
+var redis = require('./redis');
 var session = require('express-session');
 var stylus = require('stylus');
 
@@ -41,7 +42,7 @@ app.use(session({
   saveUninitialized: true,
   secret: process.env.SESSION_SECRET,
   store: new redisStore({
-    url: process.env.REDISCLOUD_URL
+    client: redis.redisClient
   })
 }));
 
