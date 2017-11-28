@@ -1,5 +1,14 @@
 extends header
 
+block extraScripts
+  script(type="application/ld+json").
+    {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "url": "http://www.quickmealplanner.com",
+      "name": "Quick Meal Planner",
+      "description": "Meal planning shouldn't be stressful. Take charge of your meals today with this straight forward meal planner."
+    }
 block content
   script.
     var calendarDayAndRecipeMap = !{calendarDayAndRecipeMap};
