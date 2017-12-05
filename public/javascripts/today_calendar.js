@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  if (calendarDayAndRecipeMap) {
+  if (typeof calendarDayAndRecipeMap !== 'undefined') {
     var currentDay = new Date().getDay();
 
     if (calendarDayAndRecipeMap[String(currentDay) + "0"]) {
