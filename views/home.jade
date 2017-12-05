@@ -24,181 +24,193 @@ block content
         });
       });
     })
+
+  link(href='/stylesheets/tingle.css', rel='stylesheet')
+
+  script(src="/javascripts/tingle.js")
+
+  script(src="/javascripts/contact.js")
   script(src="/javascripts/today_calendar.js")
-  if user
-    section(class="wrapper style1 special")
-      div(class="container")
-        if user.subscriptionStatus
-          div(class="padding-bottom")
-            if errorMessage && errorMessage.length
-              div(class="error")
-                | #{errorMessage}
-            if successMessage && successMessage.length
-              div(class="success")
-                | #{successMessage}
-            if user.subscriptionStatus === 2
-              div(class="info")
-                | You are currently on a free trial. 
-                a(href="/subscription") Subscribe soon in order to continue meal planning.
-          div(class="row 150%")
-            div(class="12u")
-              div(class="flextable")
-                if calendarError && calendarError.length
-                  div(class="error")
-                    | #{calendarError}
-                else
-                  div(class="flextable-cell flextable-cell-header-home")
-                    h3 Today at a glance
-                  if displayBreakfast
-                    div(class="flextable-cell")
-                      a(href="/calendar")
-                        section(class="box")
-                          p
-                            | Breakfast
-                          div(id="breakfast")
-                  if displayLunch
-                    div(class="flextable-cell")
-                      a(href="/calendar")
-                        section(class="box")
-                          p
-                            | Lunch
-                          div(id="lunch")
-                  if displayDinner
-                    div(class="flextable-cell")
-                      a(href="/calendar")
-                        section(class="box")
-                          p
-                            | Dinner
-                          div(id="dinner")
-          div(class="row 150%")
-            div(class="3u 12u$(medium)")
-              a(href="/view-recipes")
+
+  div(class="tingle-content-wrapper")
+    if user
+      section(class="wrapper style1 special")
+        div(class="container")
+          if user.subscriptionStatus
+            div(class="padding-bottom")
+              if errorMessage && errorMessage.length
+                div(class="error")
+                  | #{errorMessage}
+              if successMessage && successMessage.length
+                div(class="success")
+                  | #{successMessage}
+              if user.subscriptionStatus === 2
+                div(class="info")
+                  | You are currently on a free trial. 
+                  a(href="/subscription") Subscribe soon in order to continue meal planning.
+            div(class="row 150%")
+              div(class="12u")
+                div(class="flextable")
+                  if calendarError && calendarError.length
+                    div(class="error")
+                      | #{calendarError}
+                  else
+                    div(class="flextable-cell flextable-cell-header-home")
+                      h3 Today at a glance
+                    if displayBreakfast
+                      div(class="flextable-cell")
+                        a(href="/calendar")
+                          section(class="box")
+                            p
+                              | Breakfast
+                            div(id="breakfast")
+                    if displayLunch
+                      div(class="flextable-cell")
+                        a(href="/calendar")
+                          section(class="box")
+                            p
+                              | Lunch
+                            div(id="lunch")
+                    if displayDinner
+                      div(class="flextable-cell")
+                        a(href="/calendar")
+                          section(class="box")
+                            p
+                              | Dinner
+                            div(id="dinner")
+            div(class="row 150%")
+              div(class="3u 12u$(medium)")
+                a(href="/view-recipes")
+                  section(class="box")
+                    i(class="icon big rounded color1 fa-book")
+                    h3 Recipes
+              div(class="3u 12u$(medium)")
+                a(href="/view-categories")
+                  section(class="box")
+                    i(class="icon big rounded color2 fa-cog")
+                    h3 Categories
+              div(class="3u 12u$(medium)")
+                a(href="/calendar")
+                  section(class="box")
+                    i(class="icon big rounded color3 fa-calendar")
+                    h3 Calendar
+              div(class="3u 12u$(medium)")
+                a(href="/grocery-list")
+                  section(class="box")
+                    i(class="icon big rounded color4 fa-cutlery")
+                    h3 Grocery List
+          else
+            div(class="container padding-top")
+              a(href="/subscription")
                 section(class="box")
-                  i(class="icon big rounded color1 fa-book")
-                  h3 Recipes
-            div(class="3u 12u$(medium)")
-              a(href="/view-categories")
-                section(class="box")
-                  i(class="icon big rounded color2 fa-cog")
-                  h3 Categories
-            div(class="3u 12u$(medium)")
-              a(href="/calendar")
-                section(class="box")
-                  i(class="icon big rounded color3 fa-calendar")
-                  h3 Calendar
-            div(class="3u 12u$(medium)")
-              a(href="/grocery-list")
-                section(class="box")
-                  i(class="icon big rounded color4 fa-cutlery")
-                  h3 Grocery List
-        else
-          div(class="container padding-top")
-            a(href="/subscription")
-              section(class="box")
-                i(class="fa-calendar icon major")
-                h3 Your subscription has expired.
-                h4
-                  | Please resubscribe in order to access all of the site's features again.
-  else
-    section(id="banner")
-      div(class="container 75%")
-        div(class="row")
-          div(class="6u 12u(medium)")
-            h2
-              | Meal planning,
-              br
-              | made simple
-            h4
-              | Sign up for a free 14 day trial today.
-            div
-              form(action='/create-account', method='post')
-                label(for='emailAddress') Email Address:
-                input(type="text", name="emailAddress", required)
-                label(for='password') Password:
-                input(type="password", name="password", required)
-                input(type='submit', name='action', value='Create an Account')
-          div(class="6u", id="rotatingContainer")
-            h2(id="rotatingHeader")
-              | Add recipes
-            div(class="banner-caption", id="banner-caption")
-              h3
-                | Meal planning shouldn't be stressful.
-                | Take charge of your meals today with this straight forward meal planner. 
-    section(class="wrapper style2 special")
-      div(class="container")
-        div(class="container 50%")
-          h2 Add Recipes
-          h3 Add all of your favorite recipes quickly and easily.
-        img(id="recipe-gif")
-        hr
-        div(class="container 50%")
-            h2 Plan Meals
-            h3 Plan your week using drag and drop.
-        img(id="calendar-gif")
-        hr
-        div(class="container 50%")
-          h2 Make A List
-          h3 All of your necessary ingredients are added seamlessly to your favorite grocery list.
-        img(id="list-gif")
-    section(class="wrapper style1 special")
-      div(class="container 75%")
-        h2
-          | One Simple Price
-        h2
-          | $1 / month for stress free meal planning.
-        h3
-          | No premium plans, no upsell.
-        p
-          | Unlimited Recipes
-          br
-          | Unlimited Categories
-          br
-          | Weekly Meal Planning Calendar
-          br
-          | Integration with your favorite to do applications
-          br
-          | Share recipes with friends easily
-        hr
-        h3
-          | You're also doing good in the local community.
-        p
-          | 10% of all net proceeds are donated to a 
-          a(href="https://www.feedoc.org/", target="_blank") local food bank
-          |  to help provide meals to others.
-    section(class="wrapper style2 special")
-      div(class="container 50% homepage-form")
-        h2
-          | Not convinced?
-        h3
-          | Sign up for a 14 day free trial.
-        p
-          | You don't even need to enter your credit card.
-        form(action='/create-account', method='post')
-          label(for='emailAddress') Email Address:
-          input(type="text", name="emailAddress", required)
-          label(for='password') Password:
-          input(type="password", name="password", required)
-          input(type='submit', name='action', value='Create an Account')
-  footer(id="footer")
-    div(class="container 75% align-center")
-      div(class="row")
-        div(class="6u 12u$(medium)")
+                  i(class="fa-calendar icon major")
+                  h3 Your subscription has expired.
+                  h4
+                    | Please resubscribe in order to access all of the site's features again.
+    else
+      section(id="banner")
+        div(class="container 75%")
+          div(class="row")
+            div(class="6u 12u(medium)")
+              h2
+                | Meal planning,
+                br
+                | made simple
+              h4
+                | Sign up for a free 14 day trial today.
+              div
+                form(action='/create-account', method='post')
+                  label(for='emailAddress') Email Address:
+                  input(type="text", name="emailAddress", required)
+                  label(for='password') Password:
+                  input(type="password", name="password", required)
+                  input(type='submit', name='action', value='Create an Account')
+            div(class="6u", id="rotatingContainer")
+              h2(id="rotatingHeader")
+                | Add recipes
+              div(class="banner-caption", id="banner-caption")
+                h3
+                  | Meal planning shouldn't be stressful.
+                  | Take charge of your meals today with this straight forward meal planner. 
+      section(class="wrapper style2 special")
+        div(class="container")
+          div(class="container 50%")
+            h2 Add Recipes
+            h3 Add all of your favorite recipes quickly and easily.
+          img(id="recipe-gif")
+          hr
+          div(class="container 50%")
+              h2 Plan Meals
+              h3 Plan your week using drag and drop.
+          img(id="calendar-gif")
+          hr
+          div(class="container 50%")
+            h2 Make A List
+            h3 All of your necessary ingredients are added seamlessly to your favorite grocery list.
+          img(id="list-gif")
+      section(class="wrapper style1 special")
+        div(class="container 75%")
           h2
-            | Learn
+            | One Simple Price
+          h2
+            | $1 / month for stress free meal planning.
+          h3
+            | No premium plans, no upsell.
           p
-            | Send Us a Message
-        div(class="6u 12u$(medium)")
+            | Unlimited Recipes
+            br
+            | Unlimited Categories
+            br
+            | Weekly Meal Planning Calendar
+            br
+            | Integration with your favorite to do applications
+            br
+            | Share recipes with friends easily
+          hr
+          h3
+            | You're also doing good in the local community.
+          p
+            | 10% of all net proceeds are donated to a 
+            a(href="https://www.feedoc.org/", target="_blank") local food bank
+            |  to help provide meals to others.
+      section(class="wrapper style2 special")
+        div(class="container 50% homepage-form")
           h2
-            | Share
-          ul(class="icons")
+            | Not convinced?
+          h3
+            | Sign up for a 14 day free trial.
+          p
+            | You don't even need to enter your credit card.
+          form(action='/create-account', method='post')
+            label(for='emailAddress') Email Address:
+            input(type="text", name="emailAddress", required)
+            label(for='password') Password:
+            input(type="password", name="password", required)
+            input(type='submit', name='action', value='Create an Account')
+    footer(id="footer")
+      div(class="container 75% align-center")
+        div(class="row")
+          div(class="6u 12u$(medium)")
+            h2
+              | Learn
+            if user
+              p(id="contact", onClick="displayContactModal('#{user.emailAddress}')")
+                | Send Us a Message
+            else
+              p(id="contact", onClick="displayContactModal()")
+                | Send Us a Message
+          div(class="6u 12u$(medium)")
+            h2
+              | Share
+            ul(class="icons")
+              li
+                a(class="icon rounded fa-facebook", onClick="window.open('https://www.facebook.com/sharer/sharer.php?u=http://www.quickmealplanner.com', 'sharer', 'toolbar=0, status=0, width=580, height=325');", href="javascript: void(0)")
+              li
+                a(class="icon rounded fa-pinterest-p", onClick="window.open('https://www.pinterest.com/pin/create/link/?url=http%3A%2F%2Fwww.quickmealplanner.com&media=http%3A%2F%2Fwww.quickmealplanner.com%2Fimages%2Fbackground.jpg&description=Meal%20planning%20shouldn%27t%20be%20stressful.%20Take%20charge%20of%20your%20meals%20today%20with%20this%20straight%20forward%20meal%20planner.', 'sharer', 'toolbar=0, status=0, width=580, height=325');", href="javascript: void(0)")
+              li
+                a(class="icon rounded fa-twitter", onClick="window.open('https://twitter.com/intent/tweet?status=Meal%20planning%20shouldn%27t%20be%20stressful.%20Take%20charge%20of%20your%20meals%20today%20with%20this%20straight%20forward%20meal%20planner%20-%20http%3A%2F%2Fwww.quickmealplanner.com', 'sharer', 'toolbar=0, status=0, width=580, height=325');", href="javascript: void(0)")
+        hr
+        div(class="12u")
+          ul(class="copyright")
             li
-              a(class="icon rounded fa-facebook", onClick="window.open('https://www.facebook.com/sharer/sharer.php?u=http://www.quickmealplanner.com', 'sharer', 'toolbar=0, status=0, width=580, height=325');", href="javascript: void(0)")
-            li
-              a(class="icon rounded fa-pinterest-p", onClick="window.open('https://www.pinterest.com/pin/create/link/?url=http%3A%2F%2Fwww.quickmealplanner.com&media=http%3A%2F%2Fwww.quickmealplanner.com%2Fimages%2Fbackground.jpg&description=Meal%20planning%20shouldn%27t%20be%20stressful.%20Take%20charge%20of%20your%20meals%20today%20with%20this%20straight%20forward%20meal%20planner.', 'sharer', 'toolbar=0, status=0, width=580, height=325');", href="javascript: void(0)")
-            li
-              a(class="icon rounded fa-twitter", onClick="window.open('https://twitter.com/intent/tweet?status=Meal%20planning%20shouldn%27t%20be%20stressful.%20Take%20charge%20of%20your%20meals%20today%20with%20this%20straight%20forward%20meal%20planner%20-%20http%3A%2F%2Fwww.quickmealplanner.com', 'sharer', 'toolbar=0, status=0, width=580, height=325');", href="javascript: void(0)")
-      hr
-      div(class="12u")
-        ul(class="copyright")
-          li
-            | &copy; Quick Meal Planner. All rights reserved.
+              | &copy; Quick Meal Planner. All rights reserved.

@@ -1,7 +1,13 @@
+var async = require('async');
 var connection = require('../connection');
 var express = require('express');
 var logger = require('../logger');
 var router = express.Router();
+var sendgrid = require('@sendgrid/mail');
+
+const emailAddressRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$");
+
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 const breakfastBitwseValue = 1;
 const lunchBitwseValue = 2;
@@ -53,6 +59,52 @@ router.get('/', function(req, res) {
       user: req.user
     });
   }
+});
+
+router.post('/send-message', function(req, res) {
+  var data = {};
+
+  var emailAddress = req.body.emailAddress;
+  var message = req.body.message;
+
+  async.waterfall([
+    function validateEmailAddress(callback) {
+      if (!emailAddressRegex.test(emailAddress)) {
+        data.error = "Please enter a valid email address.";
+    
+        return res.send(data);
+      }
+      else {
+        callback();
+      }
+    },
+    function sendEmail(callback) {
+      var email = {
+        to: 'contact@quickmealplanner.com',
+        from: emailAddress,
+        subject: 'You Have A New Message From ' + emailAddress,
+        text: message
+      };
+
+      sendgrid.send(email, function (err) {
+        callback(err);
+      });
+    }
+  ], function(err) {
+    if (err) {
+      logger.error("Unable to send message for {emailAddress = %s, message = %s}", emailAddress, message);
+      logger.error(err);
+
+      data.error = "An unexpected error has occurred.";
+
+      res.send(data);
+    }
+    else {
+      data.success = "Your message has been sent successfully. We will get back to you as soon as possible.";
+
+      res.send(data);
+    }
+  });
 });
 
 module.exports = router;
