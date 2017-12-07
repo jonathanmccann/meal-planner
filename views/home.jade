@@ -194,10 +194,10 @@ block content
             h2
               | Contact
             if user
-              p(id="contact", onClick="displayContactModal('#{user.emailAddress}')")
+              p(class="contact", id="contact", onClick="displayContactModal('#{user.emailAddress}')")
                 | Send Us a Message
             else
-              p(id="contact", onClick="displayContactModal()")
+              p(class="contact", id="contact", onClick="displayContactModal()")
                 | Send Us a Message
           div(class="6u 12u$(medium)")
             h2

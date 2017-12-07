@@ -1138,6 +1138,11 @@
 		-moz-columns: 2;
 	}
 
+	.contact {
+		cursor: pointer;
+		display: inline-block;
+	}
+
 	.delete-button {
 		background-color: #df323c !important;
 		margin: 1em;
