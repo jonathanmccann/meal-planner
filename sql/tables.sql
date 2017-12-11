@@ -5,10 +5,8 @@ CREATE TABLE Category(
 );
 
 CREATE TABLE Calendar(
-	calendarId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	userId INT NOT NULL,
 	recipeId INT,
-	recipeName VARCHAR(300),
 	mealKey VARCHAR(2)
 );
 
@@ -49,3 +47,5 @@ CREATE TABLE User_(
 	subscriptionId VARCHAR(100),
 	subscriptionStatus INT DEFAULT 2
 );
+
+CREATE INDEX CALENDAR_IX_USERID_RECIPEID_MEALKEY ON Calendar(userId, recipeId, mealKey);
