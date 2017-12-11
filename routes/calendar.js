@@ -9,7 +9,7 @@ const lunchBitwseValue = 2;
 const dinnerBitwseValue = 4;
 
 router.get('/calendar', function(req, res) {
-  connection.query('SELECT * FROM Calendar WHERE ?', {userId: req.user.userId}, function(err, calendarRows) {
+  connection.query('SELECT Calendar.mealKey, Calendar.recipeId, Recipe.name FROM meal_planner.Calendar INNER JOIN Recipe ON Calendar.recipeId = Recipe.recipeId WHERE Calendar.userId = 1;', [req.user.userId], function(err, calendarRows) {
     if (err) {
       logger.error("Unable to fetch calendar for {userId = %s}", req.user.userId);
       logger.error(err);
@@ -44,7 +44,7 @@ router.get('/calendar', function(req, res) {
 							calendarDayAndRecipeMap[mealKey] = [];
 						}
 
-						calendarDayAndRecipeMap[mealKey].push([calendarRows[i].recipeId, calendarRows[i].recipeName]);
+						calendarDayAndRecipeMap[mealKey].push([calendarRows[i].recipeId, calendarRows[i].name]);
 					}
 
 					for (var i = 0; i < recipeRows.length; i++) {
@@ -120,13 +120,13 @@ router.post('/calendar', function(req, res) {
           for (var key in req.body) {
             var [recipeId, mealKey] = key.split('_');
   
-            var meal = [req.user.userId, recipeId, req.body[key], mealKey];
+            var meal = [req.user.userId, recipeId, mealKey];
   
             meals.push(meal);
           }
   
           if (meals.length) {
-            connection.query('INSERT INTO Calendar (userId, recipeId, recipeName, mealKey) VALUES ?', [meals], function (err) {
+            connection.query('INSERT INTO Calendar (userId, recipeId, mealKey) VALUES ?', [meals], function (err) {
               callback(err);
             });
           }

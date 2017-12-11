@@ -15,7 +15,7 @@ const dinnerBitwseValue = 4;
 
 router.get('/', function(req, res) {
   if ((req.user) && (req.user.subscriptionStatus)) {
-    connection.query('SELECT * FROM Calendar WHERE ?', {userId: req.user.userId}, function(err, calendarRows) {
+    connection.query('SELECT Calendar.mealKey, Recipe.name FROM meal_planner.Calendar INNER JOIN Recipe ON Calendar.recipeId = Recipe.recipeId WHERE Calendar.userId = 1;', [req.user.userId], function(err, calendarRows) {
       if (err) {
         logger.error("Unable to fetch home calendar for {userId = %s}", req.user.userId);
         logger.error(err);
@@ -37,7 +37,7 @@ router.get('/', function(req, res) {
             calendarDayAndRecipeMap[mealKey] = [];
           }
 
-          calendarDayAndRecipeMap[mealKey].push(calendarRows[i].recipeName);
+          calendarDayAndRecipeMap[mealKey].push(calendarRows[i].name);
         }
 
         res.render('home', {
