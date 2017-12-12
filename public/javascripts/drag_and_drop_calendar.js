@@ -154,6 +154,77 @@ $(document).ready(function() {
   $(document).on('click', 'label', function (e) {
     displayRecipeModal(e);
   });
+
+  var newMealPlanNameTextBox = $('#newMealPlanName');
+
+  $('#mealPlanId').change(function() {
+    var selectedOption = $('option:selected', this);
+
+    if (selectedOption.attr('id') === "createNew") {
+      newMealPlanNameTextBox.prop('required', true);
+
+      newMealPlanNameTextBox.show();
+
+      for (var i = 0; i < containerIds.length; i++) {
+        var mealKey = containerIds[i];
+
+        var recipeContainer = $('#' + mealKey).find("div");
+
+        recipeContainer.empty();
+      }
+    }
+    else {
+      newMealPlanNameTextBox.prop('required', false);
+
+      newMealPlanNameTextBox.hide();
+
+      var error = $("#error");
+  
+      var data = {};
+    
+      data.mealPlanId = $("#mealPlanId").val();
+
+      $.ajax({
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        url: 'meal-plan',
+        success: function(data) {
+          if (data.calendarDayAndRecipeMap) {
+            for (var i = 0; i < containerIds.length; i++) {
+              var mealKey = containerIds[i];
+
+              var recipeContainer = $('#' + mealKey).find("div");
+
+              recipeContainer.empty();
+
+              if (data.calendarDayAndRecipeMap[mealKey] !== undefined) {
+                var calendarDayAndRecipe = data.calendarDayAndRecipeMap[mealKey];
+
+                for (var j = 0; j < calendarDayAndRecipe.length; j++) {
+                  recipeContainer.append('<label class="draggable padding-top" title=' + calendarDayAndRecipe[j][0] + '>' + calendarDayAndRecipe[j][1] + '</label>');
+                }
+              }
+            }
+          }
+          else if (data.error) {
+            console.error(data.error);
+
+            error.html(data.error);
+  
+            error.show();
+          }
+        },
+        error: function(err) {
+          console.error(err);
+  
+          error.html("An unexpected error has occurred.");
+  
+          error.show();
+        }
+      });
+    }
+  });
 });
 
 window.onload = function() {

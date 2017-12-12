@@ -13,11 +13,12 @@ CREATE TABLE Calendar(
 CREATE TABLE MealPlan(
 	mealPlanId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	userId INT NOT NULL,
-	mealPlanName VARCHAR(300)
+	name VARCHAR(300)
 );
 
 CREATE TABLE MealPlanRecipe(
 	mealPlanId INT NOT NULL,
+	userId INT NOT NULL,
 	recipeId INT NOT NULL,
 	mealKey VARCHAR(2) NOT NULL
 );

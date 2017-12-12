@@ -157,4 +157,109 @@ router.post('/calendar', function(req, res) {
 	}
 });
 
+router.get('/meal-plan', function(req, res) {
+  async.waterfall([
+    function getRecipes(callback) {
+ 			connection.query('SELECT * FROM Recipe WHERE ? ORDER BY categoryName, name', {userId: req.user.userId}, function (err, recipeRows) {
+        callback(err, recipeRows);
+      });
+    },
+    function getMealPlans(recipeRows, callback) {
+      connection.query('SELECT * FROM MealPlan WHERE ?', {userId: req.user.userId}, function(err, mealPlanRows) {
+        callback(err, recipeRows, mealPlanRows);
+      });
+    },
+    function createMap(recipeRows, mealPlanRows, callback) {
+      var categoryRecipeMap = {};
+      var recipes = {};
+
+      for (var i = 0; i < recipeRows.length; i++) {
+        recipes[recipeRows[i].recipeId] = [];
+        recipes[recipeRows[i].recipeId].push(recipeRows[i].name, recipeRows[i].ingredients, recipeRows[i].directions);
+
+        var categoryName = recipeRows[i].categoryName;
+
+        if (!categoryRecipeMap[categoryName]) {
+          categoryRecipeMap[categoryName] = [];
+        }
+
+        categoryRecipeMap[categoryName].push(recipeRows[i]);
+      }
+
+      callback(null, categoryRecipeMap, recipes, mealPlanRows);
+    }
+  ], function (err, categoryRecipeMap, recipes, mealPlanRows) {
+    if (err) {
+      logger.error("Unable to display meal plans for {userId = %s}", req.user.userId);
+      logger.error(err);
+
+      res.render('meal-plan', {
+        errorMessage: "The meal plan was unable to be successfully loaded.",
+        title: "Meal Plans",
+        user: req.user
+      });
+    }
+    else {
+      res.render('calendar', {
+        calendarDayAndRecipeMap: null,
+        categoryRecipes: categoryRecipeMap,
+        displayBreakfast: req.user.mealsToDisplay & breakfastBitwseValue,
+        displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
+        displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
+        errorMessage: req.flash('errorMessage'),
+        isMealPlan: true,
+        mealPlans: mealPlanRows,
+        recipes: JSON.stringify(recipes),
+        successMessage: req.flash('successMessage'),
+        test: "test",
+        title: "Calendar",
+        user: req.user
+      });
+    }
+  });
+});
+
+router.post('/meal-plan', function(req, res) {
+  var data = {};
+
+  var mealPlanId = req.body.mealPlanId;
+
+  async.waterfall([
+    function getMealPlanRecipes(callback) {
+      connection.query('SELECT MealPlanRecipe.mealKey, MealPlanRecipe.recipeId, Recipe.name FROM MealPlanRecipe INNER JOIN Recipe ON MealPlanRecipe.recipeId = Recipe.recipeId WHERE MealPlanRecipe.mealPlanId = ? AND MealPlanRecipe.userId = ?', [mealPlanId, req.user.userId], function(err, mealPlanRecipeRows) {
+        callback(err, mealPlanRecipeRows)
+      });
+    },
+    function createMap(mealPlanRecipeRows, callback) {
+      var calendarDayAndRecipeMap = {};
+
+      for (var i = 0; i < mealPlanRecipeRows.length; i++) {
+        var mealKey = mealPlanRecipeRows[i].mealKey;
+
+        if (!calendarDayAndRecipeMap[mealKey]) {
+          calendarDayAndRecipeMap[mealKey] = [];
+        }
+
+        calendarDayAndRecipeMap[mealKey].push([mealPlanRecipeRows[i].recipeId, mealPlanRecipeRows[i].name]);
+      }
+
+      callback(null, calendarDayAndRecipeMap);
+    }
+  ], function (err, calendarDayAndRecipeMap) {
+    if (err) {
+      logger.error("Unable to fetch meal plan for {userId = %s, mealPlanId = %s}", req.user.userId, mealPlanId);
+      logger.error(err);
+
+      data.error = "An unexpected error has occurred while fetching your meal plan.";
+
+      res.send(data);
+    }
+    else {
+      data.calendarDayAndRecipeMap = calendarDayAndRecipeMap;
+
+      res.send(data);
+    }
+  });
+});
+
 module.exports = router;
