@@ -1120,6 +1120,10 @@
 		font-size: 1.75em;
 	}
 
+	.calendar-form{
+		float: left;
+	}
+
 	.calendar-message {
 		display: inline-block;
 	}
@@ -1210,6 +1214,14 @@
 		background-color: #BDE5F8;
 		color: #00529B;
 		border-radius:.5em;
+	}
+
+	.meal-plan-form {
+		float: right;
+	}
+
+	.meal-plan-name {
+		margin-top: 10px;
 	}
 
 	.padding-bottom {

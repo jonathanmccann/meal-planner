@@ -154,6 +154,23 @@ $(document).ready(function() {
   $(document).on('click', 'label', function (e) {
     displayRecipeModal(e);
   });
+
+  var newMealPlanNameTextBox = $('#newMealPlanName');
+
+  $('#mealPlan').change(function() {
+    var selectedOption = $('option:selected', this);
+
+    if (selectedOption.attr('id') === "createNew") {
+      newMealPlanNameTextBox.prop('required', true);
+
+      newMealPlanNameTextBox.show();
+    }
+    else {
+      newMealPlanNameTextBox.prop('required', false);
+
+      newMealPlanNameTextBox.hide();
+    }
+  });
 });
 
 window.onload = function() {
