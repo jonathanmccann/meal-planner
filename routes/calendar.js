@@ -74,24 +74,7 @@ router.get('/calendar', function(req, res) {
 });
 
 router.post('/calendar', function(req, res) {
-	if (req.body.action === "Clear Calendar") {
-		connection.query('DELETE FROM Calendar WHERE ?', {userId: req.user.userId}, function(err) {
-			if (err) {
-        logger.error("Unable to delete calendar entries for {userId = %s}", req.user.userId);
-        logger.error(err);
-
-				req.flash('errorMessage', 'The calendar was unable to be saved.');
-
-				res.redirect('/calendar');
-			}
-			else {
-				req.flash('successMessage', 'The calendar was cleared successfully.');
-
-				res.redirect('/calendar');
-			}
-		});
-	}
-	else if (req.body.action === "Save Meal Plan") {
+	if (req.body.action === "Save Meal Plan") {
     connection.beginTransaction(function (err) {
       if (err) {
         logger.error("Unable to begin transaction to edit meal plan for {userId = %s}", req.user.userId);
@@ -176,6 +159,10 @@ router.post('/calendar', function(req, res) {
           var meals = [];
 
           for (var key in req.body) {
+            if ((key === "action") || (key === "mealPlanId")) {
+              continue;
+            }
+
             var [recipeId, mealKey] = key.split('_');
   
             var meal = [req.user.userId, recipeId, mealKey];
@@ -213,6 +200,73 @@ router.post('/calendar', function(req, res) {
       });
     });
 	}
+});
+
+router.post('/clear-calendar', function(req, res) {
+  connection.query('DELETE FROM Calendar WHERE ?', {userId: req.user.userId}, function(err) {
+    if (err) {
+      logger.error("Unable to delete calendar entries for {userId = %s}", req.user.userId);
+      logger.error(err);
+
+      req.flash('errorMessage', 'The calendar was unable to be saved.');
+
+      res.redirect('/calendar');
+    }
+    else {
+      req.flash('successMessage', 'The calendar was cleared successfully.');
+
+      res.redirect('/calendar');
+    }
+  });
+});
+
+router.post('/delete-meal-plan', function(req, res) {
+  var mealPlanId = req.body.mealPlanId;
+
+  connection.beginTransaction(function (err) {
+    if (err) {
+      logger.error("Unable to begin transaction to delete meal plan for {userId = %s, mealPlanId = %s}", req.user.userId, mealPlanId);
+      logger.error(err);
+
+      req.flash('errorMessage', 'The meal plan was unable to be deleted.');
+
+      res.redirect('/meal-plan');
+    }
+
+    async.waterfall([
+      function deleteMealPlan(callback) {
+        connection.query('DELETE FROM MealPlan WHERE ? AND ?', [{userId: req.user.userId}, {mealPlanId: mealPlanId}], function(err) {
+          callback(err)
+        });
+      },
+      function deleteMealPlanRecipes(callback) {
+        connection.query('DELETE FROM MealPlanRecipe WHERE ? AND ?', [{userId: req.user.userId}, {mealPlanId: mealPlanId}], function(err) {
+          callback(err)
+        });
+      },
+      function commitUpdates(callback) {
+        connection.commit(function(err) {
+          callback(err);
+        })
+      }
+    ], function (err) {
+      if (err) {
+        logger.error("Unable to delete meal plan for {userId = %s, mealPlanId = %s}", req.user.userId, mealPlanId);
+        logger.error(err);
+
+        connection.rollback();
+
+        req.flash('errorMessage', 'The meal plan was unable to be deleted.');
+
+        res.redirect('/meal-plan');
+      }
+      else {
+        req.flash('successMessage', 'The meal plan was deleted successfully.');
+
+        res.redirect('/meal-plan');
+      }
+    });
+  });
 });
 
 router.get('/meal-plan', function(req, res) {

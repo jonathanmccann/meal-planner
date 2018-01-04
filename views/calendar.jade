@@ -97,10 +97,10 @@ block content
                 -}
             if isMealPlan
               input(type='submit', form='calendar-form', name='action', value='Save Meal Plan')
-              input(class="delete-button", form='calendar-form', name='action', type='submit', value='Delete Meal Plan')
+              input(class="delete-button", form='calendar-form', formaction='/delete-meal-plan', name='action', type='submit', value='Delete Meal Plan')
             else
               input(type='submit', form='calendar-form', name='action', value='Submit Calendar')
-              input(class="delete-button", form='calendar-form', name='action', type='submit', value='Clear Calendar')
+              input(class="delete-button", form='calendar-form', formaction='/clear-calendar', name='action', type='submit', value='Clear Calendar')
         div(id="recipes", class="2u 12u(small) recipes")
           input(type="text", id="searchInput", onkeyup="realtimeSearch()" placeholder="Search for recipes")
           -for (var categoryRecipe in categoryRecipes)
