@@ -195,7 +195,7 @@ router.get('/meal-plan', function(req, res) {
         recipes: JSON.stringify(recipes),
         successMessage: req.flash('successMessage'),
         test: "test",
-        title: "Calendar",
+        title: "Meal Plans",
         user: req.user
       });
     }
