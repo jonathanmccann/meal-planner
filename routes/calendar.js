@@ -9,7 +9,23 @@ const lunchBitwseValue = 2;
 const dinnerBitwseValue = 4;
 
 router.get('/calendar', function(req, res) {
-  connection.query('SELECT Calendar.mealKey, Calendar.recipeId, Recipe.name FROM Calendar INNER JOIN Recipe ON Calendar.recipeId = Recipe.recipeId WHERE Calendar.userId = ?', [req.user.userId], function(err, calendarRows) {
+  async.waterfall([
+    function getRecipes(callback) {
+      connection.query('SELECT Calendar.mealKey, Calendar.recipeId, Recipe.name FROM Calendar INNER JOIN Recipe ON Calendar.recipeId = Recipe.recipeId WHERE Calendar.userId = ?', [req.user.userId], function(err, calendarRows) {
+        callback(err, calendarRows);
+      });
+    },
+    function getMealPlans(calendarRows, callback) {
+      connection.query('SELECT * FROM MealPlan WHERE ?', {userId: req.user.userId}, function(err, mealPlanRows) {
+        callback(err, calendarRows, mealPlanRows);
+      });
+    },
+    function getRecipes(calendarRows, mealPlanRows, callback) {
+ 			connection.query('SELECT * FROM Recipe WHERE ? ORDER BY categoryName, name', {userId: req.user.userId}, function (err, recipeRows) {
+        callback(err, calendarRows, mealPlanRows, recipeRows);
+      });
+    }
+  ], function (err, calendarRows, mealPlanRows, recipeRows) {
     if (err) {
       logger.error("Unable to fetch calendar for {userId = %s}", req.user.userId);
       logger.error(err);
@@ -21,60 +37,36 @@ router.get('/calendar', function(req, res) {
       });
     }
     else {
-			connection.query('SELECT * FROM Recipe WHERE ? ORDER BY categoryName, name', {userId: req.user.userId}, function (err, recipeRows) {
-				if (err) {
-          logger.error("Unable to fetch calendar recipes for {userId = %s}", req.user.userId);
-          logger.error(err);
+      var calendarDayAndRecipeMap = {};
 
-					res.render('calendar', {
-						errorMessage: "The calendar was unable to be successfully loaded.",
-						title: "Calendar",
-						user: req.user
-					});
-				}
-				else {
-					var calendarDayAndRecipeMap = {};
-					var categoryRecipeMap = {};
-					var recipes = {};
+      for (var i = 0; i < calendarRows.length; i++) {
+        var mealKey = calendarRows[i].mealKey;
 
-					for (var i = 0; i < calendarRows.length; i++) {
-						var mealKey = calendarRows[i].mealKey;
+        if (!calendarDayAndRecipeMap[mealKey]) {
+          calendarDayAndRecipeMap[mealKey] = [];
+        }
 
-						if (!calendarDayAndRecipeMap[mealKey]) {
-							calendarDayAndRecipeMap[mealKey] = [];
-						}
+        calendarDayAndRecipeMap[mealKey].push([calendarRows[i].recipeId, calendarRows[i].name]);
+      }
 
-						calendarDayAndRecipeMap[mealKey].push([calendarRows[i].recipeId, calendarRows[i].name]);
-					}
+      var recipeMaps = createRecipeMaps(recipeRows);
 
-					for (var i = 0; i < recipeRows.length; i++) {
-					  recipes[recipeRows[i].recipeId] = [];
-					  recipes[recipeRows[i].recipeId].push(recipeRows[i].name, recipeRows[i].ingredients, recipeRows[i].directions);
+      var categoryRecipeMap = recipeMaps[0];
+      var recipes = recipeMaps[1];
 
-						var categoryName = recipeRows[i].categoryName;
-
-						if (!categoryRecipeMap[categoryName]) {
-							categoryRecipeMap[categoryName] = [];
-						}
-
-						categoryRecipeMap[categoryName].push(recipeRows[i]);
-					}
-
-					res.render('calendar', {
-						calendarDayAndRecipeMap: calendarDayAndRecipeMap,
-						categoryRecipes: categoryRecipeMap,
-						displayBreakfast: req.user.mealsToDisplay & breakfastBitwseValue,
-						displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
-						displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
-						errorMessage: req.flash('errorMessage'),
-						recipes: JSON.stringify(recipes),
-						successMessage: req.flash('successMessage'),
-						test: "test",
-						title: "Calendar",
-						user: req.user
-					});
-				}
-			});
+      res.render('calendar', {
+        calendarDayAndRecipeMap: calendarDayAndRecipeMap,
+        categoryRecipes: categoryRecipeMap,
+        displayBreakfast: req.user.mealsToDisplay & breakfastBitwseValue,
+        displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
+        displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
+        errorMessage: req.flash('errorMessage'),
+        recipes: JSON.stringify(recipes),
+        successMessage: req.flash('successMessage'),
+        test: "test",
+        title: "Calendar",
+        user: req.user
+      });
     }
   });
 });
@@ -170,21 +162,10 @@ router.get('/meal-plan', function(req, res) {
       });
     },
     function createMap(recipeRows, mealPlanRows, callback) {
-      var categoryRecipeMap = {};
-      var recipes = {};
+      var recipeMaps = createRecipeMaps(recipeRows);
 
-      for (var i = 0; i < recipeRows.length; i++) {
-        recipes[recipeRows[i].recipeId] = [];
-        recipes[recipeRows[i].recipeId].push(recipeRows[i].name, recipeRows[i].ingredients, recipeRows[i].directions);
-
-        var categoryName = recipeRows[i].categoryName;
-
-        if (!categoryRecipeMap[categoryName]) {
-          categoryRecipeMap[categoryName] = [];
-        }
-
-        categoryRecipeMap[categoryName].push(recipeRows[i]);
-      }
+      var categoryRecipeMap = recipeMaps[0];
+      var recipes = recipeMaps[1];
 
       callback(null, categoryRecipeMap, recipes, mealPlanRows);
     }
@@ -261,5 +242,25 @@ router.post('/meal-plan', function(req, res) {
     }
   });
 });
+
+function createRecipeMaps(recipeRows) {
+  var categoryRecipeMap = {};
+  var recipes = {};
+
+  for (var i = 0; i < recipeRows.length; i++) {
+    recipes[recipeRows[i].recipeId] = [];
+    recipes[recipeRows[i].recipeId].push(recipeRows[i].name, recipeRows[i].ingredients, recipeRows[i].directions);
+
+    var categoryName = recipeRows[i].categoryName;
+
+    if (!categoryRecipeMap[categoryName]) {
+      categoryRecipeMap[categoryName] = [];
+    }
+
+    categoryRecipeMap[categoryName].push(recipeRows[i]);
+  }
+
+  return [categoryRecipeMap, recipes];
+}
 
 module.exports = router;
