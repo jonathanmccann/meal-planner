@@ -155,12 +155,15 @@ $(document).ready(function() {
     displayRecipeModal(e);
   });
 
+  var deleteMealPlanButton = $('#deleteMealPlan');
   var newMealPlanNameTextBox = $('#newMealPlanName');
 
   $('#mealPlanId').change(function() {
     var selectedOption = $('option:selected', this);
 
     if (selectedOption.attr('id') === "createNew") {
+      deleteMealPlanButton.hide();
+
       newMealPlanNameTextBox.prop('required', true);
 
       newMealPlanNameTextBox.show();
@@ -174,6 +177,8 @@ $(document).ready(function() {
       }
     }
     else {
+      deleteMealPlanButton.show();
+
       newMealPlanNameTextBox.prop('required', false);
 
       newMealPlanNameTextBox.hide();

@@ -32,7 +32,7 @@ block content
             input(type="hidden" name="action" id="action")
             select(class="dropdown", id="mealPlanId", name="mealPlanId", style="display: inline-block; width: 300px")
               if isMealPlan
-                option(id='createNew') Create New
+                option(id='createNew', value='createNew') Create New
               else
                 option(id='select', disabled, selected) Select a meal plan
               for mealPlan in mealPlans
@@ -97,7 +97,7 @@ block content
                 -}
             if isMealPlan
               input(type='submit', form='calendar-form', name='action', value='Save Meal Plan')
-              input(class="delete-button", form='calendar-form', formaction='/delete-meal-plan', name='action', type='submit', value='Delete Meal Plan')
+              input(class="delete-button", form='calendar-form', formaction='/delete-meal-plan', id='deleteMealPlan' name='action', style='display: none', type='submit', value='Delete Meal Plan')
             else
               input(type='submit', form='calendar-form', name='action', value='Submit Calendar')
               input(class="delete-button", form='calendar-form', formaction='/clear-calendar', name='action', type='submit', value='Clear Calendar')
