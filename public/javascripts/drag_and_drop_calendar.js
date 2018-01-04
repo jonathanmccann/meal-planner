@@ -271,8 +271,10 @@ window.onload = function() {
       buttonClicked = $(this).find("input[type=submit]:focus").val();
     }
 
-  	if (buttonClicked === "Submit Calendar") {
+  	if ((buttonClicked === "Submit Calendar") || (buttonClicked === "Save Meal Plan")) {
 			e.preventDefault();
+
+      $('#action').val(buttonClicked);
 
 			appendToForm(this);
 

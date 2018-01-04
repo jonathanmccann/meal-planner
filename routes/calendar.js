@@ -91,6 +91,70 @@ router.post('/calendar', function(req, res) {
 			}
 		});
 	}
+	else if (req.body.action === "Save Meal Plan") {
+    connection.beginTransaction(function (err) {
+      if (err) {
+        logger.error("Unable to begin transaction to edit meal plan for {userId = %s}", req.user.userId);
+        logger.error(err);
+
+        req.flash('errorMessage', 'The meal plan was unable to be saved.');
+
+        res.redirect('/meal-plan');
+      }
+
+      var mealPlanId = req.body.mealPlanId;
+
+      async.waterfall([
+        function deleteCurrentMealPlanRecipes(callback) {
+          connection.query('DELETE FROM MealPlanRecipe WHERE ?', {mealPlanId: mealPlanId}, function(err) {
+            callback(err)
+          });
+        },
+        function saveMealPlan(callback) {
+          var meals = [];
+
+          for (var key in req.body) {
+            if ((key === "action") || (key === "mealPlanId")) {
+              continue;
+            }
+      
+            var [recipeId, mealKey] = key.split('_');
+      
+            var meal = [mealPlanId, req.user.userId, recipeId, mealKey];
+      
+            meals.push(meal);
+          }
+  
+          if (meals.length) {
+            connection.query('INSERT INTO MealPlanRecipe (mealPlanId, userId, recipeId, mealKey) VALUES ?', [meals], function (err) {
+              callback(err);
+            });
+          }
+        },
+        function commitUpdates(callback) {
+          connection.commit(function(err) {
+            callback(err);
+          })
+        }
+      ], function (err) {
+        if (err) {
+          logger.error("Unable to update meal plan for {userId = %s}", req.user.userId);
+          logger.error(err);
+
+          connection.rollback();
+
+          req.flash('errorMessage', 'The meal plan was unable to be saved.');
+
+          res.redirect('/meal-plan');
+        }
+        else {
+          req.flash('successMessage', 'The meal plan was saved successfully.');
+
+          res.redirect('/meal-plan');
+        }
+      });
+    });
+  }
 	else {
     connection.beginTransaction(function (err) {
       if (err) {

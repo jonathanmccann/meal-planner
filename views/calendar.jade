@@ -29,6 +29,7 @@ block content
       div(class="flex padding-top row")
         div(class="10u 12u(small) second")
           form(id="calendar-form", action='/calendar', method='post')
+            input(type="hidden" name="action" id="action")
             select(class="dropdown", id="mealPlanId", name="mealPlanId", style="display: inline-block; width: 300px")
               if isMealPlan
                 option(id='createNew') Create New
