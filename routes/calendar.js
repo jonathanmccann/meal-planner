@@ -61,6 +61,8 @@ router.get('/calendar', function(req, res) {
         displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
         displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
         errorMessage: req.flash('errorMessage'),
+        isMealPlan: false,
+        mealPlans: mealPlanRows,
         recipes: JSON.stringify(recipes),
         successMessage: req.flash('successMessage'),
         test: "test",
