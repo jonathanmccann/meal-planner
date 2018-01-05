@@ -97,7 +97,7 @@ router.post('/calendar', function(req, res) {
             });
           }
           else {
-            connection.query('DELETE FROM MealPlanRecipe WHERE ?', {mealPlanId: mealPlanId}, function(err) {
+            connection.query('DELETE FROM MealPlanRecipe WHERE ? AND ?', [{userId: req.user.userId}, {mealPlanId: mealPlanId}], function(err) {
               callback(err)
             });
           }
