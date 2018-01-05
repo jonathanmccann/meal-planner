@@ -143,6 +143,8 @@ router.post('/calendar', function(req, res) {
           res.redirect('/meal-plan');
         }
         else {
+          req.flash('mealPlanId', mealPlanId);
+
           req.flash('successMessage', 'The meal plan was saved successfully.');
 
           res.redirect('/meal-plan');
@@ -282,6 +284,8 @@ router.post('/delete-meal-plan', function(req, res) {
 });
 
 router.get('/meal-plan', function(req, res) {
+  var mealPlanId = req.flash('mealPlanId');
+
   async.waterfall([
     function getRecipes(callback) {
  			connection.query('SELECT * FROM Recipe WHERE ? ORDER BY categoryName, name', {userId: req.user.userId}, function (err, recipeRows) {
@@ -293,15 +297,27 @@ router.get('/meal-plan', function(req, res) {
         callback(err, recipeRows, mealPlanRows);
       });
     },
-    function createMap(recipeRows, mealPlanRows, callback) {
+    function getMealPlanRecipes(recipeRows, mealPlanRows, callback) {
+      if (mealPlanId > 0) {
+        connection.query('SELECT MealPlanRecipe.mealKey, MealPlanRecipe.recipeId, Recipe.name FROM MealPlanRecipe INNER JOIN Recipe ON MealPlanRecipe.recipeId = Recipe.recipeId WHERE MealPlanRecipe.mealPlanId = ? AND MealPlanRecipe.userId = ?', [mealPlanId, req.user.userId], function (err, mealPlanRecipeRows) {
+          callback(err, recipeRows, mealPlanRows, mealPlanRecipeRows);
+        });
+      }
+      else {
+        callback(null, recipeRows, mealPlanRows, null);
+      }
+    },
+    function createMap(recipeRows, mealPlanRows, mealPlanRecipeRows, callback) {
+      var calendarDayAndRecipeMap = createCalendarRecipeMap(mealPlanRecipeRows);
+
       var recipeMaps = createRecipeMaps(recipeRows);
 
       var categoryRecipeMap = recipeMaps[0];
       var recipes = recipeMaps[1];
 
-      callback(null, categoryRecipeMap, recipes, mealPlanRows);
+      callback(null, categoryRecipeMap, recipes, calendarDayAndRecipeMap, mealPlanRows);
     }
-  ], function (err, categoryRecipeMap, recipes, mealPlanRows) {
+  ], function (err, categoryRecipeMap, recipes, calendarDayAndRecipeMap, mealPlanRows) {
     if (err) {
       logger.error("Unable to display meal plans for {userId = %s}", req.user.userId);
       logger.error(err);
@@ -314,13 +330,14 @@ router.get('/meal-plan', function(req, res) {
     }
     else {
       res.render('calendar', {
-        calendarDayAndRecipeMap: null,
+        calendarDayAndRecipeMap: calendarDayAndRecipeMap,
         categoryRecipes: categoryRecipeMap,
         displayBreakfast: req.user.mealsToDisplay & breakfastBitwseValue,
         displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
         displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
         errorMessage: req.flash('errorMessage'),
         isMealPlan: true,
+        mealPlanId: mealPlanId,
         mealPlans: mealPlanRows,
         recipes: JSON.stringify(recipes),
         successMessage: req.flash('successMessage'),
@@ -344,17 +361,7 @@ router.post('/meal-plan', function(req, res) {
       });
     },
     function createMap(mealPlanRecipeRows, callback) {
-      var calendarDayAndRecipeMap = {};
-
-      for (var i = 0; i < mealPlanRecipeRows.length; i++) {
-        var mealKey = mealPlanRecipeRows[i].mealKey;
-
-        if (!calendarDayAndRecipeMap[mealKey]) {
-          calendarDayAndRecipeMap[mealKey] = [];
-        }
-
-        calendarDayAndRecipeMap[mealKey].push([mealPlanRecipeRows[i].recipeId, mealPlanRecipeRows[i].name]);
-      }
+      var calendarDayAndRecipeMap = createCalendarRecipeMap(mealPlanRecipeRows);
 
       callback(null, calendarDayAndRecipeMap);
     }
@@ -374,6 +381,26 @@ router.post('/meal-plan', function(req, res) {
     }
   });
 });
+
+function createCalendarRecipeMap(mealPlanRecipeRows) {
+  if (mealPlanRecipeRows === null) {
+    return null;
+  }
+
+  var calendarDayAndRecipeMap = {};
+
+  for (var i = 0; i < mealPlanRecipeRows.length; i++) {
+    var mealKey = mealPlanRecipeRows[i].mealKey;
+
+    if (!calendarDayAndRecipeMap[mealKey]) {
+      calendarDayAndRecipeMap[mealKey] = [];
+    }
+
+    calendarDayAndRecipeMap[mealKey].push([mealPlanRecipeRows[i].recipeId, mealPlanRecipeRows[i].name]);
+  }
+
+  return calendarDayAndRecipeMap;
+}
 
 function createRecipeMaps(recipeRows) {
   var categoryRecipeMap = {};

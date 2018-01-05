@@ -36,9 +36,10 @@ block content
               else
                 option(id='select', disabled, selected) Select a meal plan
               for mealPlan in mealPlans
-                option(value = mealPlan.mealPlanId) #{mealPlan.name}
+                option(selected=(mealPlan.mealPlanId == mealPlanId), value = mealPlan.mealPlanId) #{mealPlan.name}
             if isMealPlan
-              input(class="meal-plan-name", id='newMealPlanName', name='newMealPlanName', type='text', placeholder="Meal Plan Name")
+              - var display = (mealPlanId > 0 ? 'display: none': '')
+              input(class="meal-plan-name", id='newMealPlanName', name='newMealPlanName', type='text', placeholder="Meal Plan Name", style=display, required)
             else
               a(class="icon fa-cog", href='/meal-plan', style="padding-left: 10px")
             div(class="flextable", id="calendarTable")
