@@ -88,16 +88,25 @@ router.post('/calendar', function(req, res) {
       var mealPlanId = req.body.mealPlanId;
 
       async.waterfall([
-        function deleteCurrentMealPlanRecipes(callback) {
-          connection.query('DELETE FROM MealPlanRecipe WHERE ?', {mealPlanId: mealPlanId}, function(err) {
-            callback(err)
-          });
+        function addNewMealPlanOrDeletePrevious(callback) {
+          if (mealPlanId === "createNew") {
+            connection.query('INSERT INTO MealPlan(userId, name) VALUES (?, ?)', [req.user.userId, req.body.newMealPlanName], function(err, rows) {
+              mealPlanId = rows.insertId;
+
+              callback(err);
+            });
+          }
+          else {
+            connection.query('DELETE FROM MealPlanRecipe WHERE ?', {mealPlanId: mealPlanId}, function(err) {
+              callback(err)
+            });
+          }
         },
         function saveMealPlan(callback) {
           var meals = [];
 
           for (var key in req.body) {
-            if ((key === "action") || (key === "mealPlanId")) {
+            if ((key === "action") || (key === "mealPlanId") || (key === "newMealPlanName")) {
               continue;
             }
       
@@ -112,6 +121,9 @@ router.post('/calendar', function(req, res) {
             connection.query('INSERT INTO MealPlanRecipe (mealPlanId, userId, recipeId, mealKey) VALUES ?', [meals], function (err) {
               callback(err);
             });
+          }
+          else {
+            callback(null);
           }
         },
         function commitUpdates(callback) {

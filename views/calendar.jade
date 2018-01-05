@@ -38,7 +38,7 @@ block content
               for mealPlan in mealPlans
                 option(value = mealPlan.mealPlanId) #{mealPlan.name}
             if isMealPlan
-              input(class="meal-plan-name", id='newMealPlanName', type='text', placeholder="Meal Plan Name")
+              input(class="meal-plan-name", id='newMealPlanName', name='newMealPlanName', type='text', placeholder="Meal Plan Name")
             else
               a(class="icon fa-cog", href='/meal-plan', style="padding-left: 10px")
             div(class="flextable", id="calendarTable")
