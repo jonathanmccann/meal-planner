@@ -15,7 +15,7 @@ function displayShareRecipeModal(e) {
     '<div class="success" id="success" style="display: none"></div>' +
     '<div class="error" id="error" style="display: none"></div>' +
     "Recipient's email address:" +
-    '<input id="emailAddress" name="emailAddress" required="" type="text">'
+    '<input id="emailAddress" name="emailAddress" required="" type="email">'
   );
   
   var recipeId = e.target.id;
