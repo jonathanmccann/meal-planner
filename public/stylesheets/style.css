@@ -1212,8 +1212,17 @@
 		border-radius:.5em;
 	}
 
+	.meal-plan-dropdown {
+		display: inline-block;
+		width: 300px;
+	}
+
 	.padding-bottom {
 		padding-bottom: 10px;
+	}
+
+	.padding-left {
+		padding-left: 10px;
 	}
 
 	.padding-top {

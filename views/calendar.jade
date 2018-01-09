@@ -30,7 +30,7 @@ block content
         div(class="10u 12u(small) second")
           form(id="calendar-form", action='/calendar', method='post')
             input(type="hidden" name="action" id="action")
-            select(class="dropdown", id="mealPlanId", name="mealPlanId", style="display: inline-block; width: 300px")
+            select(class="dropdown meal-plan-dropdown", id="mealPlanId", name="mealPlanId")
               if isMealPlan
                 option(id='createNew', value='createNew') Create New
               else
@@ -41,7 +41,7 @@ block content
               - var display = (mealPlanId > 0 ? 'display: none': '')
               input(class="meal-plan-name", id='newMealPlanName', name='newMealPlanName', type='text', placeholder="Meal Plan Name", style=display, required)
             else
-              a(class="icon fa-cog", href='/meal-plan', style="padding-left: 10px")
+              a(class="icon fa-cog padding-left", href='/meal-plan')
             div(class="flextable", id="calendarTable")
               div(class="flextable-cell flextable-cell-header", id="sunday")
                 | Sunday
