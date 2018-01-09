@@ -1217,6 +1217,12 @@
 		width: 300px;
 	}
 
+	.meal-plan-name {
+		display: inline-block !important;
+		margin-left: 10px !important;
+		width: 300px !important;
+	}
+
 	.padding-bottom {
 		padding-bottom: 10px;
 	}
