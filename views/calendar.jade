@@ -38,8 +38,8 @@ block content
               for mealPlan in mealPlans
                 option(selected=(mealPlan.mealPlanId == mealPlanId), value = mealPlan.mealPlanId) #{mealPlan.name}
             if isMealPlan
-              - var display = (mealPlanId > 0 ? 'display: none': '')
-              input(class="meal-plan-name", id='newMealPlanName', name='newMealPlanName', type='text', placeholder="Meal Plan Name", style=display, required)
+              - var display = (mealPlanId > 0 ? 'meal-plan-name-hide': 'meal-plan-name-show')
+              input(class=display, id='newMealPlanName', name='newMealPlanName', type='text', placeholder="Meal Plan Name", required)
             else
               a(class="icon fa-cog padding-left", href='/meal-plan')
             div(class="flextable", id="calendarTable")

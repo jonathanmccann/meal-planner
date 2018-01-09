@@ -1219,7 +1219,11 @@
 		width: 300px;
 	}
 
-	.meal-plan-name {
+	.meal-plan-name-hide {
+		display: none !important;
+	}
+
+	.meal-plan-name-show {
 		display: inline-block !important;
 		margin-left: 10px !important;
 		width: 300px !important;

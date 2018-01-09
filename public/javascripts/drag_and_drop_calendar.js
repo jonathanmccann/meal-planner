@@ -166,7 +166,8 @@ $(document).ready(function() {
 
       newMealPlanNameTextBox.prop('required', true);
 
-      newMealPlanNameTextBox.show();
+      newMealPlanNameTextBox.removeClass('meal-plan-name-hide');
+      newMealPlanNameTextBox.addClass('meal-plan-name-show');
 
       for (var i = 0; i < containerIds.length; i++) {
         var mealKey = containerIds[i];
@@ -181,7 +182,8 @@ $(document).ready(function() {
 
       newMealPlanNameTextBox.prop('required', false);
 
-      newMealPlanNameTextBox.hide();
+      newMealPlanNameTextBox.removeClass('meal-plan-name-show');
+      newMealPlanNameTextBox.addClass('meal-plan-name-hide');
 
       var error = $("#error");
   
