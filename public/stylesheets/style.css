@@ -1214,6 +1214,8 @@
 
 	.meal-plan-dropdown {
 		display: inline-block;
+		padding-right: 50px;
+		text-overflow: ellipsis;
 		width: 300px;
 	}
 
