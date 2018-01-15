@@ -284,6 +284,11 @@ router.post('/edit-recipe', function(req, res) {
             callback(err);
           });
         },
+        function deleteRecipeFromMealPlanRecipe(callback) {
+          connection.query('DELETE FROM MealPlanRecipe WHERE ? AND ?', [ {recipeId: req.body.recipeId}, {userId: req.user.userId} ], function(err) {
+            callback(err);
+          });
+        },
         function commitDeletions(callback) {
           connection.commit(function (err) {
             callback(err);
