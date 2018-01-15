@@ -156,18 +156,12 @@ $(document).ready(function() {
   });
 
   var deleteMealPlanButton = $('#deleteMealPlan');
-  var newMealPlanNameTextBox = $('#newMealPlanName');
 
   $('#mealPlanId').change(function() {
     var selectedOption = $('option:selected', this);
 
     if (selectedOption.attr('id') === "createNew") {
       deleteMealPlanButton.hide();
-
-      newMealPlanNameTextBox.prop('required', true);
-
-      newMealPlanNameTextBox.removeClass('meal-plan-name-hide');
-      newMealPlanNameTextBox.addClass('meal-plan-name-show');
 
       for (var i = 0; i < containerIds.length; i++) {
         var mealKey = containerIds[i];
@@ -180,10 +174,7 @@ $(document).ready(function() {
     else {
       deleteMealPlanButton.show();
 
-      newMealPlanNameTextBox.prop('required', false);
-
-      newMealPlanNameTextBox.removeClass('meal-plan-name-show');
-      newMealPlanNameTextBox.addClass('meal-plan-name-hide');
+      $('#mealPlanName').val($("#mealPlanId option:selected").text())
 
       var error = $("#error");
   

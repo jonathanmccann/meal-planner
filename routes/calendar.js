@@ -88,16 +88,23 @@ router.post('/calendar', function(req, res) {
       var mealPlanId = req.body.mealPlanId;
 
       async.waterfall([
-        function addNewMealPlanOrDeletePrevious(callback) {
+        function addOrUpdateMealPlan(callback) {
           if (mealPlanId === "createNew") {
-            connection.query('INSERT INTO MealPlan(userId, name) VALUES (?, ?)', [req.user.userId, req.body.newMealPlanName], function(err, rows) {
+            connection.query('INSERT INTO MealPlan(userId, name) VALUES (?, ?)', [req.user.userId, req.body.mealPlanName], function(err, rows) {
               mealPlanId = rows.insertId;
 
               callback(err);
             });
           }
           else {
-            connection.query('DELETE FROM MealPlanRecipe WHERE ? AND ?', [{userId: req.user.userId}, {mealPlanId: mealPlanId}], function(err) {
+            connection.query('UPDATE MealPlan SET ? WHERE ? AND ?', [{name: req.body.mealPlanName}, {userId: req.user.userId}, {mealPlanId: mealPlanId}], function(err, rows) {
+              callback(err);
+            });
+          }
+        },
+        function deletePreviousMealPlanRecipes(callback) {
+          if (mealPlanId !== "createNew") {
+            connection.query('DELETE FROM MealPlanRecipe WHERE ? AND ?', [{userId: req.user.userId}, {mealPlanId: mealPlanId}], function (err) {
               callback(err)
             });
           }
@@ -106,7 +113,7 @@ router.post('/calendar', function(req, res) {
           var meals = [];
 
           for (var key in req.body) {
-            if ((key === "action") || (key === "mealPlanId") || (key === "newMealPlanName")) {
+            if ((key === "action") || (key === "mealPlanId") || (key === "mealPlanName")) {
               continue;
             }
       
