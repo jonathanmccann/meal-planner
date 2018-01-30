@@ -1181,6 +1181,10 @@
 		padding-top: 3em;
 	}
 
+	.home-calendar-container {
+		cursor: pointer;
+	}
+
 	.homepage-form {
 		display: inline-block;
 		width: 75%;

@@ -25,8 +25,11 @@ block content
       });
     })
 
+  link(href="/stylesheets/owl.carousel.css", rel="stylesheet")
+  link(href="/stylesheets/owl.theme.default.css", rel="stylesheet")
   link(href='/stylesheets/tingle.css', rel='stylesheet')
 
+  script(src="/javascripts/owl.carousel.min.js")
   script(src="/javascripts/tingle.js")
 
   script(src="/javascripts/contact.js")
@@ -56,28 +59,25 @@ block content
                       | #{calendarError}
                   else
                     div(class="flextable-cell flextable-cell-header-home")
-                      h3 Today at a glance
+                      h3 Meals for the Day
                     if displayBreakfast
-                      div(class="flextable-cell")
-                        a(href="/calendar")
-                          section(class="box")
-                            p
-                              | Breakfast
-                            div(id="breakfast")
+                      div(class="flextable-cell home-calendar-container", id="breakfastContainer")
+                        section(class="box")
+                          p
+                            | Breakfast
+                          div(id="breakfast")
                     if displayLunch
-                      div(class="flextable-cell")
-                        a(href="/calendar")
-                          section(class="box")
-                            p
-                              | Lunch
-                            div(id="lunch")
+                      div(class="flextable-cell home-calendar-container", id="lunchContainer")
+                        section(class="box")
+                          p
+                            | Lunch
+                          div(id="lunch")
                     if displayDinner
-                      div(class="flextable-cell")
-                        a(href="/calendar")
-                          section(class="box")
-                            p
-                              | Dinner
-                            div(id="dinner")
+                      div(class="flextable-cell home-calendar-container", id="dinnerContainer")
+                        section(class="box")
+                          p
+                            | Dinner
+                          div(id="dinner")
             div(class="row 150%")
               div(class="3u 12u$(medium)")
                 a(href="/view-recipes")

@@ -15,13 +15,19 @@ const dinnerBitwseValue = 4;
 
 router.get('/', function(req, res) {
   if ((req.user) && (req.user.subscriptionStatus)) {
-    connection.query('SELECT Calendar.mealKey, Recipe.name FROM Calendar INNER JOIN Recipe ON Calendar.recipeId = Recipe.recipeId WHERE Calendar.userId = ?', [req.user.userId], function(err, calendarRows) {
+    async.waterfall([
+      function getCalendarRows(callback) {
+        connection.query('SELECT Calendar.mealKey, Recipe.name, Recipe.ingredients, Recipe.directions FROM Calendar INNER JOIN Recipe ON Calendar.recipeId = Recipe.recipeId WHERE Calendar.userId = ?', [req.user.userId], function(err, calendarRows) {
+          callback(err, calendarRows);
+        });
+      }
+    ], function (err, calendarRows) {
       if (err) {
-        logger.error("Unable to fetch home calendar for {userId = %s}", req.user.userId);
+        logger.error("Unable to populate home calendar for {userId = %s}", req.user.userId);
         logger.error(err);
 
         res.render('home', {
-          calendarError: "Unable to fetch calendar",
+          calendarError: "Unable to populate calendar",
           errorMessage: req.flash('errorMessage'),
           title: "Quick Meal Planner",
           user: req.user
@@ -37,7 +43,7 @@ router.get('/', function(req, res) {
             calendarDayAndRecipeMap[mealKey] = [];
           }
 
-          calendarDayAndRecipeMap[mealKey].push(calendarRows[i].name);
+          calendarDayAndRecipeMap[mealKey].push(calendarRows[i].name, calendarRows[i].ingredients, calendarRows[i].directions);
         }
 
         res.render('home', {
