@@ -15,8 +15,10 @@ var modal = new tingle.modal({
           this.settings.touchDrag = false;
           this.settings.pullDrag = false;
         }
+
+        modal.checkOverflow();
       },
-      onRefreshed : function() {
+      onTranslated : function() {
         modal.checkOverflow();
       }
     });
