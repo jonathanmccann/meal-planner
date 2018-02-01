@@ -55,19 +55,21 @@ block content
     if errorMessage && errorMessage.length
       div(class="error")
         | #{errorMessage}
-        each failedIngredient in failedIngredients
-          li
-            | !{failedIngredient}
+        if failedIngredients
+          each failedIngredient in failedIngredients
+            li
+              | !{failedIngredient}
     if successMessage && successMessage.length
       div(class="success")
         | #{successMessage}
     div
       if categoryRecipes == null
-        header(class='major')
-          p
-            | There are currently no planned meals. Go ahead and 
-            a(href="/calendar") plan some
-            | .
+        if !errorMessage
+          header(class='major')
+            p
+              | There are currently no planned meals. Go ahead and 
+              a(href="/calendar") plan some
+              | .
       else
         form(action='/add-ingredients', method='post')
           each recipe in recipes
