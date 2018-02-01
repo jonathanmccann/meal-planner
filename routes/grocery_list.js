@@ -61,6 +61,7 @@ router.post('/add-ingredients', function(req, res) {
 
 router.get('/grocery-list', function(req, res) {
   var categoryRecipeMap = {};
+  var hasProvider = true;
   var infoMessage;
   var provider;
 
@@ -78,6 +79,8 @@ router.get('/grocery-list', function(req, res) {
           if (err) {
             logger.error("Unable to fetch to do list for {userId = %s, listId = %s, provider = %s", req.user.userId, req.user.listId, provider);
             logger.error(err);
+
+            hasProvider = false;
 
             infoMessage = 'Unable to connect with your to do list. If you wish to use a third party to do application, please set up the connection within your account settings.';
           }
@@ -110,6 +113,7 @@ router.get('/grocery-list', function(req, res) {
             if ((recipeRows === undefined) || (recipeRows.length === 0)) {
               res.render('add_ingredients', {
                 errorMessage: req.flash('errorMessage'),
+                hasProvider: hasProvider,
                 infoMessage: infoMessage,
                 successMessage: req.flash('successMessage'),
                 title: "Grocery List",
@@ -135,6 +139,7 @@ router.get('/grocery-list', function(req, res) {
                 categoryRecipes: categoryRecipeMap,
                 errorMessage: req.flash('errorMessage'),
                 failedIngredients: req.flash('failedIngredients'),
+                hasProvider: hasProvider,
                 infoMessage: infoMessage,
                 recipes: recipeRows,
                 successMessage: req.flash('successMessage'),
@@ -158,6 +163,7 @@ router.get('/grocery-list', function(req, res) {
 
     res.render('add_ingredients', {
       errorMessage: errorMessage,
+      hasProvider: hasProvider,
       infoMessage: infoMessage,
       successMessage: req.flash('successMessage'),
       title: "Grocery List",

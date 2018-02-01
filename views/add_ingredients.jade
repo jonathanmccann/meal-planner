@@ -88,4 +88,5 @@ block content
                     input(type="checkbox", id="#{i}_#{recipe.recipeId}", name="#{ingredients[i]} (#{recipe.name})", onClick='toggleSelectAll("#{recipe.recipeId}")')
                     label(for="#{i}_#{recipe.recipeId}") #{ingredients[i]}
                 -}
-          input(type='submit', value='Add Ingredients')
+          if hasProvider
+            input(type='submit', value='Add Ingredients')
