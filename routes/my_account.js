@@ -15,7 +15,6 @@ router.get('/my-account', function(req, res) {
     displayLunch: req.user.mealsToDisplay & lunchBitwseValue,
     displayDinner: req.user.mealsToDisplay & dinnerBitwseValue,
     errorMessage: req.flash('errorMessage'),
-    infoMessage: req.flash('infoMessage'),
     successMessage: req.flash('successMessage'),
     title: "My Account",
     user: req.user

@@ -145,7 +145,6 @@ router.get('/subscription', function(req, res) {
 
     res.render('subscription', {
       errorMessage: req.flash('errorMessage'),
-      infoMessage: req.flash('infoMessage'),
       successMessage: req.flash('successMessage'),
       isSubscriptionActive: false,
       publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
@@ -212,7 +211,6 @@ router.get('/subscription', function(req, res) {
       res.render('subscription', {
         isReceivingDiscount: isReceivingDiscount,
         errorMessage: req.flash('errorMessage'),
-        infoMessage: req.flash('infoMessage'),
         successMessage: req.flash('successMessage'),
         isPendingCancellation: isPendingCancellation,
         isSubscriptionActive: subscription.status === "active",

@@ -96,7 +96,6 @@ router.get('/copy-recipe/:hash', function(req, res, next) {
         return res.render('copy_recipe', {
           categories: categoryRows,
           directions: recipe.directions,
-          infoMessage: "",
           ingredients: recipe.ingredients.replace(/,/g, "\r\n"),
           name: recipe.name,
           title: "Copy Recipe",

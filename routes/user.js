@@ -57,7 +57,6 @@ function getPasswordResetExpiration() {
 router.get('/create-account', function(req, res) {
   res.render('create_account', {
     errorMessage: req.flash('errorMessage'),
-    infoMessage: req.flash('infoMessage'),
     successMessage: req.flash('successMessage'),
     title: "Create an Account",
     user: req.user
@@ -136,7 +135,6 @@ router.post('/forgot-password', userBruteForce.prevent, function(req, res) {
 router.get('/log-in', function(req, res) {
   res.render('log_in', {
     errorMessage: req.flash('errorMessage'),
-    infoMessage: req.flash('infoMessage'),
     originalUrl: req.flash('originalUrl'),
     successMessage: req.flash('successMessage'),
     title: "Log In",
