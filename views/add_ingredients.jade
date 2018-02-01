@@ -62,6 +62,9 @@ block content
     if successMessage && successMessage.length
       div(class="success")
         | #{successMessage}
+    if infoMessage && infoMessage.length
+      div(class="info")
+        | #{infoMessage}
     div
       if categoryRecipes == null
         if !errorMessage
