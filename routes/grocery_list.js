@@ -62,7 +62,6 @@ router.post('/add-ingredients', function(req, res) {
 router.get('/grocery-list', function(req, res) {
   var categoryRecipeMap = {};
   var hasProvider = true;
-  var infoMessage;
   var provider;
 
   if (req.user.toDoProvider === "Todoist") {
@@ -81,8 +80,6 @@ router.get('/grocery-list', function(req, res) {
             logger.error(err);
 
             hasProvider = false;
-
-            infoMessage = 'Unable to connect with your to do list. If you wish to use a third party to do application, please set up the connection within your account settings.';
           }
 
           callback();
@@ -114,7 +111,6 @@ router.get('/grocery-list', function(req, res) {
               res.render('add_ingredients', {
                 errorMessage: req.flash('errorMessage'),
                 hasProvider: hasProvider,
-                infoMessage: infoMessage,
                 successMessage: req.flash('successMessage'),
                 title: "Grocery List",
                 user: req.user
@@ -140,7 +136,6 @@ router.get('/grocery-list', function(req, res) {
                 errorMessage: req.flash('errorMessage'),
                 failedIngredients: req.flash('failedIngredients'),
                 hasProvider: hasProvider,
-                infoMessage: infoMessage,
                 recipes: recipeRows,
                 successMessage: req.flash('successMessage'),
                 title: "Grocery List",
@@ -164,7 +159,6 @@ router.get('/grocery-list', function(req, res) {
     res.render('add_ingredients', {
       errorMessage: errorMessage,
       hasProvider: hasProvider,
-      infoMessage: infoMessage,
       successMessage: req.flash('successMessage'),
       title: "Grocery List",
       user: req.user
