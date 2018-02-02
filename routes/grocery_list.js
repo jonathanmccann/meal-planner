@@ -166,4 +166,17 @@ router.get('/grocery-list', function(req, res) {
   });
 });
 
+router.get('/print-ingredients', function(req, res) {
+  connection.query("SELECT recipeId, name, ingredients FROM Recipe WHERE recipeId IN (SELECT recipeId FROM Calendar WHERE ?)", {userId: req.user.userId}, function (err, recipeRows) {
+    if ((recipeRows === undefined) || (recipeRows.length === 0)) {
+      res.redirect('add_ingredients');
+    }
+    else {
+      res.render('print_ingredients', {
+        recipes: recipeRows
+      });
+    }
+  });
+});
+
 module.exports = router;
