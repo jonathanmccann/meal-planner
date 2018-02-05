@@ -951,13 +951,6 @@
 			margin-bottom: 1.75em;
 		}
 
-		#banner .banner-input {
-			align-content: center;
-			margin: 0 0 0.5em 0;
-			padding: 0 0 2em 4em;
-			width: 45%;
-		}
-
 		#banner label {
 			font-size: 1.25em;
 		}
@@ -1106,10 +1099,6 @@
 		}
 
 /* Custom */
-
-	.banner {
-		background-image: url("../images/background.jpg")
-	}
 
 	.banner-caption {
 		display: none;
