@@ -6,13 +6,14 @@ script.
   }
 
 each recipe in recipes
-  h2(class="padding-top")
-    | #{recipe.name}
-  div(class="columns indent", id="div" + "#{recipe.recipeId}")
-    ul(class="alt")
-      -var ingredients = recipe.ingredients.split(",");
-      -for (var i = 0; i < ingredients.length; i++) {
-        li
-          input(type="checkbox", id="#{i}_#{recipe.recipeId}", name="#{ingredients[i]} (#{recipe.name})", onClick='toggleSelectAll("#{recipe.recipeId}")')
-          label(for="#{i}_#{recipe.recipeId}") #{ingredients[i]}
-      -}
+  div(class="print-ingredients")
+    h4
+      | #{recipe.name}
+    div(class="columns indent", id="div" + "#{recipe.recipeId}")
+      ul(class="alt")
+        -var ingredients = recipe.ingredients.split(",");
+        -for (var i = 0; i < ingredients.length; i++) {
+          li
+            input(type="checkbox", id="#{i}_#{recipe.recipeId}", name="#{ingredients[i]} (#{recipe.name})", onClick='toggleSelectAll("#{recipe.recipeId}")')
+            label(for="#{i}_#{recipe.recipeId}") #{ingredients[i]}
+        -}

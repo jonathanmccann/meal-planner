@@ -1241,6 +1241,19 @@
 		padding-top: 10px;
 	}
 
+	.print-ingredients label {
+		margin: 0 0 0 0;
+	}
+
+	.print-ingredients input[type="checkbox"] + label{
+		font-size: 0.75em;
+	}
+
+	.print-ingredients ul.alt li {
+		border-bottom: none;
+		padding: 0;
+	}
+
 	.recipes {
 		height: 200px;		
 	}
