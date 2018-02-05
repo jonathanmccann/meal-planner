@@ -87,8 +87,7 @@ block content
                 -}
           if hasProvider
             input(type='submit', value='Add Ingredients')
-        a(href="/print-ingredients", target="_blank")
-          | Print Ingredients
+        input(onclick="window.open('/print-ingredients', '_blank')", type='submit', value='Print Ingredients')
         if !hasProvider
           div(class="tooltip")
             i(class="fa fa-question-circle")
