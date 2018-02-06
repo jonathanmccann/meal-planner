@@ -87,9 +87,9 @@ block content
                 -}
           if hasProvider
             input(type='submit', value='Add Ingredients')
-        input(onclick="window.open('/print-ingredients', '_blank')", type='submit', value='Print Ingredients')
-        if !hasProvider
-          div(class="tooltip")
-            i(class="fa fa-question-circle")
-            span(class="tooltiptext")
-              | If you wish to use a third party to do application, please set up the connection within your account settings.
+          input(onclick="window.open('/print-ingredients', '_blank')", type='button', value='Print Ingredients')
+          if !hasProvider
+            div(class="tooltip")
+              i(class="fa fa-question-circle")
+              span(class="tooltiptext")
+                | If you wish to use a third party to do application, please set up the connection within your account settings.
