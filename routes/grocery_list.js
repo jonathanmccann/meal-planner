@@ -173,7 +173,8 @@ router.get('/print-ingredients', function(req, res) {
     }
     else {
       res.render('print_ingredients', {
-        recipes: recipeRows
+        recipes: recipeRows,
+        title: "Print Ingredients"
       });
     }
   });
