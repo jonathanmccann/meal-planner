@@ -1370,6 +1370,7 @@
 	
 			.flextable-cell .box p {
 				color: #ceced6;
+				cursor: default;
 				font-size: 14px;
 				margin: 0 0 0 0;
 			}

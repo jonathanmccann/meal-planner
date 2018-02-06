@@ -26,25 +26,38 @@ var modal = new tingle.modal({
 });
 
 $(document).ready(function() {
+  var breakfastContainer = $('#breakfastContainer');
+  var lunchContainer = $('#lunchContainer');
+  var dinnerContainer = $('#dinnerContainer');
+
   if (typeof calendarDayAndRecipeMap !== 'undefined') {
     var currentDay = String(new Date().getDay());
 
     if (calendarDayAndRecipeMap[currentDay + "0"]) {
       for (var i = 0; i < calendarDayAndRecipeMap[currentDay + "0"].length; i += 3) {
-        $('#breakfast').append(calendarDayAndRecipeMap[currentDay + "0"][i] + "<br>");
+        breakfastContainer.append(calendarDayAndRecipeMap[currentDay + "0"][i] + "<br>");
       }
+    }
+    else {
+      breakfastContainer.toggleClass('home-calendar-container')
     }
 
     if (calendarDayAndRecipeMap[currentDay + "1"]) {
       for (var i = 0; i < calendarDayAndRecipeMap[currentDay + "1"].length; i += 3) {
-        $('#lunch').append(calendarDayAndRecipeMap[currentDay + "1"][i] + "<br>");
+        lunchContainer.append(calendarDayAndRecipeMap[currentDay + "1"][i] + "<br>");
       }
+    }
+    else {
+      lunchContainer.toggleClass('home-calendar-container')
     }
 
     if (calendarDayAndRecipeMap[currentDay + "2"]) {
       for (var i = 0; i < calendarDayAndRecipeMap[currentDay + "2"].length; i += 3) {
-        $('#dinner').append(calendarDayAndRecipeMap[currentDay + "2"][i] + "<br>");
+        dinnerContainer.append(calendarDayAndRecipeMap[currentDay + "2"][i] + "<br>");
       }
+    }
+    else {
+      dinnerContainer.toggleClass('home-calendar-container')
     }
   }
 
@@ -53,14 +66,21 @@ $(document).ready(function() {
 
     var timeOfDay;
 
-    if (clickedId === "breakfast") {
+    if (clickedId.includes("breakfast")) {
       timeOfDay = "0";
+
+      if (!calendarDayAndRecipeMap[currentDay + "0"]) {
+        return;
+      }
     }
-    else if (clickedId === "lunch") {
+    else if (clickedId.includes("lunch")) {
       timeOfDay = "1";
     }
-    else {
+    else if (clickedId.includes("dinner")) {
       timeOfDay = "2";
+    }
+    else {
+      return;
     }
 
     var modalContent = "<div class=\"owl-carousel owl-theme\">";

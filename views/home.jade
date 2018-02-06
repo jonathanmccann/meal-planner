@@ -61,23 +61,23 @@ block content
                     div(class="flextable-cell flextable-cell-header-home")
                       h3 Meals for the Day
                     if displayBreakfast
-                      div(class="flextable-cell home-calendar-container", id="breakfastContainer")
+                      div(class="flextable-cell")
                         section(class="box")
                           p
                             | Breakfast
-                          div(id="breakfast")
+                          div(class="home-calendar-container", id="breakfastContainer")
                     if displayLunch
-                      div(class="flextable-cell home-calendar-container", id="lunchContainer")
+                      div(class="flextable-cell")
                         section(class="box")
                           p
                             | Lunch
-                          div(id="lunch")
+                          div(class="home-calendar-container", id="lunchContainer")
                     if displayDinner
-                      div(class="flextable-cell home-calendar-container", id="dinnerContainer")
+                      div(class="flextable-cell")
                         section(class="box")
                           p
                             | Dinner
-                          div(id="dinner")
+                          div(class="home-calendar-container", id="dinnerContainer")
             div(class="row 150%")
               div(class="3u 12u$(medium)")
                 a(href="/view-recipes")
